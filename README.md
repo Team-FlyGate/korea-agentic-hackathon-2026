@@ -47,9 +47,9 @@ FDA와 EMA는 2026년 1월 14일에 의약품 전 주기의 AI 활용 원칙 열
 | 에이전트 도구 호출 | 4종 연속, 주장 4건 전부 근거 있음 | `eval/results/nat_run_author_flydock.json` |
 | 과잉해석 규칙 | 15종 | `src/harness/tools/overclaim_rules.py` |
 | 평가 케이스 | 33건 | `eval/cases.jsonl` |
-| **적발률 (LLM 포함)** | **16/16**, 거짓 양성 0/17 | `eval/results/critic_verdict_output_llm.json` |
-| **적발률 (결정 규칙만)** | **1/16** | `eval/results/critic_verdict_output_deterministic.json` |
-| 적발률 (규칙 없이 LLM만) | 13/16, 거짓 양성 1/17 | `eval/results/bench_generic-arm.json` |
+| 적발률 (고정 규칙만) | 1/16 | `eval/results/critic_verdict_output_deterministic.json` |
+| 적발률 (규칙 없이 모델 판단만) | 13/16, 거짓 양성 1/17 | `eval/results/bench_generic-arm.json` |
+| **적발률 (규칙 15종 + 모델)** | **16/16**, 거짓 양성 0/17 | `eval/results/critic_verdict_output_llm.json` |
 | 표기 변동 판정 뒤집힘 | 0/126 (상품명, 코드명 각 3회) | `eval/results/notation_robustness_2026-09-27.json` |
 | DiffDock NIM 호출 | HTTP 200, 4.1초, 포즈 3개 | `eval/results/diffdock_smoke.txt` |
 | 샌드박스 스모크 | 18건 통과 | `eval/results/openshell_smoke_flydock.txt` |
@@ -175,7 +175,7 @@ Calle 등이 FAERS와 정리된 CYP 매핑과 PubMed를 ReAct 에이전트로 �
 | 제한을 거는 시점 | 생성할 때 | 생성한 뒤 |
 | 제한의 출처 | 저자의 약동학 지식 | 도구와 데이터 제공자 문서의 경고 15종 |
 | 검증 주체 | 저자가 읽고 판단 | 별도 크리틱 워크플로. 쓰기 도구 없음 |
-| 성능 수치 | 없음 | 16/16, 고정 규칙만 1/16, 거짓 양성 0/17 |
+| 성능 수치 | 없음 | 1/16 → 13/16 → 16/16, 거짓 양성 0/17 |
 | 부정 사례 | 없음 | 심어 둔 과잉해석 16건 |
 
 로깅 범위는 저쪽이 넓다. 도구 입출력 전체를 남기는데 우리는 결합 근거만 해시로 고정하고
