@@ -335,12 +335,14 @@ FDDD 를 실제로 빼야 할 때는 그 목록만 쓰면 된다.
 
 ### 지금 결정할 것 (해커톤과 겹친다)
 
+**2026-09-27 에 공식 페이지로 재확인했다.** 아래 표가 그 결과다.
+
 | 자리 | 마감 | 내는 것 | 판단 |
 |---|---|---|---|
-| **ACS Spring 2027 CINF 초록** | **2026-09-28 23:59 EST** | 초록만 | 심포지엄 "Rebuilding Public Trust in Chemistry: Information Validation, Addressing AI-Related Concerns" 가 우리 주제와 정면으로 맞는다. **다만 개최가 2027년 3월인데 마감이 지금이라 이례적으로 빠르다. 의존하기 전에 공식 페이지를 직접 확인한다** |
-| **BIOINFO/GIW ISCB-Asia 2026 late-breaking 포스터** | **2026-09-30** | 초록만 | **서울 연세대 11/17~20 개최.** 기조강연 제목이 "Agentic AI for Drug Discovery with Physical and Biological Priors" 이고 튜토리얼에 "Agentic AI for In Silico Team Science" 가 있다. 청중이 정확히 겹치고 이동 부담이 없다 |
-| AgenticLS @ NeurIPS 2026 | 2026-09-26 AoE | 정식 9p 또는 확장초록 4p | 주제는 맞지만 **내일이라 무리다** |
-| KIPS ACK 2026 | 2026-09-30 | 2~4p | 원고를 써야 해서 이번 주에는 무리다 |
+| **ACS Spring 2027 CINF 초록** | **2026-09-28 23:59 EST** = 한국시간 **9/29 13:59** | 초록만 | **확인함.** `callforabstracts.acs.org/acsspring2027/CINF` 에 마감일과 심포지엄이 그대로 있다. "Rebuilding Public Trust in Chemistry: Information Validation, Information and Data Literacy, Retractions, Ethical Issues, Addressing AI-Related Concerns" 다. **해커톤 마감보다 14시간 뒤라 제출 끝내고 써도 된다** |
+| **BIOINFO/GIW ISCB-Asia 2026 late-breaking 포스터** | **2026-09-30** | 초록만 | **확인함.** `giw2026.ksbi.or.kr` 이 late-breaking 포스터가 열려 있다고 밝힌다. 정규 초록 마감(8/15)은 지났다. 서울 11/17~20 개최라 이동 부담이 없다 |
+| ~~AgenticLS @ NeurIPS 2026~~ | ~~2026-09-26 AoE~~ | | **마감했다.** 2026-09-27 기준 지났다 |
+| KIPS ACK 2026 | 2026-09-30 | 2~4p | 원고를 써야 해서 무리다 |
 
 **초록만 내는 두 건은 원고를 새로 쓰지 않아도 되므로 해커톤과 병행할 수 있다.**
 
