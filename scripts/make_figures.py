@@ -1120,18 +1120,20 @@ def make_overview(out_path: Path) -> Path:
             "추론이 넘었는지는 모델이 본다.",
             fontsize=6.6, color=INK_SOFT, ha="left", va="center", linespacing=1.6)
 
-    # 두 수치를 나란히. 이 대비가 이 프로젝트의 요지다.
-    for x0, big, lab, col in ((48.0, "1 / 16", "고정 규칙만", INK_FAINT),
-                              (73.0, "16 / 16", "의미 판단을 붙이면", PLUM)):
-        ax.text(x0 + 10.5, cy + ch - 4.6, big, fontsize=17, fontweight="bold",
+    # 세 조건을 나란히. 규칙이 더하는 몫까지 보여야 과장이 아니다.
+    for x0, big, lab, col in ((40.0, "1 / 16", "고정 규칙만", INK_FAINT),
+                              (59.5, "13 / 16", "모델 판단만", INK_SOFT),
+                              (79.0, "16 / 16", "규칙 15종을 주면", PLUM)):
+        ax.text(x0 + 8.5, cy + ch - 4.6, big, fontsize=15, fontweight="bold",
                 color=col, ha="center", va="center")
-        ax.text(x0 + 10.5, cy + 2.8, lab, fontsize=6.8, color=INK_SOFT,
+        ax.text(x0 + 8.5, cy + 2.8, lab, fontsize=6.4, color=INK_SOFT,
                 ha="center", va="center")
-    ax.text(66.0, cy + ch / 2, "vs", fontsize=8.0, color=INK_FAINT,
-            ha="center", va="center", style="italic")
+    for xm in (53.5, 73.0):
+        ax.text(xm, cy + ch / 2, "→", fontsize=8.0, color=INK_FAINT,
+                ha="center", va="center")
 
     ax.text(2.0, 2.2, "심어 둔 과잉해석 16건 기준. 반려해야 할 주장을 잡은 수. "
-            "출처 eval/results/critic_verdict_output_*.json",
+            "출처 eval/results/critic_verdict_output_*.json, bench_generic-arm.json",
             fontsize=5.4, color=INK_FAINT, ha="left")
 
     fig.savefig(out_path, dpi=300, facecolor=PAPER)
