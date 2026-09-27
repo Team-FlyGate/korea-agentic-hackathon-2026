@@ -1,0 +1,133 @@
+{
+ "ran_at": "2026-09-27T15:22:54+00:00",
+ "report_id": "13497451",
+ "model": "jev-1.13.0",
+ "seconds": 0.306,
+ "usage": {
+  "input_tokens": 2473,
+  "output_tokens": 613
+ },
+ "state": {
+  "report_id": "13497451",
+  "country": "DK",
+  "serious": "1",
+  "patient_age_group": null,
+  "patient_sex": "2",
+  "reactions": [
+   {
+    "term": "Thrombocytopenia",
+    "outcome": "1"
+   }
+  ],
+  "suspect_drugs": [
+   {
+    "name": "NIRAPARIB",
+    "start": "20170407",
+    "end": "20170419",
+    "action_taken": "6",
+    "improved_after_withdrawal": null,
+    "recurred_on_rechallenge": null,
+    "indication": null
+   },
+   {
+    "name": "NIRAPARIB",
+    "start": "20170208",
+    "end": "20170223",
+    "action_taken": "6",
+    "improved_after_withdrawal": null,
+    "recurred_on_rechallenge": null,
+    "indication": "OVARIAN CANCER"
+   },
+   {
+    "name": "NIRAPARIB",
+    "start": "20170320",
+    "end": "20170406",
+    "action_taken": "6",
+    "improved_after_withdrawal": null,
+    "recurred_on_rechallenge": null,
+    "indication": null
+   },
+   {
+    "name": "NIRAPARIB",
+    "start": "20170224",
+    "end": "20170319",
+    "action_taken": "6",
+    "improved_after_withdrawal": null,
+    "recurred_on_rechallenge": null,
+    "indication": null
+   },
+   {
+    "name": "NIRAPARIB",
+    "start": "20170420",
+    "end": null,
+    "action_taken": "6",
+    "improved_after_withdrawal": null,
+    "recurred_on_rechallenge": null,
+    "indication": null
+   }
+  ],
+  "concomitant_drugs": [
+   "PARACETAMOL",
+   "HEMOJERN",
+   "IMOZOP",
+   "UNIKALK BASIC",
+   "ALENDRONAT"
+  ],
+  "note": "openFDA 공개본이다. 경과 서술과 인과성 평가 결과가 들어 있지 않다. 필드가 비어 있으면 그 사실을 아직 모른다는 뜻이다.",
+  "reaction_in_product_label": "true"
+ },
+ "items": [
+  {
+   "item": "시간적 선후관계",
+   "choice": "정보없음",
+   "points": 0,
+   "confidence": 0.93
+  },
+  {
+   "item": "감량 또는 중단",
+   "choice": "정보없음",
+   "points": 0,
+   "confidence": 0.35
+  },
+  {
+   "item": "이상사례의 과거력",
+   "choice": "정보없음",
+   "points": 0,
+   "confidence": 0.89
+  },
+  {
+   "item": "병용약물",
+   "choice": "정보없음",
+   "points": 0,
+   "confidence": 0.54
+  },
+  {
+   "item": "비약물요인",
+   "choice": "정보없음",
+   "points": 0,
+   "confidence": 0.95
+  },
+  {
+   "item": "약물에 대해 알려진 정보",
+   "choice": "허가사항(label, insert 등)에 반영되어 있음",
+   "points": 3,
+   "confidence": 0.99
+  },
+  {
+   "item": "재투약",
+   "choice": "정보없음",
+   "points": 0,
+   "confidence": 0.99
+  },
+  {
+   "item": "특이적인 검사",
+   "choice": "정보없음",
+   "points": 0,
+   "confidence": 0.97
+  }
+ ],
+ "total": 3,
+ "grade": "가능성 있음",
+ "absent_items": 7,
+ "request_id": "req_01a0e37645e474c2ad29247e2d41e293"
+}
