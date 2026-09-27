@@ -231,3 +231,40 @@ def test_case_notes_say_which_stage_should_catch_it():
 def test_pharmacovigilance_cases_are_kept():
     ids = {c["id"] for c in _cases()}
     assert {"prr_signal_ok", "label_listed_ok", "planted_unsupported_claim"} <= ids
+
+
+# --------------------------------------------------------------------------------------
+# 구조 예측을 붙일 때 켜는 규칙 2종
+#
+# `RULES` 와 분리해 둔 이유가 측정 분모를 지키는 것이므로, 분리 자체를 테스트가 지킨다.
+# --------------------------------------------------------------------------------------
+def test_structure_rules_are_two_and_separate_from_the_measured_fifteen():
+    assert len(ocr.STRUCTURE_RULES) == 2
+    assert len(ocr.RULES) == 15, "구조 예측 규칙을 RULES 에 넣으면 적발률 16/16 의 근거가 흔들린다"
+    assert set(ocr.structure_rule_ids()).isdisjoint(set(ocr.rule_ids()))
+    assert len(ocr.ALL_RULES) == 17
+
+
+def test_structure_rules_cite_the_nvidia_skill_docs():
+    for rule in ocr.STRUCTURE_RULES:
+        assert rule.source == ocr.SOURCE_NVIDIA_FOLD
+        assert rule.source in ocr.SOURCES
+        assert len(rule.source_quote) > 60, f"{rule.id}: 원문 인용이 너무 짧다"
+        assert rule.strength == ocr.STRENGTH_NONE
+        assert rule.strength_note, f"{rule.id}: 등급이 없음이면 사유를 적어야 한다"
+
+
+def test_structure_rules_are_absent_from_the_default_prompt():
+    base = ocr.stage3_prompt(numbers_verified=False)
+    widened = ocr.stage3_prompt(numbers_verified=False, include_structure=True)
+    for rule in ocr.STRUCTURE_RULES:
+        assert rule.prompt_line() not in base
+        assert rule.prompt_line() in widened
+    assert len(ocr.rule_lines()) == 15
+    assert len(ocr.rule_lines(include_structure=True)) == 17
+
+
+def test_get_rule_finds_structure_rules_too():
+    for rule_id in ocr.structure_rule_ids():
+        assert ocr.get_rule(rule_id).id == rule_id
+    assert set(ocr.RULES_BY_ID) == set(ocr.rule_ids()), "RULES_BY_ID 는 15종만 담는다"

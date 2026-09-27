@@ -48,7 +48,7 @@ FDA와 EMA는 2026년 1월 14일에 의약품 전 주기의 AI 활용 원칙 열
 
 | 항목 | 값 | 어디서 |
 |---|---|---|
-| 오프라인 테스트 | 293개 통과 | `pytest -q -m "not network"` |
+| 오프라인 테스트 | 297개 통과 | `pytest -q -m "not network"` |
 | NAT 등록 도구 | 8종 | `configs/author.yml` |
 | 에이전트 도구 호출 | 4종 연속, 주장 4건 전부 근거 있음 | `eval/results/nat_run_author_flydock.json` |
 | 과잉해석 규칙 | 15종 | `src/harness/tools/overclaim_rules.py` |
@@ -202,6 +202,12 @@ LLM 판단만으로도 열세 건이 걸러진다. 규칙이 더한 것은 세 �
 놓친 세 건이 무엇인지가 규칙의 값을 보여 준다. 단일 시드 결과에 재현성을 주장하는 것,
 SMILES를 실행 입력이라고 말하는 것, DiffDock 호스팅 API에 시드가 없다는 사실이다.
 분야 상식으로는 닿지 않고 도구 문서를 읽어야 안다. 측정은 `docs/notes/rule-contribution-2026-09-27.md`.
+
+규칙을 늘리면 늘 좋아지는지도 재 보았다. 구조 예측 도구를 붙이는 안이 나와 예측 구조와 신뢰도
+지표(pLDDT, pTM, ipTM)를 다루는 규칙 2종을 NVIDIA 스킬 문서에서 옮겨 적고, 케이스 5건에
+두 프롬프트로 물었다. **기존 15종만으로도 반려 정답 4건을 모두 잡아 새 규칙이 추가로 잡은 것은
+없었다.** 그래서 두 규칙은 `overclaim_rules.STRUCTURE_RULES` 로 분리해 두고 발표하는 적발률은
+15종 기준을 그대로 쓴다. 측정은 `docs/notes/structure-rules-2026-09-27.md`.
 
 ### 예상 질문
 

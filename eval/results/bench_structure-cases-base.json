@@ -1,0 +1,77 @@
+{
+ "label": "structure-cases-base",
+ "model": "nvidia/nemotron-3-super-120b-a12b",
+ "base_url": "https://integrate.api.nvidia.com/v1",
+ "cases_file": "eval/cases_structure.jsonl",
+ "prompt_sha256": null,
+ "ran_at": "2026-09-27T21:26:19+0900",
+ "summary": {
+  "cases": 3,
+  "ok": 3,
+  "failed": 0,
+  "detection": {
+   "caught": 2,
+   "of": 2,
+   "rate": 1.0
+  },
+  "false_positive": {
+   "count": 0,
+   "of": 1,
+   "rate": 0.0
+  },
+  "latency_ms": {
+   "mean": 2248.0,
+   "median": 2588.1,
+   "min": 918.0,
+   "max": 3238.0
+  },
+  "tokens": {
+   "prompt": 5190,
+   "completion": 662,
+   "total": 5852
+  },
+  "cost_usd": null,
+  "failed_ids": []
+ },
+ "rows": [
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 2588.1,
+   "verdict": "reject",
+   "usage": {
+    "prompt_tokens": 1731,
+    "completion_tokens": 131,
+    "total_tokens": 1862
+   },
+   "id": "structure_confidence_as_binding",
+   "expected_verdict": "reject"
+  },
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 3238.0,
+   "verdict": "reject",
+   "usage": {
+    "prompt_tokens": 1706,
+    "completion_tokens": 510,
+    "total_tokens": 2216
+   },
+   "id": "predicted_structure_as_experiment",
+   "expected_verdict": "reject"
+  },
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 918.0,
+   "verdict": "pass",
+   "usage": {
+    "prompt_tokens": 1753,
+    "completion_tokens": 21,
+    "total_tokens": 1774
+   },
+   "id": "structure_limits_stated_ok",
+   "expected_verdict": "pass"
+  }
+ ]
+}

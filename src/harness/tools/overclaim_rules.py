@@ -12,6 +12,8 @@
 - `TABLE_RULE_IDS` 14종은 `docs/notes/topic-decision.md` 의 규칙 표를 그대로 옮긴 것이다.
 - 여기에 `evidence_scope` 1종을 더해 `RULES` 는 15종이다. 이 규칙은 표에 적히기 전부터
   `case_runner` 3단 프롬프트가 쓰고 있었고, 출처도 FDDD 원문과 약물감시 규율에 있다.
+- `STRUCTURE_RULES` 2종은 구조 예측 도구(OpenFold2 계열)를 붙일 때만 켜는 규칙이라 `RULES` 와
+  분리했다. 측정된 적발률의 분모를 건드리지 않으려는 것이고, 실제로 붙이는 시점에 옮겨 다시 잰다.
 
 ## 출처
 
@@ -55,7 +57,11 @@ SOURCE_FDDD = "FDDD notes 원문"
 SOURCE_NVIDIA = "NVIDIA DiffDock 문서 (nim-skills/diffdock-nim/references/validation.md:31)"
 SOURCE_PV = "기존 약물감시 규율"
 
-SOURCES: tuple[str, ...] = (SOURCE_FDDD, SOURCE_NVIDIA, SOURCE_PV)
+SOURCE_NVIDIA_FOLD = ("NVIDIA 구조 예측 스킬 문서 (NVIDIA/skills: "
+                      "bionemo-openfold2-nim/references/science.md, "
+                      "bionemo-msa-structure-prediction-pipeline/SKILL.md)")
+
+SOURCES: tuple[str, ...] = (SOURCE_FDDD, SOURCE_NVIDIA, SOURCE_PV, SOURCE_NVIDIA_FOLD)
 
 # --------------------------------------------------------------------------------------
 # 문헌 귀속의 허용 값
@@ -397,6 +403,61 @@ RULES: tuple[Rule, ...] = (
     ),
 )
 
+# --------------------------------------------------------------------------------------
+# 구조 예측을 붙일 때 함께 켜는 규칙 2종
+#
+# `RULES` 15종에 넣지 않는다. 적발률 16/16 과 13/16 은 15종을 프롬프트에 준 상태에서 쟀고,
+# 그 분모에 규칙을 더하면 이미 발표한 수치의 근거가 흔들린다. 구조 예측 도구를 실제로 붙이는
+# 시점에 `RULES` 로 옮기고 그때 다시 잰다. 옮기기 전까지 이 두 규칙의 적발률은 따로 재고
+# 따로 적는다(`eval/cases_structure.jsonl`).
+#
+# 출처는 NVIDIA 가 스킬 문서에 직접 적어 둔 사용 범위다. 우리가 정한 주의사항이 아니다.
+# --------------------------------------------------------------------------------------
+STRUCTURE_RULES: tuple[Rule, ...] = (
+    Rule(
+        id="predicted_structure_evidence",
+        name="예측 구조를 실험 근거로 쓰지 않기",
+        reject_when=(
+            "OpenFold2, OpenFold3, Boltz-2 같은 예측 모델이 낸 구조를 실험으로 결정된 구조와 같은 근거로 "
+            "취급하거나, 예측 구조에 도킹해 얻은 결과를 실험으로 확인된 결합이라고 말하거나, 단일 서열이나 "
+            "얕은 MSA 로 낸 예측을 검증된 폴드라고 말하면 반려한다."),
+        source=SOURCE_NVIDIA_FOLD,
+        source_quote=('openfold2-nim/references/science.md 의 "Not For" 목록에 '
+                      '"Claiming experimental validation from toy sequences or shallow alignments" 가 있고, '
+                      '같은 문서가 "A single-sequence A3M can validate endpoint shape, but it is weak evidence '
+                      'for a production-quality fold." 라고 적었다.'),
+        strength=STRENGTH_NONE,
+        strength_note=("문헌 귀속을 달지 않았다. 근거가 도구 제작자의 사용 범위 문서이고 "
+                       "`docs/notes/paper-plan.md` 의 강도 표에는 아직 이 행이 없다. "
+                       "diffdock_confidence_affinity 와 같은 성격의 출처다."),
+        literature_source=None,
+        literature_quote=None,
+    ),
+    Rule(
+        id="folding_confidence_scope",
+        name="구조 예측 신뢰도 지표 해석 제한",
+        reject_when=(
+            "pLDDT, pTM, ipTM, pDE 값을 결합 세기, 친화도, 효능, 선택성으로 옮기거나, 실험 구조와의 일치도나 "
+            "RMSD 로 말하거나, 서로 다른 단백질이나 서로 다른 MSA 조건에서 나온 값을 견주어 순위를 매기면 "
+            "반려한다."),
+        source=SOURCE_NVIDIA_FOLD,
+        source_quote=('openfold2-nim/references/science.md 가 "Direct ligand docking or affinity ranking" 을 '
+                      '용도 밖으로 적었고, bionemo-msa-structure-prediction-pipeline/SKILL.md 는 '
+                      '"A larger, higher-quality MSA typically yields higher pLDDT and lower pDE" 라고 적어 '
+                      '값이 입력 조건에 좌우된다는 것을 밝혔다.'),
+        strength=STRENGTH_NONE,
+        strength_note=("문헌 귀속을 달지 않았다. pLDDT 가 MSA 깊이에 좌우된다는 것은 도구 문서가 직접 적은 "
+                       "사실이고, 그 값과 실험 정확도의 관계를 다룬 문헌은 `paper-plan.md` 표에 아직 없다."),
+        literature_source=None,
+        literature_quote=None,
+    ),
+)
+
+STRUCTURE_RULE_IDS: tuple[str, ...] = tuple(r.id for r in STRUCTURE_RULES)
+
+# 규칙 전체. id 로 찾을 때만 쓰고, 프롬프트 기본값에는 구조 예측 규칙이 들어가지 않는다.
+ALL_RULES: tuple[Rule, ...] = RULES + STRUCTURE_RULES
+
 # `docs/notes/topic-decision.md` 규칙 표 14종. evidence_scope 는 표에 없다.
 TABLE_RULE_IDS: tuple[str, ...] = (
     "cross_target_ranking", "affinity_conversion", "cross_docking_binding", "species_mismatch",
@@ -406,6 +467,7 @@ TABLE_RULE_IDS: tuple[str, ...] = (
 )
 
 RULES_BY_ID: dict[str, Rule] = {r.id: r for r in RULES}
+ALL_RULES_BY_ID: dict[str, Rule] = {r.id: r for r in ALL_RULES}
 
 # --------------------------------------------------------------------------------------
 # FDDD 가 빠져도 서는 규칙
@@ -431,8 +493,13 @@ def rule_ids() -> list[str]:
 
 
 def get_rule(rule_id: str) -> Rule:
-    """id 로 규칙 하나를 찾는다. 없으면 KeyError."""
-    return RULES_BY_ID[rule_id]
+    """id 로 규칙 하나를 찾는다. 구조 예측 규칙도 찾는다. 없으면 KeyError."""
+    return ALL_RULES_BY_ID[rule_id]
+
+
+def structure_rule_ids() -> list[str]:
+    """구조 예측을 붙일 때 켜는 규칙의 id 목록."""
+    return [r.id for r in STRUCTURE_RULES]
 
 
 def fddd_independent_rules() -> list[Rule]:
@@ -450,14 +517,20 @@ def literature_backed_rules() -> list[Rule]:
     return [r for r in RULES if r.literature_source is not None]
 
 
-def rule_lines() -> list[str]:
-    """3단 프롬프트에 실을 규칙 줄 목록."""
-    return [r.prompt_line() for r in RULES]
+def rule_lines(*, include_structure: bool = False) -> list[str]:
+    """3단 프롬프트에 실을 규칙 줄 목록.
+
+    기본값은 측정에 쓴 15종 그대로다. `include_structure=True` 일 때만 구조 예측 규칙 2종을
+    뒤에 붙인다. 기본 프롬프트가 한 글자도 바뀌지 않아야 기존 적발률의 근거가 유지된다.
+    """
+    rules = ALL_RULES if include_structure else RULES
+    return [r.prompt_line() for r in rules]
 
 
-def numbered_rules_block() -> str:
+def numbered_rules_block(*, include_structure: bool = False) -> str:
     """번호를 붙인 규칙 블록."""
-    return "\n".join(f"{i}. {line}" for i, line in enumerate(rule_lines(), 1))
+    return "\n".join(f"{i}. {line}"
+                     for i, line in enumerate(rule_lines(include_structure=include_structure), 1))
 
 
 _JSON_CONTRACT = (
@@ -474,7 +547,7 @@ _JUDGE_CONTRACT = (
     "`reason` and `required_followups` entry in Korean.\n")
 
 
-def stage3_prompt(*, numbers_verified: bool = True) -> str:
+def stage3_prompt(*, numbers_verified: bool = True, include_structure: bool = False) -> str:
     """3단 과잉해석 판정 시스템 프롬프트.
 
     `numbers_verified=True` 는 케이스 러너 경로다. 2단 숫자 오라클이 앞에서 돌았다.
@@ -497,6 +570,6 @@ def stage3_prompt(*, numbers_verified: bool = True) -> str:
         + "Judge ONE thing: does any claim or the summary draw an inference that the cited evidence "
         "cannot support? Apply these rules, which come from the docking demo's own published "
         "restrictions, from the NVIDIA DiffDock documentation and from pharmacovigilance practice:\n"
-        + numbered_rules_block()
+        + numbered_rules_block(include_structure=include_structure)
         + "\n" + _JUDGE_CONTRACT
         + _JSON_CONTRACT)

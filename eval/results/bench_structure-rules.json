@@ -1,0 +1,103 @@
+{
+ "label": "structure-rules",
+ "model": "nvidia/nemotron-3-super-120b-a12b",
+ "base_url": "https://integrate.api.nvidia.com/v1",
+ "cases_file": "eval/cases_structure.jsonl",
+ "prompt_sha256": null,
+ "ran_at": "2026-09-27T21:27:10+0900",
+ "summary": {
+  "cases": 5,
+  "ok": 5,
+  "failed": 0,
+  "detection": {
+   "caught": 4,
+   "of": 4,
+   "rate": 1.0
+  },
+  "false_positive": {
+   "count": 0,
+   "of": 1,
+   "rate": 0.0
+  },
+  "latency_ms": {
+   "mean": 2573.6,
+   "median": 1878.2,
+   "min": 1221.5,
+   "max": 4214.9
+  },
+  "tokens": {
+   "prompt": 8639,
+   "completion": 438,
+   "total": 9077
+  },
+  "cost_usd": null,
+  "failed_ids": []
+ },
+ "rows": [
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 1878.2,
+   "verdict": "reject",
+   "usage": {
+    "prompt_tokens": 1731,
+    "completion_tokens": 105,
+    "total_tokens": 1836
+   },
+   "id": "structure_confidence_as_binding",
+   "expected_verdict": "reject"
+  },
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 4059.1,
+   "verdict": "reject",
+   "usage": {
+    "prompt_tokens": 1706,
+    "completion_tokens": 94,
+    "total_tokens": 1800
+   },
+   "id": "predicted_structure_as_experiment",
+   "expected_verdict": "reject"
+  },
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 1221.5,
+   "verdict": "reject",
+   "usage": {
+    "prompt_tokens": 1731,
+    "completion_tokens": 106,
+    "total_tokens": 1837
+   },
+   "id": "plddt_cross_protein_ranking",
+   "expected_verdict": "reject"
+  },
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 4214.9,
+   "verdict": "reject",
+   "usage": {
+    "prompt_tokens": 1718,
+    "completion_tokens": 112,
+    "total_tokens": 1830
+   },
+   "id": "plddt_gain_as_accuracy_gain",
+   "expected_verdict": "reject"
+  },
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 1494.5,
+   "verdict": "pass",
+   "usage": {
+    "prompt_tokens": 1753,
+    "completion_tokens": 21,
+    "total_tokens": 1774
+   },
+   "id": "structure_limits_stated_ok",
+   "expected_verdict": "pass"
+  }
+ ]
+}

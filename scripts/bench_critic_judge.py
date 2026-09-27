@@ -216,7 +216,7 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--api-key-env", default="NVIDIA_API_KEY",
                     help="키를 담은 환경변수 이름. 기본 NVIDIA_API_KEY")
     ap.add_argument("--limit", type=int, default=None, help="앞의 N 건만 돌린다")
-    ap.add_argument("--prompt", choices=["rules", "generic"], default="rules",
+    ap.add_argument("--prompt", choices=["rules", "generic", "rules+structure"], default="rules",
                     help="rules=규칙 15종 포함(기본), generic=규칙 없이 일반 판정")
     ap.add_argument("--sleep", type=float, default=0.0, help="호출 사이 대기 초")
     ap.add_argument("--timeout", type=float, default=120.0)
@@ -225,7 +225,13 @@ def main(argv: list[str] | None = None) -> int:
                     help="입력 백만 토큰당 달러. 주면 비용을 환산한다")
     ap.add_argument("--price-out", type=float, default=None, help="출력 백만 토큰당 달러")
     args = ap.parse_args(argv)
-    PROMPT = GENERIC_PROMPT if args.prompt == "generic" else SYSTEM_PROMPT
+    if args.prompt == "generic":
+        PROMPT = GENERIC_PROMPT
+    elif args.prompt == "rules+structure":
+        # 구조 예측 규칙 2종을 켠 프롬프트. 기본 15종 측정과 분모를 섞지 않으려고 따로 둔다.
+        PROMPT = ocr.stage3_prompt(numbers_verified=False, include_structure=True)
+    else:
+        PROMPT = SYSTEM_PROMPT
 
     if args.compare:
         return compare(args.compare)

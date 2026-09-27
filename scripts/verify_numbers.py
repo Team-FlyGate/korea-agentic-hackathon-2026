@@ -62,6 +62,12 @@ def overclaim_rules() -> int:
     return len(o.RULES)
 
 
+def structure_rules() -> int:
+    """구조 예측을 붙일 때 켜는 규칙 수. `RULES` 와 분리돼 있어 따로 센다."""
+    from harness.tools import overclaim_rules as o
+    return len(o.STRUCTURE_RULES)
+
+
 def eval_cases() -> tuple[int, int]:
     lines = [l for l in (ROOT / "eval/cases.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
     rej = sum(1 for l in lines if json.loads(l).get("expected_verdict") == "reject")
@@ -98,6 +104,7 @@ def main(argv: list[str] | None = None) -> int:
         ("오프라인 테스트", f"{offline_tests()}개 통과", 'pytest -q -m "not network"'),
         ("NAT 등록 도구", f"{registered_tools()}종", "configs/author.yml"),
         ("과잉해석 규칙", f"{overclaim_rules()}종", "overclaim_rules.RULES"),
+        ("구조 예측 규칙", f"{structure_rules()}종", "overclaim_rules.STRUCTURE_RULES"),
         ("평가 케이스", f"{cases}건", "eval/cases.jsonl"),
         ("반려 정답 케이스", f"{rejects}/{rejects}", "eval/cases.jsonl"),
         ("샌드박스 스모크", f"{sandbox_pass()}건 통과", "openshell_smoke_flydock.txt"),

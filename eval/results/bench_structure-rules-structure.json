@@ -1,0 +1,103 @@
+{
+ "label": "structure-rules-structure",
+ "model": "nvidia/nemotron-3-super-120b-a12b",
+ "base_url": "https://integrate.api.nvidia.com/v1",
+ "cases_file": "eval/cases_structure.jsonl",
+ "prompt_sha256": null,
+ "ran_at": "2026-09-27T21:27:25+0900",
+ "summary": {
+  "cases": 5,
+  "ok": 5,
+  "failed": 0,
+  "detection": {
+   "caught": 4,
+   "of": 4,
+   "rate": 1.0
+  },
+  "false_positive": {
+   "count": 0,
+   "of": 1,
+   "rate": 0.0
+  },
+  "latency_ms": {
+   "mean": 1354.7,
+   "median": 938.4,
+   "min": 613.3,
+   "max": 3378.9
+  },
+  "tokens": {
+   "prompt": 9514,
+   "completion": 527,
+   "total": 10041
+  },
+  "cost_usd": null,
+  "failed_ids": []
+ },
+ "rows": [
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 3378.9,
+   "verdict": "reject",
+   "usage": {
+    "prompt_tokens": 1906,
+    "completion_tokens": 160,
+    "total_tokens": 2066
+   },
+   "id": "structure_confidence_as_binding",
+   "expected_verdict": "reject"
+  },
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 957.1,
+   "verdict": "reject",
+   "usage": {
+    "prompt_tokens": 1881,
+    "completion_tokens": 93,
+    "total_tokens": 1974
+   },
+   "id": "predicted_structure_as_experiment",
+   "expected_verdict": "reject"
+  },
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 938.4,
+   "verdict": "reject",
+   "usage": {
+    "prompt_tokens": 1906,
+    "completion_tokens": 97,
+    "total_tokens": 2003
+   },
+   "id": "plddt_cross_protein_ranking",
+   "expected_verdict": "reject"
+  },
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 885.7,
+   "verdict": "reject",
+   "usage": {
+    "prompt_tokens": 1893,
+    "completion_tokens": 94,
+    "total_tokens": 1987
+   },
+   "id": "plddt_gain_as_accuracy_gain",
+   "expected_verdict": "reject"
+  },
+  {
+   "ok": true,
+   "error": null,
+   "latency_ms": 613.3,
+   "verdict": "pass",
+   "usage": {
+    "prompt_tokens": 1928,
+    "completion_tokens": 83,
+    "total_tokens": 2011
+   },
+   "id": "structure_limits_stated_ok",
+   "expected_verdict": "pass"
+  }
+ ]
+}
