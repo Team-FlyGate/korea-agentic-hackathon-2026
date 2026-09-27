@@ -1134,6 +1134,13 @@ def main() -> int:
         print()
         print(f"팀명이 아직 비어 있다. 확정되면 TEAM_NAME 을 채우고 다시 만든 뒤 다음처럼 복사한다.")
         print(f'  cp {_rel(PDF_PATH)} "docs/submission/[NVIDIA 해커톤_<팀명>_{PROJECT_NAME}].pdf"')
+    else:
+        # 폼이 요구하는 파일명으로 사본을 함께 남긴다. 제출 때 이 파일을 올린다.
+        import shutil
+        final = PDF_PATH.parent / f"[NVIDIA 해커톤_{TEAM_NAME}_{PROJECT_NAME}].pdf"
+        shutil.copyfile(PDF_PATH, final)
+        print()
+        print(f"  제출용  {_rel(final)}  {final.stat().st_size // 1024}KB")
     if CERT_IMAGE is None:
         print()
         print("DLI 수료증 자리는 비어 있다. 수료 후 CERT_IMAGE 에 이미지 경로를 넣는다.")
