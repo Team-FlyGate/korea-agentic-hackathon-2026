@@ -12,8 +12,14 @@ NVIDIA x 패스트캠퍼스 Korea Agentic AI Hackathon 2026 온라인 사전 챌
 
 ## 형식 검사의 한계
 
-도킹 점수에는 도구 문서가 직접 밝힌 해석 한계가 있다. 서로 다른 단백질에서 나온 점수는 견줄 수
-없고, 딥러닝 도킹이 내는 신뢰도 값은 결합 세기가 아니며, 교차 도킹 결과는 결합의 증거가 아니다.
+안전성 검토자가 감당할 양이 사람 수를 넘었다. FDA 이상사례 보고만 2천만 건이 넘고, 그 가운데
+어느 것이 약 때문인지 가리는 인과성 평가가 가장 오래 걸린다. 그래서 AI로 덜어 내려는 시도가
+이어지는데, 모델이 내놓은 판단을 무엇과 대조해 믿을지가 비어 있다.
+
+사람 판정을 정답으로 쓰기 어렵다. 같은 사례를 두 척도로 평가한 연구에서 일치도가 카파 0.22에
+그쳤다. 대신 쓸 수 있는 것이 **도구와 데이터 제공자가 문서에 적어 둔 한계**다. 서로 다른
+단백질에서 나온 도킹 점수는 견줄 수 없고, 딥러닝 도킹이 내는 신뢰도 값은 결합 세기가 아니며,
+교차 도킹 결과는 결합의 증거가 아니다. 만든 쪽이 밝힌 것이므로 취향 문제가 되지 않는다.
 
 LLM 에이전트를 이런 도구에 붙이면 그 선을 자주 넘어, 근거도 제대로 붙고 숫자도 로그와
 맞는데 결론만 틀린 요약이 나온다. 형식을 보는 검사로는 걸러지지 않는다.
@@ -85,7 +91,7 @@ FDA와 EMA는 2026년 1월 14일에 의약품 전 주기의 AI 활용 원칙 열
 - DiffDock NIM (`health.api.nvidia.com/v1/biology/mit/diffdock`)
 - NeMo Agent Toolkit 1.9.0 (작성자와 크리틱 워크플로 분리, `nat eval`, Guardrails 미들웨어)
 - OpenShell 0.0.116 (deny-by-default 정책, 허용 호스트 일곱 곳)
-- build.nvidia.com 스킬 카탈로그 (BioNeMo 에이전트 스킬 문서를 NIM 호출 규격 참조로 사용)
+- build.nvidia.com 스킬 카탈로그. BioNeMo 에이전트 스킬 `diffdock-nim` 을 `.claude/skills/nvidia-diffdock-nim/` 에 설치해 쓴다
 
 **그 밖에** Python 3.12, AutoDock Vina 실측(FDDD), openFDA FAERS, DailyMed SPL,
 PubMed E-utilities, RCSB PDB, BindingDB 참조.
