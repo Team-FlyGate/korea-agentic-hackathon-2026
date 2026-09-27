@@ -66,6 +66,7 @@ if str(REPO_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from harness.tools import pharmasignal_openfda as ofda  # noqa: E402
+from harness.tools import jev_client as jev
 from harness.tools.pharmasignal_common import ResponseCache, http_get, now_iso  # noqa: E402
 
 DEFAULT_DRUG = "niraparib"
@@ -264,6 +265,74 @@ def rule_one(faers: dict[str, Any]) -> dict[str, Any]:
             "latency_ms": latency_ms, "usage": None, "judge": "rule"}
 
 
+# --------------------------------------------------------------------------------------
+# Jev judge
+#
+# Jev answers a typed question with a calibrated probability, so the triage decision becomes a
+# threshold rather than a parse. That removes the failure mode the LLM path has to guard
+# against, where a reply arrives without the VERDICT line and the report cannot be scored.
+#
+# The state deliberately carries only the counts, the measures and which record fields exist.
+# Sending the reaction's name and nothing else would let the model answer from prior knowledge
+# of the drug rather than from this report, and then the benchmark would measure recall of
+# drug labels instead of triage.
+# --------------------------------------------------------------------------------------
+JEV_QUESTION_KEY = "needs_human"
+
+JEV_QUESTIONS = {
+    JEV_QUESTION_KEY: {
+        "type": "noul",
+        "instructions": (
+            "Should a pharmacovigilance reviewer read this case before it goes to the "
+            "automated queue? Judge only from the counts, the measures and which record "
+            "fields are present."),
+        "criteria": {
+            "true": "A reviewer should read this case first, because the evidence or the "
+                    "missing fields could change what the report means.",
+            "false": "The case can wait in the automated queue without a reviewer looking "
+                     "at it first.",
+        },
+    },
+}
+
+
+def jev_state(drug: str, event: dict[str, Any], faers: dict[str, Any]) -> dict[str, Any]:
+    """Build the state sent to Jev for one report."""
+    counts = faers.get("counts") or {}
+    return {
+        "drug": drug,
+        "reaction": event["reaction"],
+        "reports_with_this_reaction": event.get("faers_count"),
+        "contingency_2x2": {k: counts.get(k) for k in ("a", "b", "c", "d")},
+        "measures": {"PRR": faers.get("prr"), "ROR": faers.get("ror"),
+                     "chi_square_yates": faers.get("chi2_yates")},
+        "note": "Public FAERS carries no causality assessment and no narrative.",
+    }
+
+
+def jev_one(drug: str, event: dict[str, Any], faers: dict[str, Any], *, model: str,
+            threshold: float, timeout: float) -> dict[str, Any]:
+    """Judge one report with Jev and turn its probability into the same row shape."""
+    result = jev.systemone(jev_state(drug, event, faers), JEV_QUESTIONS,
+                           model=model, timeout=timeout)
+    latency_ms = round(result.get("seconds", 0.0) * 1000, 1)
+    usage = jev.usage_tokens(result)
+    probability = jev.noul_probability(result, JEV_QUESTION_KEY)
+
+    if probability is None:
+        return {"ok": False, "error": result.get("error") or "noul 값을 읽지 못했다",
+                "verdict": None, "reason": "", "latency_ms": latency_ms,
+                "usage": usage, "judge": "jev", "jev_probability": None,
+                "jev_request_id": result.get("request_id"), "http_status": result.get("status")}
+
+    verdict = "yes" if probability >= threshold else "no"
+    return {"ok": True, "error": None, "verdict": verdict,
+            "reason": f"noul {probability:.2f} (임계값 {threshold:.2f})",
+            "latency_ms": latency_ms, "usage": usage, "judge": "jev",
+            "jev_probability": probability, "jev_request_id": result.get("request_id"),
+            "http_status": result.get("status")}
+
+
 def judge_one(client: Any, model: str, evidence: str, *, timeout: float,
               max_tokens: int) -> dict[str, Any]:
     """Judge one report with a single call and return verdict, latency and token usage."""
@@ -311,7 +380,8 @@ def faers_for_event(drug: str, reaction: str, *, name_field: str = "generic",
 def run_rows(drug: str, events: list[dict[str, Any]], *, name_field: str = "generic",
              use_cache: bool = True, client: Any = None, model: str = "",
              timeout: float = 120.0, max_tokens: int = 256, sleep: float = 0.0,
-             progress: bool = True) -> list[dict[str, Any]]:
+             progress: bool = True, judge: str = "llm",
+             jev_threshold: float = 0.5) -> list[dict[str, Any]]:
     """Walk the event list one report at a time. Without a ``client`` the fixed rules decide."""
     rows: list[dict[str, Any]] = []
     total = len(events)
@@ -319,7 +389,10 @@ def run_rows(drug: str, events: list[dict[str, Any]], *, name_field: str = "gene
         faers = faers_for_event(drug, event["reaction"], name_field=name_field,
                                 use_cache=use_cache)
         evidence = build_evidence(drug, event, faers)
-        if client is None:
+        if judge == "jev":
+            result = jev_one(drug, event, faers, model=model, threshold=jev_threshold,
+                             timeout=timeout)
+        elif client is None:
             result = rule_one(faers)
         else:
             result = judge_one(client, model, evidence, timeout=timeout, max_tokens=max_tokens)
@@ -457,6 +530,10 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--api-key-env", default="NVIDIA_API_KEY",
                     help="키를 담은 환경변수 이름. 기본 NVIDIA_API_KEY")
     ap.add_argument("--sleep", type=float, default=1.0, help="호출 사이 대기 초. 기본 1.0")
+    ap.add_argument("--judge", choices=["llm", "jev"], default="llm",
+                    help="판정기. jev 는 TypeSafe Jev 를 쓰고 TYPESAFE_API_KEY 를 읽는다")
+    ap.add_argument("--jev-threshold", type=float, default=0.5,
+                    help="Jev noul 확률이 이 값 이상이면 사람에게 넘긴다. 기본 0.5")
     ap.add_argument("--offline", action="store_true",
                     help="캐시만 쓰고 LLM 을 부르지 않는다. 판정은 고정 규칙이 낸다")
     ap.add_argument("--out", default=DEFAULT_OUT_DIR, help=f"산출 디렉터리. 기본 {DEFAULT_OUT_DIR}")
@@ -471,13 +548,24 @@ def main(argv: list[str] | None = None) -> int:
         print(f"--name-field 는 {sorted(ofda.NAME_FIELDS)} 중 하나여야 한다.", file=sys.stderr)
         return 2
 
-    model = "" if args.offline else (args.model or os.environ.get("MODEL_PLANNER") or DEFAULT_MODEL)
-    base_url = "" if args.offline else (args.base_url or os.environ.get("NVIDIA_BASE_URL") or DEFAULT_BASE_URL)
+    use_jev = args.judge == "jev" and not args.offline
+    if use_jev:
+        model = args.model or jev.DEFAULT_MODEL
+        base_url = jev.BASE_URL
+    else:
+        model = "" if args.offline else (args.model or os.environ.get("MODEL_PLANNER") or DEFAULT_MODEL)
+        base_url = "" if args.offline else (args.base_url or os.environ.get("NVIDIA_BASE_URL") or DEFAULT_BASE_URL)
     label = args.label or ("offline" if args.offline else model.split("/")[-1])
-    mode = "rule-offline" if args.offline else "llm"
+    mode = "rule-offline" if args.offline else ("jev" if use_jev else "llm")
 
     client = None
-    if not args.offline:
+    if use_jev:
+        # Jev speaks its own protocol, so there is no OpenAI client to build here. Check the
+        # key early rather than after the first openFDA fetch has already spent time.
+        if not (os.environ.get(jev.API_KEY_ENV) or "").strip():
+            print(f"환경변수 {jev.API_KEY_ENV} 가 비어 있다.", file=sys.stderr)
+            return 2
+    elif not args.offline:
         key = (os.environ.get(args.api_key_env) or "").strip()
         if not key:
             print(f"환경변수 {args.api_key_env} 가 비어 있다. 키를 넣거나 --offline 으로 돌려라.",
@@ -507,7 +595,8 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  목록 오류: {'; '.join(listing['errors'])}")
         rows = run_rows(args.drug, listing["events"], name_field=args.name_field,
                         client=client, model=model, timeout=args.timeout,
-                        max_tokens=args.max_tokens, sleep=args.sleep)
+                        max_tokens=args.max_tokens, sleep=args.sleep,
+                        judge=args.judge, jev_threshold=args.jev_threshold)
     wall_clock_s = time.perf_counter() - started_all
 
     summary = summarize(rows, price_in=args.price_in, price_out=args.price_out,
@@ -520,6 +609,8 @@ def main(argv: list[str] | None = None) -> int:
         "events_url": listing["url"], "events_total_terms": listing["total_terms"],
         "events_errors": listing["errors"],
         "prompt": SYSTEM_PROMPT if mode == "llm" else None,
+        "jev_questions": JEV_QUESTIONS if mode == "jev" else None,
+        "jev_threshold": args.jev_threshold if mode == "jev" else None,
         "ran_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "retrieved_at": now_iso(),
         "summary": summary, "rows": rows,

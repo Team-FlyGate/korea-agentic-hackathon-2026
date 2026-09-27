@@ -77,6 +77,10 @@ STATE = {
     "note": "Public FAERS carries no causality assessment and no narrative.",
 }
 
+# Each question type takes `criteria`, and its shape differs by type. Noul takes an object
+# with `true` and `false`, Choice a map from option name to its description, and Score an
+# ordered list of levels. Sending a Choice without `criteria` returns 422, and the service
+# names the missing field, which is how the shapes below were pinned down.
 QUESTIONS = {
     "needs_human": {
         "type": "noul",
@@ -84,6 +88,12 @@ QUESTIONS = {
             "Should a pharmacovigilance reviewer read this case before it goes to the "
             "automated queue? Judge only from the counts, the measures and which record "
             "fields exist."),
+        "criteria": {
+            "true": "A reviewer should read this case first, because the evidence or the "
+                    "missing fields could change what the report means.",
+            "false": "The case can wait in the automated queue without a reviewer looking "
+                     "at it first.",
+        },
     },
     "time_order": {
         "type": "choice",
@@ -91,16 +101,27 @@ QUESTIONS = {
             "The Korean causality algorithm scores a time-order item: +3 when the record "
             "supports the order of dosing then reaction, -3 when it contradicts it, 0 when "
             "the information is absent. Which applies here?"),
-        "choices": ["supports", "contradicts", "absent"],
+        "criteria": {
+            "supports": "The record carries dates or fields showing the drug was taken "
+                        "before the reaction appeared.",
+            "contradicts": "The record shows the reaction appeared before the drug was "
+                           "taken, or otherwise breaks that order.",
+            "absent": "The record does not carry enough date information to judge the order.",
+        },
     },
     "signal_score": {
         "type": "score",
         "instructions": (
-            "Rate how strong the disproportionality evidence is on a 0 to 100 scale. A "
-            "disproportionality measure is a screening signal, not a causal claim, so a "
-            "labelled and expected reaction should not score high merely for being frequent."),
-        "min": 0,
-        "max": 100,
+            "How strong is the disproportionality evidence here? A disproportionality "
+            "measure is a screening signal, not a causal claim, so a reaction already in "
+            "the label should not rate highly merely for being frequent."),
+        "criteria": [
+            "No disproportionality worth acting on",
+            "Weak, explainable by reporting patterns alone",
+            "Moderate, worth keeping under watch",
+            "Strong, but already described in the label",
+            "Strong and not yet described in the label",
+        ],
     },
 }
 

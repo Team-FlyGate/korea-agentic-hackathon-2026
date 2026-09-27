@@ -1,5 +1,5 @@
 {
- "ran_at": "2026-09-27T13:29:01+00:00",
+ "ran_at": "2026-09-27T14:10:12+00:00",
  "state": {
   "drug": "NIRAPARIB",
   "reaction": "THROMBOCYTOPENIA",
@@ -27,32 +27,82 @@
  "questions": {
   "needs_human": {
    "type": "noul",
-   "instructions": "Should a pharmacovigilance reviewer read this case before it goes to the automated queue? Judge only from the counts, the measures and which record fields exist."
+   "instructions": "Should a pharmacovigilance reviewer read this case before it goes to the automated queue? Judge only from the counts, the measures and which record fields exist.",
+   "criteria": {
+    "true": "A reviewer should read this case first, because the evidence or the missing fields could change what the report means.",
+    "false": "The case can wait in the automated queue without a reviewer looking at it first."
+   }
   },
   "time_order": {
    "type": "choice",
    "instructions": "The Korean causality algorithm scores a time-order item: +3 when the record supports the order of dosing then reaction, -3 when it contradicts it, 0 when the information is absent. Which applies here?",
-   "choices": [
-    "supports",
-    "contradicts",
-    "absent"
-   ]
+   "criteria": {
+    "supports": "The record carries dates or fields showing the drug was taken before the reaction appeared.",
+    "contradicts": "The record shows the reaction appeared before the drug was taken, or otherwise breaks that order.",
+    "absent": "The record does not carry enough date information to judge the order."
+   }
   },
   "signal_score": {
    "type": "score",
-   "instructions": "Rate how strong the disproportionality evidence is on a 0 to 100 scale. A disproportionality measure is a screening signal, not a causal claim, so a labelled and expected reaction should not score high merely for being frequent.",
-   "min": 0,
-   "max": 100
+   "instructions": "How strong is the disproportionality evidence here? A disproportionality measure is a screening signal, not a causal claim, so a reaction already in the label should not rate highly merely for being frequent.",
+   "criteria": [
+    "No disproportionality worth acting on",
+    "Weak, explainable by reporting patterns alone",
+    "Moderate, worth keeping under watch",
+    "Strong, but already described in the label",
+    "Strong and not yet described in the label"
+   ]
   }
  },
  "routes": {
   "direct": {
-   "skipped": "TYPESAFE_API_KEY 없음",
-   "endpoint": "https://api.typesafe.ai/v1/systemone"
-  },
-  "gateway": {
-   "skipped": "AI_GATEWAY_API_KEY 없음",
-   "endpoint": "https://ai-gateway.vercel.sh/v1/systemone"
+   "endpoint": "https://api.typesafe.ai/v1/systemone",
+   "model": "jev-latest",
+   "status": 200,
+   "seconds": 0.8,
+   "request_id": "req_01a0e333b7457c0e870531b49f9850b8",
+   "body": {
+    "model": "jev-1.13.0",
+    "answers": {
+     "needs_human": {
+      "type": "noul",
+      "noul": 0.54
+     },
+     "time_order": {
+      "type": "choice",
+      "choice": "supports",
+      "confidence": 0.46,
+      "probabilities": {
+       "contradicts": 0.0,
+       "supports": 0.64,
+       "absent": 0.36
+      }
+     },
+     "signal_score": {
+      "type": "score",
+      "score": 2.98,
+      "confidence": 0.98,
+      "legend": {
+       "0": "No disproportionality worth acting on",
+       "1": "Weak, explainable by reporting patterns alone",
+       "2": "Moderate, worth keeping under watch",
+       "3": "Strong, but already described in the label",
+       "4": "Strong and not yet described in the label"
+      },
+      "probabilities": {
+       "0": 0.0,
+       "1": 0.01,
+       "2": 0.0,
+       "3": 0.99,
+       "4": 0.0
+      }
+     }
+    },
+    "usage": {
+     "input_tokens": 851,
+     "output_tokens": 75
+    }
+   }
   }
  }
 }
