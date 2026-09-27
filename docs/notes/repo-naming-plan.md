@@ -35,3 +35,33 @@
 보고 ROR을 계산했고 FAERS와 허가 라벨, 문헌을 다루지 못했다. 그 한계를 스스로 문서에 적어 두었고
 이번 판이 그 셋을 메운다. "아이디어 단계"라고 낮춰 적지 않는다. v0은 파이썬 2,495줄에 테스트
 28개, 영상과 슬라이드까지 있는 동작하는 파이프라인이다.
+
+---
+
+## 2026-09-27: 이전 대신 두 곳을 함께 둔다
+
+팀원 A가 org `Team-FlyGate` 를 만들어 다섯 명을 Owner로 초대했다. 저장소를 옮기는 안을
+검토했으나 **옮기지 않고 양쪽에 같은 내용을 두기로 했다.**
+
+| 곳 | 주소 | 역할 |
+|---|---|---|
+| 개인 | `github.com/kakyungkim/korea-agentic-hackathon-2026` | 작업 이력과 프로필 노출. 지금까지의 링크가 그대로 산다 |
+| 팀 org | `github.com/Team-FlyGate/korea-agentic-hackathon-2026` | 팀 공동 소유. 다섯 명이 같은 권한을 가진다 |
+
+옮기면 개인 계정에서 사라지고 문서 네 곳과 제출 PDF의 주소를 한꺼번에 고쳐야 한다.
+두 곳을 두면 둘 다 살고 제출 주소는 한 줄만 고르면 된다.
+
+**배선.** `origin` 에 push url 두 개를 걸어 `git push` 한 번이 양쪽으로 간다.
+
+```bash
+git remote -v | grep push
+# origin  https://github.com/kakyungkim/korea-agentic-hackathon-2026.git (push)
+# origin  https://github.com/Team-FlyGate/korea-agentic-hackathon-2026.git (push)
+```
+
+fetch 는 개인 쪽만 본다. 팀원이 org 쪽에 직접 올리는 경우를 위해 `scripts/sync_remotes.sh` 를
+두었다. 확인만 하려면 인자 없이, 맞추려면 `--push` 로 돌린다. 팀 쪽에만 있는 커밋이 있으면
+조용히 덮어쓰지 않고 멈춘다.
+
+**제출 주소는 개인 쪽을 그대로 쓴다.** 문안과 PDF가 이미 그 주소이고, 팀 저장소를 내야 하면
+`docs/submission-flygate.md` 와 README의 주소 한 줄씩만 바꾸면 된다.

@@ -1,17 +1,24 @@
 #!/usr/bin/env python3
-"""NVIDIA MSA-Search 와 OpenFold3 NIM 으로 구조를 예측한다.
+"""Predict a protein structure with the NVIDIA MSA-Search and OpenFold3 NIMs.
 
-NVIDIA 스킬 `msa-structure-prediction-pipeline` 이 적어 둔 규격을 그대로 따른다.
-스킬 문서는 `.agents/skills/msa-structure-prediction-pipeline/SKILL.md` 에 있다.
+This follows the request format documented by the NVIDIA skill
+`msa-structure-prediction-pipeline`, installed under
+`.agents/skills/msa-structure-prediction-pipeline/SKILL.md`.
 
-두 단계다. MSA-Search(ColabFold)로 정렬을 찾고 그 정렬을 OpenFold3 에 넘긴다.
-`--no-msa` 는 정렬 없이 서열만 넣어 엔드포인트와 권한을 빠르게 확인하는 경로다.
-스킬 문서가 단일 서열 예측을 "weak evidence for a production-quality fold" 라고 적었으므로
-그 경로의 결과는 검증용으로만 쓰고 근거로 인용하지 않는다.
+Two hosted calls in sequence: MSA-Search (ColabFold) retrieves an alignment for the query
+sequence, and OpenFold3 folds the sequence using that alignment. `--no-msa` skips the
+search and sends the query sequence as its own single-entry alignment. That mode exists to
+check credentials and the payload shape in a few seconds, not to produce evidence: the
+skill's own notes call a single-sequence prediction "weak evidence for a production-quality
+fold", and our measurement agrees (pLDDT 31.9 without an alignment against 90.1 with one).
 
-사용:
-  python3 scripts/openfold3_smoke.py --no-msa          # 권한과 규격 확인
-  python3 scripts/openfold3_smoke.py                   # 문서대로 MSA 먼저
+Running both modes is itself the interesting result. Confidence scores move with the input
+alignment, not with the truth of the molecule, which is what our overclaim rule about
+folding confidence asserts. See docs/notes/openfold3-2026-09-27.md.
+
+Usage:
+  python3 scripts/openfold3_smoke.py --no-msa   # fast check of credentials and payload
+  python3 scripts/openfold3_smoke.py            # full pipeline, alignment first
   python3 scripts/openfold3_smoke.py --pdb-id 4R6E --chain A
 """
 from __future__ import annotations
@@ -109,8 +116,10 @@ def main() -> int:
             out.write_text(json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
             print(f"  본문: {str(body)[:300]}")
             return 1
-        # 응답의 데이터베이스 키가 요청한 이름과 다르게 온다(실측: uniref30 이 아니었다).
-        # 무엇이 왔는지 기록하고 첫 번째 a3m 정렬을 쓴다.
+        # The database key in the response does not match the name we asked for. We requested
+        # "Uniref30_2302" and the skill example reads `alignments["uniref30"]`, which raises
+        # KeyError against the real reply. Record whichever keys came back, then take the first
+        # one that carries an a3m alignment.
         alignments = body.get("alignments", {})
         doc["msa"]["databases_returned"] = sorted(alignments)
         pick = next((k for k, v in alignments.items() if "a3m" in v), None)
@@ -128,9 +137,10 @@ def main() -> int:
         msa_data = {"uniref30": {"a3m": {"alignment": align, "format": "a3m"}}}
 
     if not msa_data:
-        # OpenFold3 는 MSA 필드가 비면 422 를 낸다. 응답 원문이 "If the user intent is to
+        # OpenFold3 rejects a protein molecule with no alignment, returning 422. Its error says:
+        # "If the user intent is to
         # provide 0 hits for this protein sequence, then an MSA consisting of only the query
-        # sequence should be provided" 라고 알려 준다. 그래서 질의 서열만 담은 a3m 을 만든다.
+        # sequence should be provided". So build a one-entry a3m holding the query itself.
         msa_data = {"uniref30": {"a3m": {"alignment": f">query\n{seq}\n", "format": "a3m"}}}
         doc["msa"] = {"note": "히트 없이 질의 서열만 담은 a3m. 스킬 문서 기준으로 약한 근거다"}
 

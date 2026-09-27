@@ -1,21 +1,25 @@
 #!/usr/bin/env python
-"""문서에 적힌 수치가 출처 파일과 같은지 대조한다.
+"""Check that every number written in our documents still matches its source file.
 
-왜 필요한가
------------
-이 저장소는 근거를 넘어선 주장을 잡는 것을 기여로 내세운다. 그러면서 정작 우리 문서의
-수치가 출처와 어긋나면 앞뒤가 맞지 않는다. 2026-09-26 하루에 테스트 개수가 세 번 바뀌었고
-그때마다 문서 네 곳을 손으로 고쳐야 했다. 한 곳을 빠뜨리면 아무도 모른다.
+Why this exists
+---------------
+This project claims, as its contribution, that it catches statements which outrun their
+evidence. A document of ours carrying a number its own source no longer supports would
+undercut exactly that claim. The risk is not hypothetical: on 2026-09-26 the test count
+changed three times in one day, and each change meant editing four documents by hand. Miss
+one and nothing tells you.
 
-이 스크립트가 항목마다 출처에서 값을 직접 재고, 그 값이 문서에 그대로 적혀 있는지 본다.
+So each item here measures the value from its source, then checks that the rendered string
+appears verbatim in the documents that quote it. String matching is deliberate. It catches
+the stale "293개 통과" that a human eye skims past.
 
-사용
-----
+Usage
+-----
     .venv/bin/python scripts/verify_numbers.py
-    .venv/bin/python scripts/verify_numbers.py --quiet   # 어긋난 것만
+    .venv/bin/python scripts/verify_numbers.py --quiet   # mismatches only
 
-종료 코드는 어긋난 항목 수다. 제출 전 점검과 CI 에 그대로 쓴다.
-네트워크를 타지 않고 이미 커밋된 결과 파일만 읽는다.
+The exit code is the number of mismatches, so this drops straight into a pre-submission
+check or CI. It touches no network and reads only committed result files.
 """
 
 from __future__ import annotations
@@ -31,7 +35,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
-# 수치를 실어야 하는 문서. 한 곳이라도 빠지면 어긋난 것으로 본다.
+# Documents expected to carry these numbers. A value missing from any one of them counts as
+# a mismatch: partial updates are the failure we are guarding against.
 DOCS = ["README.md", "docs/HANDOFF.md", "docs/video/script_flygate.md"]
 
 
@@ -41,7 +46,11 @@ def read(rel: str) -> str:
 
 
 def offline_tests() -> int:
-    """기본 실행에서 실제로 통과하는 건수. 수집 개수와 다르다(네트워크 건이 빠진다)."""
+    """Tests that actually pass in the default run.
+
+    This is not the collected count: network-marked tests are deselected, so counting
+    collection would overstate what we can claim to have verified offline.
+    """
     out = subprocess.run(
         ["env", "-u", "NVIDIA_API_KEY", str(ROOT / ".venv/bin/python"),
          "-m", "pytest", "-q", "-m", "not network", "-p", "no:cacheprovider"],
@@ -63,7 +72,11 @@ def overclaim_rules() -> int:
 
 
 def structure_rules() -> int:
-    """구조 예측을 붙일 때 켜는 규칙 수. `RULES` 와 분리돼 있어 따로 센다."""
+    """Rules that switch on only when a structure-prediction tool is wired in.
+
+    Kept out of `RULES` so the measured detection rate keeps its original denominator, which
+    means it also has to be counted separately here.
+    """
     from harness.tools import overclaim_rules as o
     return len(o.STRUCTURE_RULES)
 
@@ -99,7 +112,7 @@ def main(argv: list[str] | None = None) -> int:
     cases, rejects = eval_cases()
     per_tok, median_ms = bench_numbers()
 
-    # (이름, 문서에 있어야 하는 문자열, 출처)
+    # (label, the exact string the documents must contain, where the value came from)
     checks = [
         ("오프라인 테스트", f"{offline_tests()}개 통과", 'pytest -q -m "not network"'),
         ("NAT 등록 도구", f"{registered_tools()}종", "configs/author.yml"),

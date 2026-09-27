@@ -1,8 +1,13 @@
-"""build.nvidia.com NIM API 연결 확인.
+"""Check that the build.nvidia.com NIM API works before any harness code depends on it.
 
-1) 일반 채팅 응답 1회
-2) 도구 호출(tool calling) 왕복 1회
-둘 다 성공하면 하네스 개발을 시작할 수 있다. 크레딧 소모는 호출 2~3회.
+Two probes, in order:
+  1. one plain chat completion, which proves the key and endpoint are good;
+  2. one tool-calling round trip, which proves the model returns the tool-call shape our
+     agent workflows rely on.
+
+The second probe matters on its own. A key can be valid for chat yet the deployment still
+not behave as our workflows assume, and finding that out here costs two or three calls
+instead of a debugging session later.
 """
 import json
 import os
@@ -31,7 +36,7 @@ def main() -> None:
     )
     model = os.environ.get("MODEL_WORKER", "nvidia/nemotron-3.5-lightning-30b-a3b")
 
-    # 1) 일반 응답
+    # Probe 1: a plain completion. If this fails, the key or the endpoint is wrong.
     r = client.chat.completions.create(
         model=model,
         messages=[{"role": "user", "content": "한 문장으로 자기소개를 해 주세요."}],
@@ -42,7 +47,7 @@ def main() -> None:
     )
     print("[chat]", r.choices[0].message.content.strip())
 
-    # 2) 도구 호출 왕복
+    # Probe 2: tool calling. The model must come back with a tool call, not prose about one.
     tools = [{
         "type": "function",
         "function": {

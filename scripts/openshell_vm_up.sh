@@ -1,27 +1,30 @@
 #!/usr/bin/env bash
-# 리눅스 VM 안에서 Docker → OpenShell → 샌드박스 이미지 → provider → 샌드박스 → 정책 적용까지
-# 한 번에 한다. VM 백엔드는 Colima(기본)와 Multipass 둘 다 지원한다.
+# Bring up the whole OpenShell stack inside a Linux VM in one run: Docker, OpenShell, the
+# sandbox image, the model provider, the sandbox itself, and finally the policy. Two VM
+# backends are supported, Colima (default) and Multipass.
 #
-# 사용:  scripts/openshell_vm_up.sh [pharmasignal|base|flydock]   (기본 pharmasignal)
-# 환경변수(선택):
-#   VM_BACKEND=colima|multipass   (기본 colima)
-#   VM_NAME=openshell  VM_CPUS=2  VM_MEM=6G  VM_DISK=30G      (multipass 백엔드에서만 쓴다)
-#   SANDBOX_NAME=<정책명>   SANDBOX_CPU=2  SANDBOX_MEM=3Gi
-#   OPENSHELL_DRIVER=docker  (게이트웨이 compute driver. Colima에서는 자동 탐지가 실패하므로 명시한다)
-#   NVIDIA_API_KEY=...  또는 저장소 루트의 .env 에 NVIDIA_API_KEY 가 있으면 읽는다(없으면 provider 단계 생략)
-#   OPENSHELL_VERSION=...   (install.sh 에 그대로 전달. 기본은 최신 안정 릴리스)
+# Usage:  scripts/openshell_vm_up.sh [pharmasignal|base|flydock]   (default: pharmasignal)
+# Optional environment variables:
+#   VM_BACKEND=colima|multipass   (default: colima)
+#   VM_NAME=openshell  VM_CPUS=2  VM_MEM=6G  VM_DISK=30G      (multipass backend only)
+#   SANDBOX_NAME=<policy>   SANDBOX_CPU=2  SANDBOX_MEM=3Gi
+#   OPENSHELL_DRIVER=docker  (gateway compute driver; autodetection fails on Colima, so set it)
+#   NVIDIA_API_KEY=...  also read from .env at the repo root; without it the provider step is skipped
+#   OPENSHELL_VERSION=...   (passed straight to install.sh; defaults to the latest stable release)
 #
-# 각 단계는 다시 실행해도 안전하다(있으면 건너뜀). 실패하면 그 자리에서 멈춘다(set -e).
+# Every step is safe to re-run: anything already in place is skipped. A failure stops the run
+# where it happened (set -e) rather than leaving a half-built stack that looks finished.
 #
-# 실행 검증: Colima 백엔드로 2026-09-25 에 8단계 전부 통과했다(OpenShell 0.0.116, Docker 29.5.2,
-# Ubuntu 24.04 커널 6.8.0-117). Multipass 백엔드는 Intel Mac 의 qemu-img 크래시로 실행하지
-# 못했다 [unverified]. 자세한 기록은 docs/notes/openshell-setup.md 의 "실행 기록(Colima)" 절.
+# Verified run: all eight steps passed on the Colima backend on 2026-09-25 (OpenShell 0.0.116,
+# Docker 29.5.2, Ubuntu 24.04, kernel 6.8.0-117). The Multipass backend could not be exercised
+# because qemu-img crashes on this Intel Mac [unverified]. The full log is in
+# docs/notes/openshell-setup.md.
 #
-# 근거 문서(2026-09-24 확인) 및 실측(2026-09-25)
+# Reference documents (checked 2026-09-24) and measurements (2026-09-25)
 #   OpenShell install.sh:      https://raw.githubusercontent.com/NVIDIA/OpenShell/main/install.sh
-#   지원 매트릭스(커널 요건):  https://github.com/NVIDIA/OpenShell/blob/main/docs/reference/support-matrix.mdx
-#   샌드박스 관리(플래그):     https://github.com/NVIDIA/OpenShell/blob/main/docs/sandboxes/manage-sandboxes.mdx
-#   Docker apt 설치:           https://docs.docker.com/engine/install/ubuntu/
+#   support matrix (kernel requirements): https://github.com/NVIDIA/OpenShell/blob/main/docs/reference/support-matrix.mdx
+#   sandbox management (flags):           https://github.com/NVIDIA/OpenShell/blob/main/docs/sandboxes/manage-sandboxes.mdx
+#   Docker apt install:                   https://docs.docker.com/engine/install/ubuntu/
 #   Colima:                    https://github.com/abiosoft/colima
 
 set -euo pipefail
@@ -46,8 +49,8 @@ PROVIDER_NAME="nvidia"
 log()  { printf '\n\033[1;34m[%s] %s\033[0m\n' "$(date +%H:%M:%S)" "$*"; }
 die()  { printf '\033[1;31m오류: %s\033[0m\n' "$*" >&2; exit 1; }
 
-# ---------------------------------------------------------------- VM 백엔드 추상화
-# vm <셸 명령>  : VM 안에서 로그인 셸로 실행한다. stdin 은 그대로 전달된다.
+# ---------------------------------------------------------------- VM backend abstraction
+# vm <shell command>  : run it inside the VM as a login shell, passing stdin straight through.
 case "$VM_BACKEND" in
   colima)
     command -v colima >/dev/null 2>&1 || die "colima 가 없다. 먼저 설치한다:  brew install colima"
@@ -62,7 +65,8 @@ case "$VM_BACKEND" in
     ;;
 esac
 
-# .env 에서 NVIDIA_API_KEY 읽기(환경변수가 이미 있으면 그쪽 우선). 값은 화면에 찍지 않는다.
+# Read NVIDIA_API_KEY from .env, with an already-exported variable winning. The value is never
+# printed, so a shared terminal or a pasted log cannot leak it.
 if [ -z "${NVIDIA_API_KEY:-}" ] && [ -f "$REPO_ROOT/.env" ]; then
   NVIDIA_API_KEY="$(grep -E '^NVIDIA_API_KEY=' "$REPO_ROOT/.env" | head -1 | cut -d= -f2- | tr -d '[:space:]' || true)"
 fi
@@ -71,7 +75,7 @@ case "${NVIDIA_API_KEY:-}" in ""|nvapi-xxxxxxxx) NVIDIA_API_KEY="";; esac
 # ---------------------------------------------------------------- 1. VM
 log "1/8 VM 확인 (백엔드: $VM_BACKEND)"
 if [ "$VM_BACKEND" = colima ]; then
-  # Colima 는 VM 생성이 이미 끝나 있어야 한다. 여기서 만들지 않고 상태만 본다.
+  # Colima expects the VM to exist already. Check its state instead of creating one here.
   if ! colima status >/dev/null 2>&1; then
     cat >&2 <<'MSG'
 colima VM 이 돌고 있지 않다. 먼저 띄운다:
@@ -95,12 +99,12 @@ else
 fi
 vm 'echo "VM OK: $(uname -m) $(lsb_release -ds 2>/dev/null || head -1 /etc/os-release)"'
 
-# VM 안의 홈 디렉터리는 백엔드마다 다르다(multipass: /home/ubuntu, colima: /home/<user>.guest).
+# The home directory differs per backend (multipass: /home/ubuntu, colima: /home/<user>.guest).
 VM_HOME="$(vm 'printf %s "$HOME"')"
 VM_WORK="$VM_HOME/hackathon"
 echo "VM 작업 디렉터리: $VM_WORK"
 
-# ---------------------------------------------------------------- 2. 커널 기능 점검
+# ---------------------------------------------------------------- 2. kernel feature check
 log "2/8 커널 기능 점검 (Landlock ABI 3+ = Linux 6.2+, seccomp, netns)"
 vm '
 set -e
@@ -146,11 +150,13 @@ vm 'docker version --format "Docker client {{.Client.Version}} / server {{.Serve
   || die "VM 사용자로 docker 소켓 접근 실패"
 vm 'v=$(docker version --format "{{.Server.Version}}"); [ "${v%%.*}" -ge 28 ] || { echo "Docker $v 는 28 미만"; exit 1; }'
 
-# 게이트웨이는 systemd --user 서비스로 돌면서 Docker 소켓을 연다. 그래서
-#   (1) 사용자가 docker 그룹에 있어야 하고
-#   (2) 사용자 systemd 매니저 프로세스 자체가 그 그룹을 들고 있어야 한다.
-# Colima 는 부팅 순서 때문에 매니저가 docker 그룹 없이 떠 있는 경우가 있고, 그러면 게이트웨이가
-# "failed to query Docker daemon version ... client error (Connect)" 로 죽는다. 실측 확인 사항이다.
+# The gateway runs as a systemd --user service and opens the Docker socket, which needs two
+# things to be true:
+#   (1) the user belongs to the docker group, and
+#   (2) the user's systemd manager process itself carries that group.
+# On Colima the manager can come up before the group is applied, and then the gateway dies with
+# "failed to query Docker daemon version ... client error (Connect)". Seen in practice, which is
+# why the restart below is not optional.
 log "3b/8 사용자 systemd 매니저가 docker 그룹을 들고 있는지"
 vm '
 set -e
@@ -169,9 +175,10 @@ echo "user manager pid=$mpid groups=$(grep ^Groups: /proc/$mpid/status | cut -f2
 
 # ---------------------------------------------------------------- 4. OpenShell
 log "4/8 OpenShell (deb 패키지 + 사용자 서비스 openshell-gateway, driver=$OPENSHELL_DRIVER)"
-# 게이트웨이는 compute driver 를 Kubernetes → Podman → Docker 순으로 자동 탐지하는데 Colima VM
-# 에서는 어느 것도 못 찾고 죽는다. EnvironmentFile(~/.config/openshell/gateway.env)로 못 박는다.
-# 설치 스크립트가 게이트웨이 기동까지 하므로 설치 전에 미리 써 둔다.
+# The gateway autodetects its compute driver in the order Kubernetes, Podman, Docker, and on a
+# Colima VM it finds none of them and exits. Pin the choice through the EnvironmentFile at
+# ~/.config/openshell/gateway.env. It has to be written before installation, because the install
+# script starts the gateway itself.
 vm "mkdir -p ~/.config/openshell && printf 'OPENSHELL_DRIVERS=%s\n' '$OPENSHELL_DRIVER' > ~/.config/openshell/gateway.env"
 if vm 'command -v openshell >/dev/null 2>&1'; then
   vm 'echo "이미 설치됨: $(openshell --version)"'
@@ -187,14 +194,15 @@ systemctl --user is-active --quiet openshell-gateway || {
   echo "게이트웨이가 뜨지 않았다. 최근 로그:"; journalctl --user -u openshell-gateway --no-pager -n 30; exit 1; }
 echo "openshell-gateway: active"
 '
-# CLI 가 로컬 게이트웨이를 모르면 등록한다(설치 스크립트가 중간에 멈췄을 때 필요).
+# Register the local gateway if the CLI does not know it yet, which happens when a previous
+# install run stopped midway.
 vm 'openshell gateway list 2>/dev/null | grep -q 127.0.0.1:17670 || openshell gateway add https://127.0.0.1:17670 --local --name openshell'
 vm 'openshell status'
 
-# ---------------------------------------------------------------- 5. 정책 파일 전송 + 이미지 빌드
+# ---------------------------------------------------------------- 5. copy policies, build image
 log "5/8 정책 파일 전송 → $VM_WORK, 샌드박스 이미지 $IMAGE_TAG 빌드"
 vm "mkdir -p $VM_WORK"
-# macOS tar 가 붙이는 확장 속성은 GNU tar 가 경고를 내므로 빼고 보낸다.
+# Strip the extended attributes macOS tar adds; GNU tar inside the VM warns about them.
 COPYFILE_DISABLE=1 tar --no-xattrs -C "$REPO_ROOT" -cf - policies scripts | vm "tar -C $VM_WORK -xf -"
 vm "ls $VM_WORK/policies"
 if vm "docker image inspect $IMAGE_TAG >/dev/null 2>&1"; then
@@ -203,9 +211,9 @@ else
   vm "docker build -t $IMAGE_TAG $VM_WORK/policies/sandbox-image"
 fi
 
-# ---------------------------------------------------------------- 6. provider (NVIDIA 키)
+# ---------------------------------------------------------------- 6. provider (NVIDIA key)
 log "6/8 provider profile '$PROFILE_ID' import, provider '$PROVIDER_NAME' 생성"
-# lint 는 "이미 있는 id" 를 오류로 잡으므로(실측) import 여부를 먼저 본다.
+# lint treats an id that already exists as an error (measured), so check for the import first.
 if vm "openshell provider list-profiles 2>/dev/null | grep -qw $PROFILE_ID"; then
   echo "profile 이미 import 됨 (다시 넣으려면 VM 에서: openshell provider profile delete $PROFILE_ID)"
 else
@@ -217,8 +225,9 @@ if [ -n "$NVIDIA_API_KEY" ]; then
   if vm "openshell provider list 2>/dev/null | awk '{print \$1}' | grep -qx $PROVIDER_NAME"; then
     echo "provider '$PROVIDER_NAME' 이미 있음"
   else
-    # 키는 명령줄 인자로 넘기지 않는다. stdin 으로 보내 환경변수에 담고, --credential 로는
-    # 값이 아니라 조회할 환경변수 이름만 넘긴다(ps 와 셸 히스토리에 값이 남지 않는다).
+    # Never pass the key as a command-line argument. Send it on stdin into an environment
+    # variable and give --credential the variable's name rather than its value, so the secret
+    # stays out of ps output and shell history.
     printf '%s\n' "$NVIDIA_API_KEY" | vm \
       'read -r k; export NVIDIA_API_KEY="$k"; openshell provider create --name '"$PROVIDER_NAME"' --type '"$PROFILE_ID"' --credential NVIDIA_API_KEY'
   fi
@@ -227,7 +236,7 @@ else
   echo "NVIDIA_API_KEY 가 없어 provider 생성을 건너뛴다(.env 에 넣고 다시 실행하면 붙는다). 샌드박스는 --no-auto-providers 로 만든다."
 fi
 
-# ---------------------------------------------------------------- 7. 샌드박스
+# ---------------------------------------------------------------- 7. sandbox
 log "7/8 샌드박스 '$SANDBOX_NAME' (정책 $POLICY.yaml, --cpu $SANDBOX_CPU --memory $SANDBOX_MEM)"
 if vm "openshell sandbox list --names 2>/dev/null | grep -qx '$SANDBOX_NAME'"; then
   echo "샌드박스 이미 있음. static 구역(filesystem/landlock/process)을 바꿨다면: openshell sandbox delete $SANDBOX_NAME 후 재실행"
@@ -236,7 +245,7 @@ else
         --policy policies/$POLICY.yaml --cpu $SANDBOX_CPU --memory $SANDBOX_MEM $PROVIDER_FLAG --detach -- sleep infinity"
 fi
 
-# ---------------------------------------------------------------- 8. 정책 적용(전체 치환) + 확인
+# ---------------------------------------------------------------- 8. apply policy (full replace) and verify
 log "8/8 정책 적용: openshell policy set $SANDBOX_NAME --policy policies/$POLICY.yaml --wait"
 vm "cd $VM_WORK && openshell policy set $SANDBOX_NAME --policy policies/$POLICY.yaml --wait"
 vm "openshell policy get $SANDBOX_NAME --full"

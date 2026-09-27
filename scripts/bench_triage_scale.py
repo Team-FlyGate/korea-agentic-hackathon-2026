@@ -1,40 +1,43 @@
 #!/usr/bin/env python
-"""이상사례를 건별로 선별하는 경로를 만들고, 그 경로를 프런티어 모델로 돌릴 때의 시간과 비용을 재는 벤치마크.
+"""Benchmark a per-report triage path and what it costs to run on a frontier model.
 
-왜 필요한가
------------
-지금 파이프라인은 화합물 하나를 깊게 따라간다. 그 구조에서는 앞단에 싼 분류기를 두는
-이점이 드러나지 않는다. 한 건을 처리하는 비용이 애초에 작기 때문이다. 이점은 건수가
-많을 때 드러난다. 그래서 여기서는 한 화합물의 이상사례를 여러 건 받아 건마다 판정을
-한 번씩 돌리고, 건당 지연과 건당 토큰을 잰다.
+Why this exists
+---------------
+The main pipeline follows one compound in depth, and at that depth a cheap classifier in
+front of the expensive model buys nothing: handling a single report is already cheap. The
+saving only appears with volume. So this builds the other shape of the problem, many
+reports for one compound, judges each one separately, and measures per-report latency and
+per-report tokens.
 
-무엇을 재는가
--------------
-한 화합물의 FAERS 이상사례 목록을 보고 건수 많은 순으로 앞의 N 건을 잡는다. 건마다
-openFDA 2x2 집계와 불균형 지표를 붙이고, "이건 사람이 먼저 봐야 하는가" 를 묻는
-예아니오 질문을 한 번 던진다. 기록하는 값은 넷이다.
+What it measures
+----------------
+It takes a compound's FAERS adverse events, most-reported first, keeps the top N, attaches
+the openFDA 2x2 counts and disproportionality measures to each, and asks a single yes/no
+question: should a person look at this one first? Four things are recorded.
 
-- 판정: yes 는 사람이 먼저 검토, no 는 자동 큐에 남김
-- 지연: 건당 밀리초. 평균과 중앙값을 함께 적는다
-- 토큰: 입력과 출력을 나눠 세고 건당 값으로 환산한다
-- 고정 규칙과의 일치: LLM 없이 도는 규칙(Evans 신호 또는 ROR 신호)과 얼마나 같은 답을 내는가
+- verdict: yes routes to human review, no stays in the automated queue
+- latency: milliseconds per report, mean and median
+- tokens: prompt and completion counted separately, then divided per report
+- agreement with the fixed rules: how often the model matches the rule that runs without an
+  LLM at all (an Evans signal or an ROR signal)
 
-마지막 항목이 이 실험의 요지다. 예아니오 하나를 받자고 모델이 얼마나 많은 토큰을 쓰는지,
-그 답이 공짜로 도는 규칙과 얼마나 다른지를 나란히 놓는다.
+That last line is the point of the experiment. It puts the token cost of one yes/no answer
+next to how often that answer differs from a rule that costs nothing to run.
 
-판정기는 OpenAI 호환 엔드포인트면 무엇이든 붙는다. ``--base-url`` 과 ``--model`` 과
-``--api-key-env`` 셋만 바꾸면 되고, 키는 환경변수에서만 읽어 저장소에 남지 않는다.
+Any OpenAI-compatible endpoint can act as the judge. Point ``--base-url``, ``--model`` and
+``--api-key-env`` at it. Keys are read only from the environment, so nothing lands in the
+repository.
 
-사용
+Usage
 ----
-    # 캐시만 쓰고 LLM 을 부르지 않는 경로. 키 없는 환경에서도 끝까지 돈다
+    # Cache-only path with no LLM calls, so it runs to completion without a key
     .venv/bin/python scripts/bench_triage_scale.py --offline --drug niraparib
 
-    # 기준선. 지금 쓰는 NVIDIA 모델로 10건
+    # Baseline: ten reports through the NVIDIA model we ship with
     set -a; source .env; set +a
     .venv/bin/python scripts/bench_triage_scale.py --drug niraparib --limit 10
 
-    # 판정기를 바꾼다
+    # Swap in a different judge
     .venv/bin/python scripts/bench_triage_scale.py --label jev \\
         --base-url https://<배포주소>/v1 --model typesafe-ai/jev --api-key-env JEV_API_KEY
 
@@ -71,8 +74,9 @@ DEFAULT_OUT_DIR = "eval/results"
 DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
 DEFAULT_MODEL = "nvidia/nemotron-3-super-120b-a12b"
 
-# 짧고 정형화된 예아니오 질문. 긴 설명을 요구하지 않는다. 이 실험이 보려는 것은
-# 판정 하나를 받는 데 드는 토큰이지 판정문의 완성도가 아니다.
+# A short, rigidly formatted yes/no question. Asking for a long justification would move what
+# we are measuring from "tokens per decision" to "quality of prose", and the prompt is kept in
+# Korean because changing its wording would invalidate every number already recorded.
 SYSTEM_PROMPT = """당신은 약물감시 1차 선별 담당이다. 이상사례 한 건의 FAERS 집계와 불균형 지표만 보고
 그 건을 사람이 먼저 봐야 하는지 판정한다.
 
@@ -85,28 +89,32 @@ YES 는 사람이 먼저 검토해야 하는 건이다. NO 는 자동 큐에 남
 
 
 # ======================================================================================
-# 이상사례 목록 받기
+# Fetching the adverse-event list
 # ======================================================================================
 
 def count_url(drug: str, name_field: str = "generic") -> str:
-    """한 약물의 반응별 보고 건수를 세는 openFDA 집계 쿼리.
+    """Build the openFDA aggregation query that counts reports per reaction for one drug.
 
-    기존 도구가 쓰는 필드 상수와 절 생성기를 그대로 빌려 쓴다. 도구 파일은 고치지 않는다.
+    It borrows the field constants and clause builder from the shipped tool rather than
+    restating them, so the benchmark cannot drift away from what the tool actually queries.
+    The tool file itself is left untouched.
     """
     clause = ofda._drug_clause(drug, name_field)
     return f"{ofda.BASE}?search={clause}&count={ofda.REACTION_FIELD}"
 
 
 def count_cache(drug: str, name_field: str = "generic", enabled: bool = True) -> ResponseCache:
-    """반응 목록 응답을 담는 캐시. 건별 2x2 캐시와 섞이지 않게 source 를 따로 둔다."""
+    """Cache for reaction-list responses, under its own source so it cannot collide with the
+    per-report 2x2 cache."""
     return ResponseCache("triage_events", f"{drug.strip().lower()}|{name_field}", enabled=enabled)
 
 
 class CacheOnlyGet:
-    """오프라인용 ``http_get`` 대체물. 캐시에 있으면 돌려주고 없으면 오류 표시를 낸다.
+    """Stand-in for ``http_get`` used offline: serve from cache, otherwise report a miss.
 
-    네트워크로 절대 나가지 않는다. 캐시에 없는 URL 은 ``offline_cache_miss`` 로 돌아오고,
-    그 건은 집계에서 실패로 잡힌다.
+    It never reaches the network. A URL that is not cached comes back as
+    ``offline_cache_miss`` and that report is counted as a failure rather than quietly
+    dropped, so an incomplete cache cannot masquerade as a clean run.
     """
 
     def __init__(self) -> None:
@@ -125,11 +133,11 @@ class CacheOnlyGet:
 
 @contextlib.contextmanager
 def cache_only_network(*modules: Any):
-    """with 블록 안에서만 도구 모듈의 ``http_get`` 을 캐시 전용 대체물로 바꾼다.
+    """Swap the tool module's ``http_get`` for the cache-only stand-in, inside this block only.
 
-    ``pharmasignal_openfda.py`` 파일은 손대지 않는다. 블록을 빠져나올 때 원래 함수를
-    되돌린다. 오프라인 경로에서 기존 도구의 2x2 계산과 지표 산식을 그대로 재사용하면서도
-    네트워크로 나가는 길만 막는 것이 목적이다.
+    ``pharmasignal_openfda.py`` is not edited and the original function is restored on exit.
+    The aim is to reuse the tool's real 2x2 counting and its disproportionality formulas in
+    offline mode while closing the one door that leads to the network.
     """
     stub = CacheOnlyGet()
     saved = [(m, m.http_get) for m in modules]
@@ -160,7 +168,7 @@ def fetch_events(drug: str, *, limit: int = DEFAULT_LIMIT, name_field: str = "ge
     results: list[dict[str, Any]] = []
     if isinstance(payload, dict) and "__error__" in payload:
         if payload["__error__"] == 404 and "NOT_FOUND" in str(payload.get("body", "")):
-            pass  # 보고가 한 건도 없다
+            pass  # no reports at all for this pair
         else:
             errors.append(f"events: http_error:{payload['__error__']}")
     elif isinstance(payload, dict) and isinstance(payload.get("results"), list):
@@ -176,7 +184,7 @@ def fetch_events(drug: str, *, limit: int = DEFAULT_LIMIT, name_field: str = "ge
 
 
 # ======================================================================================
-# 건별 판정
+# Per-report judging
 # ======================================================================================
 
 def _fmt(value: Any, digits: int = 2) -> str:
@@ -196,7 +204,7 @@ def _fmt_ci(ci: Any) -> str:
 
 
 def build_evidence(drug: str, event: dict[str, Any], faers: dict[str, Any]) -> str:
-    """판정기에 줄 근거. 그 이상사례의 FAERS 집계와 불균형 지표만 담는다."""
+    """The evidence handed to the judge: this event's FAERS counts and measures, nothing else."""
     counts = faers.get("counts") or {}
     lines = [
         f"약물: {drug}",
@@ -214,7 +222,8 @@ def build_evidence(drug: str, event: dict[str, Any], faers: dict[str, Any]) -> s
 
 
 def parse_verdict(text: str) -> tuple[str | None, str]:
-    """응답에서 판정과 짧은 사유를 꺼낸다. 형식이 어긋나면 판정은 None 이다."""
+    """Pull the verdict and short reason out of a reply. A malformed reply yields None, which
+    is counted as a failure rather than guessed at."""
     verdict = None
     match = re.search(r"VERDICT\s*[:：]\s*\**\s*(YES|NO)", text or "", re.IGNORECASE)
     if match is None:
@@ -239,7 +248,8 @@ def rule_verdict(faers: dict[str, Any]) -> str | None:
 
 
 def rule_one(faers: dict[str, Any]) -> dict[str, Any]:
-    """고정 규칙 한 건. LLM 을 부르지 않으므로 토큰은 없고 지연은 계산 시간뿐이다."""
+    """One fixed-rule decision. No LLM call, so there are no tokens and the latency is only
+    the arithmetic."""
     started = time.perf_counter()
     verdict = rule_verdict(faers)
     latency_ms = round((time.perf_counter() - started) * 1000, 3)
@@ -254,7 +264,7 @@ def rule_one(faers: dict[str, Any]) -> dict[str, Any]:
 
 def judge_one(client: Any, model: str, evidence: str, *, timeout: float,
               max_tokens: int) -> dict[str, Any]:
-    """한 건을 한 번 부르고 판정과 지연과 토큰을 돌려준다."""
+    """Judge one report with a single call and return verdict, latency and token usage."""
     started = time.perf_counter()
     try:
         response = client.chat.completions.create(
@@ -287,7 +297,7 @@ def judge_one(client: Any, model: str, evidence: str, *, timeout: float,
 
 def faers_for_event(drug: str, reaction: str, *, name_field: str = "generic",
                     use_cache: bool = True) -> dict[str, Any]:
-    """기존 도구를 그대로 불러 한 건의 2x2 와 불균형 지표를 받는다.
+    """Call the shipped tool to get one report's 2x2 table and disproportionality measures.
 
     오프라인에서는 호출부가 ``cache_only_network`` 로 감싸므로 이 함수는 그대로 두고도
     네트워크로 나가지 않는다.
@@ -300,7 +310,7 @@ def run_rows(drug: str, events: list[dict[str, Any]], *, name_field: str = "gene
              use_cache: bool = True, client: Any = None, model: str = "",
              timeout: float = 120.0, max_tokens: int = 256, sleep: float = 0.0,
              progress: bool = True) -> list[dict[str, Any]]:
-    """이상사례 목록을 건별로 돌린다. ``client`` 가 없으면 고정 규칙으로 판정한다."""
+    """Walk the event list one report at a time. Without a ``client`` the fixed rules decide."""
     rows: list[dict[str, Any]] = []
     total = len(events)
     for i, event in enumerate(events, 1):
@@ -340,12 +350,13 @@ def run_rows(drug: str, events: list[dict[str, Any]], *, name_field: str = "gene
 
 
 # ======================================================================================
-# 요약
+# Summary
 # ======================================================================================
 
 def summarize(rows: list[dict[str, Any]], *, price_in: float | None = None,
               price_out: float | None = None, wall_clock_s: float | None = None) -> dict[str, Any]:
-    """건수, 건당 토큰, 지연을 센다. 실패한 호출은 집계에서 빼고 따로 센다."""
+    """Count reports, tokens per report and latency. Failed calls are excluded from the
+    aggregates and counted on their own, so an outage cannot look like a slow model."""
     ok = [r for r in rows if r.get("ok")]
     failed = [r for r in rows if not r.get("ok")]
     n = len(ok)
@@ -374,7 +385,8 @@ def summarize(rows: list[dict[str, Any]], *, price_in: float | None = None,
         "cost_usd": round(cost / n, 8) if (cost is not None and n) else None,
     }
 
-    # 건수가 늘 때의 값. 건당 값을 그대로 곱한 추정이며 병렬 실행과 캐시 효과는 넣지 않았다.
+    # Straight-line projection to larger volumes: the per-report value multiplied out. It
+    # ignores parallelism and cache hits, so treat it as an upper bound, not a forecast.
     projected = None
     if n:
         projected = {
@@ -427,7 +439,7 @@ def print_summary(label: str, s: dict[str, Any]) -> None:
 
 
 # ======================================================================================
-# 진입점
+# Entry point
 # ======================================================================================
 
 def main(argv: list[str] | None = None) -> int:

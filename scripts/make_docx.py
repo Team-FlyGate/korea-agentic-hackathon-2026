@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""마크다운 문서를 공유용 docx 와 pdf 로 만든다.
+"""Turn a Markdown file into a docx and a pdf for sharing with the team.
 
-pandoc 으로 docx 를 만들고 LibreOffice 로 pdf 를 뽑는다. 한글 폰트가 필요한
-pdf 엔진(xelatex) 없이도 돌아간다.
+pandoc writes the docx, then LibreOffice converts that docx to pdf. We go through
+LibreOffice on purpose: pandoc's own pdf writers need a LaTeX engine (xelatex) plus a
+CJK-capable font, and neither is installed here. LibreOffice already ships fonts that
+render Korean, so this path works on a plain machine.
 
-사용:
-  python3 scripts/make_docx.py <문서.md> [--out <폴더>] [--no-pdf]
+Usage:
+  python3 scripts/make_docx.py <document.md> [--out <folder>] [--no-pdf]
 """
 from __future__ import annotations
 

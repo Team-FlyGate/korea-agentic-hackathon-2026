@@ -1,36 +1,41 @@
 #!/usr/bin/env python
-"""크리틱 3단 판정기를 바꿔 가며 같은 조건으로 재는 A/B 벤치마크.
+"""A/B benchmark for the critic's third stage, holding everything but the judge fixed.
 
-왜 필요한가
------------
-3단 과잉해석 판정에 어떤 모델을 쓰든, 바꾸기 전과 바꾼 뒤를 같은 데이터와 같은 프롬프트로
-재야 비교가 선다. 지금 ``eval/results/critic_verdict_output_*.json`` 에는 판정만 있고
-지연과 토큰이 없어서 속도와 비용을 말할 근거가 없다. 이 스크립트가 그 빈자리를 메운다.
+Why this exists
+---------------
+Swapping the model that judges overclaims is only meaningful if before and after are
+measured on the same cases with the same prompt. The verdict files under
+``eval/results/critic_verdict_output_*.json`` record what was decided but not how long it
+took or what it cost, which leaves us unable to say anything about speed or price. This
+fills that gap.
 
-무엇을 재는가
--------------
-``eval/cases.jsonl`` 33건(정상 17, 과잉해석 16)에 3단 프롬프트를 그대로 물리고 케이스마다
-판정, 지연, 토큰을 기록한다. 지표는 넷이다.
+What it measures
+----------------
+Every case in ``eval/cases.jsonl`` (33: 17 that should pass, 16 planted overclaims) goes
+through the real third-stage prompt, and each call's verdict, latency and token usage is
+recorded. Four numbers come out:
 
-- 적발률: 반려해야 할 16건 중 실제로 반려한 수
-- 거짓 양성: 통과해야 할 17건 중 잘못 반려한 수
-- 지연: 케이스당 밀리초. 평균과 중앙값을 함께 적는다
-- 비용: 토큰 합계. 단가를 주면 달러로 환산한다
+- detection rate: how many of the 16 plants were rejected
+- false positives: how many of the 17 clean cases were rejected anyway
+- latency: milliseconds per case, reported as both mean and median, because a single slow
+  call skews the mean and the median alone hides it
+- cost: token totals, converted to dollars when prices are supplied
 
-판정기는 OpenAI 호환 엔드포인트면 무엇이든 붙는다. ``--base-url`` 과 ``--model`` 과
-``--api-key-env`` 셋만 바꾸면 되고, 키는 환경변수에서만 읽어 저장소에 남지 않는다.
+Any OpenAI-compatible endpoint can play the judge. Point ``--base-url``, ``--model`` and
+``--api-key-env`` at it. Keys are read only from the environment so none of this ends up in
+the repository.
 
-사용
-----
-    # 기준선. 지금 쓰는 NVIDIA 모델
+Usage
+-----
+    # baseline: the NVIDIA model we ship with
     .venv/bin/python scripts/bench_critic_judge.py --label nemotron-super
 
-    # 바꾼 뒤. 다른 엔드포인트를 붙인다
+    # a challenger on a different endpoint
     .venv/bin/python scripts/bench_critic_judge.py \\
-        --label jev --base-url https://<배포주소>/v1 \\
+        --label jev --base-url https://<deployment>/v1 \\
         --model typesafe-ai/jev --api-key-env JEV_API_KEY
 
-    # 두 결과를 나란히 본다
+    # put two finished runs side by side
     .venv/bin/python scripts/bench_critic_judge.py --compare \\
         eval/results/bench_nemotron-super.json eval/results/bench_jev.json
 
@@ -63,11 +68,12 @@ DEFAULT_OUT_DIR = "eval/results"
 DEFAULT_BASE_URL = "https://integrate.api.nvidia.com/v1"
 DEFAULT_MODEL = "nvidia/nemotron-3-super-120b-a12b"
 
-# nat eval 경로와 같은 프롬프트를 쓴다. 그쪽은 숫자 오라클이 앞에 없다.
+# Same prompt the `nat eval` path uses. That path has no numeric oracle ahead of it, so the
+# prompt must not tell the judge that arithmetic was already verified.
 SYSTEM_PROMPT = ocr.stage3_prompt(numbers_verified=False)
 
-# 규칙 목록을 빼고 일반 판정만 시키는 대조 프롬프트.
-# 규칙 15종이 일반 LLM 판단에 무엇을 더하는지 재려고 둔다.
+# Control prompt: the rule list removed, everything else identical. This is what lets us say
+# how much the 15 documented rules add over a model judging on general scientific sense.
 GENERIC_PROMPT = (
     "You are the overclaim stage of a critic inside a drug-candidate evidence pipeline. A "
     "deterministic stage already checked that every claim carries a non-empty evidence id, and a "
@@ -87,7 +93,7 @@ def load_cases(path: Path, limit: int | None) -> list[dict[str, Any]]:
 
 def judge_one(client: Any, model: str, case_input: str, *, prompt: str, timeout: float,
               max_tokens: int) -> dict[str, Any]:
-    """한 케이스를 한 번 부르고 판정과 지연과 토큰을 돌려준다."""
+    """Judge one case with a single call and return its verdict, latency and token usage."""
     started = time.perf_counter()
     try:
         response = client.chat.completions.create(
@@ -96,7 +102,7 @@ def judge_one(client: Any, model: str, case_input: str, *, prompt: str, timeout:
                       {"role": "user", "content": case_input}],
             temperature=0.2, top_p=0.95, max_tokens=max_tokens,
             extra_body={"chat_template_kwargs": {"enable_thinking": False}})
-    except Exception as exc:  # noqa: BLE001  실패도 그대로 기록한다
+    except Exception as exc:  # noqa: BLE001  a failed call is data too, so record it
         return {"ok": False, "error": f"{type(exc).__name__}: {exc}",
                 "latency_ms": round((time.perf_counter() - started) * 1000, 1),
                 "verdict": None, "usage": None}
@@ -119,7 +125,11 @@ def judge_one(client: Any, model: str, case_input: str, *, prompt: str, timeout:
 
 def summarize(rows: list[dict[str, Any]], *, price_in: float | None,
               price_out: float | None) -> dict[str, Any]:
-    """적발률, 거짓 양성, 지연, 토큰, 비용을 센다. 실패 건은 따로 센다."""
+    """Compute detection rate, false positives, latency, tokens and cost.
+
+    Failed calls are counted separately rather than folded in: treating an error as a missed
+    detection would blame the judge for a network problem.
+    """
     ok = [r for r in rows if r["ok"]]
     failed = [r for r in rows if not r["ok"]]
 
@@ -167,7 +177,7 @@ def print_summary(label: str, s: dict[str, Any]) -> None:
 
 
 def compare(paths: list[str]) -> int:
-    """돌려 둔 결과 둘 이상을 한 표로 나란히 둔다."""
+    """Lay two or more finished runs side by side in one table."""
     docs = []
     for p in paths:
         d = json.loads(Path(p).read_text(encoding="utf-8"))
@@ -228,7 +238,8 @@ def main(argv: list[str] | None = None) -> int:
     if args.prompt == "generic":
         PROMPT = GENERIC_PROMPT
     elif args.prompt == "rules+structure":
-        # 구조 예측 규칙 2종을 켠 프롬프트. 기본 15종 측정과 분모를 섞지 않으려고 따로 둔다.
+        # Prompt with the two structure-prediction rules switched on. Kept as its own arm so
+        # the published 15-rule detection rate keeps its denominator.
         PROMPT = ocr.stage3_prompt(numbers_verified=False, include_structure=True)
     else:
         PROMPT = SYSTEM_PROMPT

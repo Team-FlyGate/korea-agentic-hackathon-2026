@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
-"""NVIDIA 스킬 카탈로그를 조회해 우리에게 쓸 만한 것을 골라낸다.
+"""Survey the NVIDIA agent-skill catalog and shortlist the skills worth using here.
 
-카탈로그는 `github.com/NVIDIA/skills` 이고 제품별 표가 README 에 있다. 스킬 하나하나의
-용도와 호출 규격은 그 폴더의 `SKILL.md` 앞머리(YAML frontmatter)에 적혀 있다.
+The catalog lives at `github.com/NVIDIA/skills`. Its README carries one table row per
+product, each row listing that product's skills, which is why we parse the README instead
+of walking 380 directories: one request replaces hundreds. What a single skill does, and
+the exact endpoint it calls, sits in the YAML frontmatter and body of its `SKILL.md`, so
+`--detail` fetches those files directly.
 
-카톡으로 주고받은 조사 결과를 문서로 옮기려면 원문을 직접 읽어야 하므로, 이 스크립트가
-목록과 앞머리를 받아 JSON 으로 남긴다. 같은 명령을 다시 돌리면 그때의 카탈로그를 다시 잰다.
+The point of having this as a script is provenance. Skill recommendations reached us as
+chat messages, and chat is not a source we can re-check later. Running this writes the
+catalog we actually saw, with a date, into `eval/results/`, so a claim in our docs can be
+compared against the file. The catalog changes often, so re-run before quoting it.
 
-사용:
-  python3 scripts/fetch_nvidia_skills.py                    # 목록과 관련 스킬 후보
-  python3 scripts/fetch_nvidia_skills.py --detail <스킬명> ...  # 지정한 스킬의 앞머리까지
-  python3 scripts/fetch_nvidia_skills.py --detail-relevant   # 관련 후보 전부의 앞머리
+Usage:
+  python3 scripts/fetch_nvidia_skills.py                      # list, plus relevant candidates
+  python3 scripts/fetch_nvidia_skills.py --detail <skill> ...  # add frontmatter for those skills
+  python3 scripts/fetch_nvidia_skills.py --detail-relevant     # frontmatter for every candidate
 """
 from __future__ import annotations
 
@@ -27,7 +32,8 @@ ROOT = Path(__file__).resolve().parents[1]
 RAW = "https://raw.githubusercontent.com/NVIDIA/skills/main"
 OUT = ROOT / "eval" / "results" / f"nvidia_skills_{date.today().isoformat()}.json"
 
-# 우리 파이프라인과 닿을 수 있는 낱말. 이름과 제품 설명 양쪽에서 찾는다.
+# Words that could touch our pipeline. Matched against both the skill name and the
+# product description, since a skill name alone is often too terse to judge.
 KEYWORDS = (
     "bionemo", "openfold", "msa", "molkit", "mol", "protein", "drug", "chem",
     "medtech", "digital-health", "clinical", "evidence",
@@ -35,7 +41,9 @@ KEYWORDS = (
     "nemotron", "guardrail", "guard", "safety", "eval", "judge",
     "skill-card", "skill-finder", "nat", "agent-toolkit", "agent-intelligence",
 )
-# 낱말이 걸리지만 우리와 무관한 것. 기계 비전, 네트워크 장비, 로봇 쪽이다.
+# Families that match a keyword but have nothing to do with us: computer vision, network
+# hardware, robotics. Excluding by name prefix is cruder than reading each description, but
+# it keeps the shortlist small enough for a person to read, which is the point.
 EXCLUDE = ("doca", "deepstream", "holohub", "earth2", "cuopt", "dali", "jetson",
            "tao-", "physical-ai", "foundationpose", "rtvi", "amc-", "vss-", "nv-generate",
            "cudaq", "cudf", "dynamo", "isaac", "omniverse", "warp", "modulus")

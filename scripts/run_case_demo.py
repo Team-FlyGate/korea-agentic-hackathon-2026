@@ -1,17 +1,22 @@
 #!/usr/bin/env python
-"""후보 하나를 도킹에서 사람 근거까지 이은 케이스 시연 실행기.
+"""Run one candidate end to end, from docking through to human evidence, as a demo case.
 
-사용
+Usage
     .venv/bin/python scripts/run_case_demo.py --out eval/results
     .venv/bin/python scripts/run_case_demo.py --out eval/results --offline
 
-산출물
-    <out>/case_niraparib.json        단계별 근거와 수치와 SHA256 전부, 주장 두 벌, 크리틱 판정
-    <out>/case_niraparib_brief.md    사람이 읽는 한 장 브리프
+Outputs
+    <out>/case_niraparib.json        every step's evidence, numbers and SHA256 digests, both
+                                     sets of claims, and the critic's verdicts
+    <out>/case_niraparib_brief.md    the one-page brief a person reads
 
-``--offline`` 은 캐시에 있는 응답만 쓰고 네트워크를 타지 않는다. 캐시가 없는 단계는 무엇이
-없었는지 그대로 적고 자리표시자를 채우지 않는다. DiffDock 은 경로당 1회, ``--num-poses``
-기본 3 으로 아낀다. ``NVIDIA_API_KEY`` 가 없으면 DiffDock 단계와 크리틱 3단을 건너뛴다.
+``--offline`` serves each step from the response cache and touches no network. A step with
+nothing cached records what was missing rather than filling in a placeholder, because a
+placeholder in an evidence file is the exact failure this project exists to catch.
+
+Paid calls are kept deliberately small: DiffDock runs once per path, ``--num-poses``
+defaults to 3, and without ``NVIDIA_API_KEY`` both the DiffDock step and the critic's third
+stage are skipped instead of faked.
 """
 
 from __future__ import annotations
@@ -30,7 +35,11 @@ from harness.tools import case_runner as cr  # noqa: E402
 
 
 def write_atomic(path: Path, text: str) -> None:
-    """임시 파일에 쓰고 원자적으로 교체한다. 실행 중 끊겨도 기존 파일이 비지 않는다."""
+    """Write to a temporary file, then replace the target atomically.
+
+    A direct open(path, "w") truncates immediately, so an interrupted run would leave an
+    empty file where a good result used to be. We lost files that way before.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(text, encoding="utf-8")

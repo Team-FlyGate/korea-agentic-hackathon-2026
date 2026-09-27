@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
-"""openFDA FAERS 에서 약물별 보고 건수와 상위 이상사례를 받아 사례 약물을 고른다.
+"""Count FAERS reports per drug so we can pick the case drug from data, not from hunches.
 
-사례 약물을 바꿀지 판단하려면 보고가 실제로 얼마나 쌓였는지 봐야 한다. 후보를 넣고 돌리면
-성분명과 상품명 양쪽으로 세어 표로 찍는다. 키가 필요 없고 분당 240회 한도 안에서 돈다.
+Deciding whether to swap the case drug needs the actual report volume behind each
+candidate. For every drug given, this queries openFDA twice, once on the generic name and
+once on the brand name, keeps whichever field carries more reports, and then pulls the top
+adverse events for that field. Brand and generic are counted separately because a drug can
+be indexed under either one, and picking the wrong field silently reports zero.
 
-사용:
+openFDA needs no API key and allows 240 requests per minute, so the short sleeps below are
+enough to stay inside the limit.
+
+Usage:
   python3 scripts/faers_drug_scan.py NIRAPARIB LECANEMAB DONANEMAB ADUCANUMAB
   python3 scripts/faers_drug_scan.py --top 8 PEMBROLIZUMAB
 """
@@ -28,7 +34,7 @@ def get(params: dict) -> dict:
         with urllib.request.urlopen(url, timeout=40) as r:  # noqa: S310
             return json.loads(r.read().decode())
     except urllib.error.HTTPError as e:
-        if e.code == 404:      # openFDA 는 결과 없음을 404 로 준다
+        if e.code == 404:      # openFDA answers "no matches" with 404, not an empty result set
             return {"meta": {"results": {"total": 0}}, "results": []}
         return {"error": f"HTTP {e.code}", "body": e.read().decode()[:200]}
     except Exception as exc:  # noqa: BLE001
