@@ -67,6 +67,7 @@ if str(REPO_ROOT / "src") not in sys.path:
 
 from harness.tools import pharmasignal_openfda as ofda  # noqa: E402
 from harness.tools import jev_client as jev
+from harness.tools import pharmasignal_dailymed as dmed
 from harness.tools.pharmasignal_common import ResponseCache, http_get, now_iso  # noqa: E402
 
 DEFAULT_DRUG = "niraparib"
@@ -281,54 +282,88 @@ def rule_one(faers: dict[str, Any]) -> dict[str, Any]:
 # --------------------------------------------------------------------------------------
 JEV_QUESTION_KEY = "needs_human"
 
-JEV_QUESTIONS = {
-    JEV_QUESTION_KEY: {
-        "type": "noul",
+# Two phrasings of the same gate, because the first measurement showed the question itself was
+# ambiguous. "Should a reviewer read this first?" can mean "is this a new signal?" or "is the
+# disproportionality strong?", and Jev answered the first reading while Nemotron answered the
+# second. Comparing judges is only meaningful once they are asked the same thing.
+JEV_QUESTION_SETS = {
+    "triage": {
         "instructions": (
             "Should a pharmacovigilance reviewer read this case before it goes to the "
-            "automated queue? Judge only from the counts, the measures and which record "
-            "fields are present."),
-        "criteria": {
-            "true": "A reviewer should read this case first, because the evidence or the "
-                    "missing fields could change what the report means.",
-            "false": "The case can wait in the automated queue without a reviewer looking "
-                     "at it first.",
-        },
+            "automated queue? Judge only from the counts, the measures and any label "
+            "information given."),
+        "true": "A reviewer should read this case first, because the evidence or the missing "
+                "fields could change what the report means.",
+        "false": "The case can wait in the automated queue without a reviewer looking at it "
+                 "first.",
+    },
+    "novel": {
+        "instructions": (
+            "Could this drug and reaction pair be a signal that is NOT yet described in the "
+            "product label? Judge from the counts, the measures and any label information "
+            "given. A reaction already described in the label is not a new signal, however "
+            "strong its disproportionality."),
+        "true": "The pair could be a new signal: the disproportionality is not explained by "
+                "what the label already describes.",
+        "false": "The pair is not a new signal, either because the label already describes it "
+                 "or because the disproportionality is too weak to raise one.",
     },
 }
 
 
-def jev_state(drug: str, event: dict[str, Any], faers: dict[str, Any]) -> dict[str, Any]:
-    """Build the state sent to Jev for one report."""
+def jev_questions(kind: str) -> dict[str, dict]:
+    """Build the question map for one phrasing of the gate."""
+    spec = JEV_QUESTION_SETS[kind]
+    return {JEV_QUESTION_KEY: {"type": "noul", "instructions": spec["instructions"],
+                               "criteria": {"true": spec["true"], "false": spec["false"]}}}
+
+
+def jev_state(drug: str, event: dict[str, Any], faers: dict[str, Any], *,
+              blind: bool = False, labeled: bool | None = None) -> dict[str, Any]:
+    """Build the state sent to Jev for one report.
+
+    `blind` replaces the drug and reaction names with placeholders. That is the control arm:
+    with the names in, the model can answer from what it already knows about the drug, and the
+    first run looked like it did. Redacting them leaves only the numbers.
+
+    `labeled` states whether the product label already describes this reaction. Supplying it
+    turns something the model was recalling from memory into evidence it was given.
+    """
     counts = faers.get("counts") or {}
-    return {
-        "drug": drug,
-        "reaction": event["reaction"],
+    state: dict[str, Any] = {
+        "drug": "DRUG_A" if blind else drug,
+        "reaction": "REACTION_1" if blind else event["reaction"],
         "reports_with_this_reaction": event.get("faers_count"),
         "contingency_2x2": {k: counts.get(k) for k in ("a", "b", "c", "d")},
         "measures": {"PRR": faers.get("prr"), "ROR": faers.get("ror"),
                      "chi_square_yates": faers.get("chi2_yates")},
         "note": "Public FAERS carries no causality assessment and no narrative.",
     }
+    if labeled is not None:
+        state["reaction_in_product_label"] = labeled
+    return state
 
 
 def jev_one(drug: str, event: dict[str, Any], faers: dict[str, Any], *, model: str,
-            threshold: float, timeout: float) -> dict[str, Any]:
+            threshold: float, timeout: float, question: str = "triage",
+            blind: bool = False, labeled: bool | None = None) -> dict[str, Any]:
     """Judge one report with Jev and turn its probability into the same row shape."""
-    result = jev.systemone(jev_state(drug, event, faers), JEV_QUESTIONS,
-                           model=model, timeout=timeout)
+    result = jev.systemone(jev_state(drug, event, faers, blind=blind, labeled=labeled),
+                           jev_questions(question), model=model, timeout=timeout)
     latency_ms = round(result.get("seconds", 0.0) * 1000, 1)
     usage = jev.usage_tokens(result)
     probability = jev.noul_probability(result, JEV_QUESTION_KEY)
 
     if probability is None:
         return {"ok": False, "error": result.get("error") or "noul 값을 읽지 못했다",
+                "jev_question": question, "jev_blind": blind, "labeled": labeled,
                 "verdict": None, "reason": "", "latency_ms": latency_ms,
                 "usage": usage, "judge": "jev", "jev_probability": None,
                 "jev_request_id": result.get("request_id"), "http_status": result.get("status")}
 
     verdict = "yes" if probability >= threshold else "no"
     return {"ok": True, "error": None, "verdict": verdict,
+            "jev_question": question, "jev_blind": blind, "labeled": labeled,
             "reason": f"noul {probability:.2f} (임계값 {threshold:.2f})",
             "latency_ms": latency_ms, "usage": usage, "judge": "jev",
             "jev_probability": probability, "jev_request_id": result.get("request_id"),
@@ -382,8 +417,9 @@ def faers_for_event(drug: str, reaction: str, *, name_field: str = "generic",
 def run_rows(drug: str, events: list[dict[str, Any]], *, name_field: str = "generic",
              use_cache: bool = True, client: Any = None, model: str = "",
              timeout: float = 120.0, max_tokens: int = 256, sleep: float = 0.0,
-             progress: bool = True, judge: str = "llm",
-             jev_threshold: float = 0.5) -> list[dict[str, Any]]:
+             progress: bool = True, judge: str = "llm", jev_threshold: float = 0.5,
+             jev_question: str = "triage", blind: bool = False,
+             with_label: bool = False) -> list[dict[str, Any]]:
     """Walk the event list one report at a time. Without a ``client`` the fixed rules decide."""
     rows: list[dict[str, Any]] = []
     total = len(events)
@@ -391,9 +427,16 @@ def run_rows(drug: str, events: list[dict[str, Any]], *, name_field: str = "gene
         faers = faers_for_event(drug, event["reaction"], name_field=name_field,
                                 use_cache=use_cache)
         evidence = build_evidence(drug, event, faers)
+        labeled = None
+        if with_label:
+            # One DailyMed lookup per reaction, cached like every other fetch. `labeled` is
+            # None when no label could be read, which stays distinct from a confirmed absence.
+            mentions = dmed.find_label_mentions(drug, event["reaction"], use_cache=use_cache)
+            labeled = mentions.get("labeled")
         if judge == "jev":
             result = jev_one(drug, event, faers, model=model, threshold=jev_threshold,
-                             timeout=timeout)
+                             timeout=timeout, question=jev_question, blind=blind,
+                             labeled=labeled)
         elif client is None:
             result = rule_one(faers)
         else:
@@ -410,6 +453,7 @@ def run_rows(drug: str, events: list[dict[str, Any]], *, name_field: str = "gene
             "evans_signal": faers.get("evans_signal"),
             "ror_signal": faers.get("ror_signal"),
             "rule_verdict": rule_verdict(faers),
+            "labeled": labeled,
             "faers_errors": faers.get("errors", []),
             "evidence_chars": len(evidence),
         }
@@ -536,6 +580,12 @@ def main(argv: list[str] | None = None) -> int:
                     help="판정기. jev 는 TypeSafe Jev 를 쓰고 TYPESAFE_API_KEY 를 읽는다")
     ap.add_argument("--jev-threshold", type=float, default=0.5,
                     help="Jev noul 확률이 이 값 이상이면 사람에게 넘긴다. 기본 0.5")
+    ap.add_argument("--jev-question", choices=sorted(JEV_QUESTION_SETS), default="triage",
+                    help="물을 질문. novel 은 라벨에 없는 새 신호인지를 묻는다")
+    ap.add_argument("--blind", action="store_true",
+                    help="약물명과 이상사례명을 가린다. 사전 지식과 숫자를 가르는 대조군")
+    ap.add_argument("--with-label", action="store_true",
+                    help="DailyMed 로 라벨 기재 여부를 확인해 state 에 넣는다")
     ap.add_argument("--offline", action="store_true",
                     help="캐시만 쓰고 LLM 을 부르지 않는다. 판정은 고정 규칙이 낸다")
     ap.add_argument("--out", default=DEFAULT_OUT_DIR, help=f"산출 디렉터리. 기본 {DEFAULT_OUT_DIR}")
@@ -598,7 +648,9 @@ def main(argv: list[str] | None = None) -> int:
         rows = run_rows(args.drug, listing["events"], name_field=args.name_field,
                         client=client, model=model, timeout=args.timeout,
                         max_tokens=args.max_tokens, sleep=args.sleep,
-                        judge=args.judge, jev_threshold=args.jev_threshold)
+                        judge=args.judge, jev_threshold=args.jev_threshold,
+                        jev_question=args.jev_question, blind=args.blind,
+                        with_label=args.with_label)
     wall_clock_s = time.perf_counter() - started_all
 
     summary = summarize(rows, price_in=args.price_in, price_out=args.price_out,
@@ -611,8 +663,10 @@ def main(argv: list[str] | None = None) -> int:
         "events_url": listing["url"], "events_total_terms": listing["total_terms"],
         "events_errors": listing["errors"],
         "prompt": SYSTEM_PROMPT if mode == "llm" else None,
-        "jev_questions": JEV_QUESTIONS if mode == "jev" else None,
+        "jev_questions": jev_questions(args.jev_question) if mode == "jev" else None,
         "jev_threshold": args.jev_threshold if mode == "jev" else None,
+        "jev_question_kind": args.jev_question if mode == "jev" else None,
+        "blind": args.blind, "with_label": args.with_label,
         "ran_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
         "retrieved_at": now_iso(),
         "summary": summary, "rows": rows,

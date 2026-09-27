@@ -1,0 +1,370 @@
+{
+ "fetched_at": "2026-09-27",
+ "limit": 10,
+ "results": [
+  {
+   "drug": "PEMBROLIZUMAB",
+   "events": 10,
+   "yes": 4,
+   "no": 6,
+   "unknown": 0,
+   "split": 4,
+   "rows": [
+    {
+     "reaction": "DRUG INEFFECTIVE",
+     "faers_count": 1299282,
+     "prr": 0.390806099036476,
+     "ror": 0.3754328173012466,
+     "chi2_yates": 2603.271666676104,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "OFF LABEL USE",
+     "faers_count": 856387,
+     "prr": 1.0988148102402735,
+     "ror": 1.1035200889101229,
+     "chi2_yates": 43.73074033628453,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "DEATH",
+     "faers_count": 849919,
+     "prr": 1.3634974791814745,
+     "ror": 1.3850204046644674,
+     "chi2_yates": 586.5322226889182,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "NAUSEA",
+     "faers_count": 778535,
+     "prr": 0.904806611836804,
+     "ror": 0.9014501478530188,
+     "chi2_yates": 36.81046802610505,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "FATIGUE",
+     "faers_count": 766575,
+     "prr": 1.3214584497931512,
+     "ror": 1.3379770481368098,
+     "chi2_yates": 412.1059261124992,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "DIARRHOEA",
+     "faers_count": 634732,
+     "prr": 1.789313464808391,
+     "ror": 1.8349586815052836,
+     "chi2_yates": 2034.9751543123973,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "HEADACHE",
+     "faers_count": 617855,
+     "prr": 0.42710731711681355,
+     "ror": 0.4196851627954058,
+     "chi2_yates": 1056.9291111682896,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "PAIN",
+     "faers_count": 607148,
+     "prr": 0.44116761522476394,
+     "ror": 0.4338179757023656,
+     "chi2_yates": 987.5666518494047,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "DYSPNOEA",
+     "faers_count": 558127,
+     "prr": 0.8324895585670045,
+     "ror": 0.8286385367134604,
+     "chi2_yates": 80.92372951700398,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "DIZZINESS",
+     "faers_count": 491281,
+     "prr": 0.3475202384602228,
+     "ror": 0.3420738927620556,
+     "chi2_yates": 1084.107742082972,
+     "rule_verdict": "no"
+    }
+   ],
+   "errors": []
+  },
+  {
+   "drug": "WARFARIN",
+   "events": 10,
+   "yes": 6,
+   "no": 4,
+   "unknown": 0,
+   "split": 4,
+   "rows": [
+    {
+     "reaction": "DRUG INEFFECTIVE",
+     "faers_count": 1299282,
+     "prr": 0.6545412422585767,
+     "ror": 0.6397020359425185,
+     "chi2_yates": 1017.0535051205612,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "OFF LABEL USE",
+     "faers_count": 856387,
+     "prr": 0.7594140789719688,
+     "ror": 0.7515953580159955,
+     "chi2_yates": 317.3244157054321,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "DEATH",
+     "faers_count": 849919,
+     "prr": 0.9182539868342298,
+     "ror": 0.9150483522825317,
+     "chi2_yates": 36.218803488286916,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "NAUSEA",
+     "faers_count": 778535,
+     "prr": 1.2660314678509084,
+     "ror": 1.27931420048794,
+     "chi2_yates": 349.16097389570496,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "FATIGUE",
+     "faers_count": 766575,
+     "prr": 1.3370526527858164,
+     "ror": 1.354579290610247,
+     "chi2_yates": 551.1369276894783,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "DIARRHOEA",
+     "faers_count": 634732,
+     "prr": 1.5457826699462935,
+     "ror": 1.572853885772641,
+     "chi2_yates": 1185.8528269320477,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "HEADACHE",
+     "faers_count": 617855,
+     "prr": 1.2557770662744947,
+     "ror": 1.265724947969123,
+     "chi2_yates": 254.0676923677623,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "PAIN",
+     "faers_count": 607148,
+     "prr": 1.0180626375861794,
+     "ror": 1.0186187390675654,
+     "chi2_yates": 1.2308173187496596,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "DYSPNOEA",
+     "faers_count": 558127,
+     "prr": 2.5139136176535555,
+     "ror": 2.622941366204827,
+     "chi2_yates": 7900.469286765419,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "DIZZINESS",
+     "faers_count": 491281,
+     "prr": 1.7477159919971685,
+     "ror": 1.7799298889762578,
+     "chi2_yates": 1706.2565920727461,
+     "rule_verdict": "yes"
+    }
+   ],
+   "errors": []
+  },
+  {
+   "drug": "LENALIDOMIDE",
+   "events": 10,
+   "yes": 4,
+   "no": 6,
+   "unknown": 0,
+   "split": 4,
+   "rows": [
+    {
+     "reaction": "DRUG INEFFECTIVE",
+     "faers_count": 1299282,
+     "prr": 0.24579350669618052,
+     "ror": 0.2337844532787053,
+     "chi2_yates": 16174.63468364713,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "OFF LABEL USE",
+     "faers_count": 856387,
+     "prr": 1.093975200492908,
+     "ror": 1.0984228309437887,
+     "chi2_yates": 156.2187607511454,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "DEATH",
+     "faers_count": 849919,
+     "prr": 1.5643660087501743,
+     "ror": 1.6026499462517811,
+     "chi2_yates": 5487.5769862370935,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "NAUSEA",
+     "faers_count": 778535,
+     "prr": 0.684740473735471,
+     "ror": 0.6763487155214636,
+     "chi2_yates": 1619.4438310085704,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "FATIGUE",
+     "faers_count": 766575,
+     "prr": 1.7472057612417522,
+     "ror": 1.7980915040642043,
+     "chi2_yates": 8576.731535218109,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "DIARRHOEA",
+     "faers_count": 634732,
+     "prr": 2.5174939390060063,
+     "ror": 2.640382012551512,
+     "chi2_yates": 28223.097767881995,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "HEADACHE",
+     "faers_count": 617855,
+     "prr": 0.3346508048181423,
+     "ror": 0.3278425060734809,
+     "chi2_yates": 5761.271117622607,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "PAIN",
+     "faers_count": 607148,
+     "prr": 0.489614734314613,
+     "ror": 0.4820967036993942,
+     "chi2_yates": 3308.330487474934,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "DYSPNOEA",
+     "faers_count": 558127,
+     "prr": 0.6727006178204479,
+     "ror": 0.6666110796713289,
+     "chi2_yates": 1238.1627548326942,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "DIZZINESS",
+     "faers_count": 491281,
+     "prr": 0.7263826193930546,
+     "ror": 0.7215538239432027,
+     "chi2_yates": 757.4204240094601,
+     "rule_verdict": "no"
+    }
+   ],
+   "errors": []
+  },
+  {
+   "drug": "ATORVASTATIN",
+   "events": 10,
+   "yes": 7,
+   "no": 3,
+   "unknown": 0,
+   "split": 3,
+   "rows": [
+    {
+     "reaction": "DRUG INEFFECTIVE",
+     "faers_count": 1299282,
+     "prr": 0.8503472827818797,
+     "ror": 0.841890083088423,
+     "chi2_yates": 371.1732172734297,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "OFF LABEL USE",
+     "faers_count": 856387,
+     "prr": 0.7095104827123554,
+     "ror": 0.700690727588842,
+     "chi2_yates": 904.3759547598521,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "DEATH",
+     "faers_count": 849919,
+     "prr": 0.7549831124716494,
+     "ror": 0.7471180701793605,
+     "chi2_yates": 637.5870985796305,
+     "rule_verdict": "no"
+    },
+    {
+     "reaction": "NAUSEA",
+     "faers_count": 778535,
+     "prr": 1.3834461776928675,
+     "ror": 1.4043983343755093,
+     "chi2_yates": 1404.009850033234,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "FATIGUE",
+     "faers_count": 766575,
+     "prr": 1.5682137775997473,
+     "ror": 1.6030073559099933,
+     "chi2_yates": 3020.7460993243944,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "DIARRHOEA",
+     "faers_count": 634732,
+     "prr": 1.5234730545385307,
+     "ror": 1.548966000949001,
+     "chi2_yates": 2111.0113860690267,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "HEADACHE",
+     "faers_count": 617855,
+     "prr": 1.3754971827161553,
+     "ror": 1.3915039194603713,
+     "chi2_yates": 1060.0851813546542,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "PAIN",
+     "faers_count": 607148,
+     "prr": 1.4311601994084011,
+     "ror": 1.4499570059142561,
+     "chi2_yates": 1370.9406336827058,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "DYSPNOEA",
+     "faers_count": 558127,
+     "prr": 1.7365509386489884,
+     "ror": 1.772410964265507,
+     "chi2_yates": 3642.5033377201767,
+     "rule_verdict": "yes"
+    },
+    {
+     "reaction": "DIZZINESS",
+     "faers_count": 491281,
+     "prr": 1.7353125128829068,
+     "ror": 1.766619070908601,
+     "chi2_yates": 3184.903658090702,
+     "rule_verdict": "yes"
+    }
+   ],
+   "errors": []
+  }
+ ]
+}

@@ -2,71 +2,84 @@
  "fetched_at": "2026-09-27",
  "rows": [
   {
-   "drug": "NIRAPARIB",
-   "generic_total": 22116,
-   "brand_total": 0,
+   "drug": "VALPROIC ACID",
+   "generic_total": 31328,
+   "brand_total": 31286,
    "counted_on": "generic_name",
    "top_reactions": [
     {
-     "term": "NAUSEA",
-     "count": 5789
+     "term": "DRUG INEFFECTIVE",
+     "count": 3770
+    },
+    {
+     "term": "DRUG INTERACTION",
+     "count": 3528
+    },
+    {
+     "term": "OFF LABEL USE",
+     "count": 2160
+    }
+   ]
+  },
+  {
+   "drug": "LEVOFLOXACIN",
+   "generic_total": 59954,
+   "brand_total": 59954,
+   "counted_on": "generic_name",
+   "top_reactions": [
+    {
+     "term": "OFF LABEL USE",
+     "count": 3287
+    },
+    {
+     "term": "DRUG INEFFECTIVE",
+     "count": 3087
+    },
+    {
+     "term": "DYSPNOEA",
+     "count": 3047
+    }
+   ]
+  },
+  {
+   "drug": "AMIODARONE",
+   "generic_total": 11140,
+   "brand_total": 8963,
+   "counted_on": "generic_name",
+   "top_reactions": [
+    {
+     "term": "DYSPNOEA",
+     "count": 1201
+    },
+    {
+     "term": "ASTHENIA",
+     "count": 998
     },
     {
      "term": "FATIGUE",
-     "count": 5237
-    },
-    {
-     "term": "PLATELET COUNT DECREASED",
-     "count": 4132
+     "count": 929
     }
    ]
   },
   {
-   "drug": "LECANEMAB",
-   "generic_total": 3591,
-   "brand_total": 15,
+   "drug": "ISOTRETINOIN",
+   "generic_total": 49172,
+   "brand_total": 15622,
    "counted_on": "generic_name",
    "top_reactions": [
     {
-     "term": "AMYLOID RELATED IMAGING ABNORMALITY-OEDEMA/EFFUSION",
-     "count": 491
+     "term": "DEPRESSION",
+     "count": 5803
     },
     {
-     "term": "HEADACHE",
-     "count": 482
+     "term": "INFLAMMATORY BOWEL DISEASE",
+     "count": 5253
     },
     {
-     "term": "AMYLOID RELATED IMAGING ABNORMALITY-MICROHAEMORRHAGES AND HAEMOSIDERIN DEPOSITS",
-     "count": 454
+     "term": "COLITIS ULCERATIVE",
+     "count": 3808
     }
    ]
-  },
-  {
-   "drug": "DONANEMAB",
-   "generic_total": 2535,
-   "brand_total": 0,
-   "counted_on": "generic_name",
-   "top_reactions": [
-    {
-     "term": "AMYLOID RELATED IMAGING ABNORMALITY-OEDEMA/EFFUSION",
-     "count": 421
-    },
-    {
-     "term": "AMYLOID RELATED IMAGING ABNORMALITY-MICROHAEMORRHAGES AND HAEMOSIDERIN DEPOSITS",
-     "count": 343
-    },
-    {
-     "term": "INFUSION RELATED REACTION",
-     "count": 321
-    }
-   ]
-  },
-  {
-   "drug": "ADUCANUMAB",
-   "generic_total": 0,
-   "brand_total": 0,
-   "counted_on": "generic_name",
-   "top_reactions": []
   }
  ]
 }
