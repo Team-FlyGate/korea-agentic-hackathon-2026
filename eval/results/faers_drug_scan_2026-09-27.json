@@ -2,17 +2,30 @@
  "fetched_at": "2026-09-27",
  "rows": [
   {
-   "drug": "ADUHELM",
-   "generic_total": 0,
+   "drug": "NIRAPARIB",
+   "generic_total": 22116,
    "brand_total": 0,
    "counted_on": "generic_name",
-   "top_reactions": []
+   "top_reactions": [
+    {
+     "term": "NAUSEA",
+     "count": 5789
+    },
+    {
+     "term": "FATIGUE",
+     "count": 5237
+    },
+    {
+     "term": "PLATELET COUNT DECREASED",
+     "count": 4132
+    }
+   ]
   },
   {
-   "drug": "LEQEMBI",
-   "generic_total": 0,
-   "brand_total": 3576,
-   "counted_on": "brand_name",
+   "drug": "LECANEMAB",
+   "generic_total": 3591,
+   "brand_total": 15,
+   "counted_on": "generic_name",
    "top_reactions": [
     {
      "term": "AMYLOID RELATED IMAGING ABNORMALITY-OEDEMA/EFFUSION",
@@ -20,19 +33,19 @@
     },
     {
      "term": "HEADACHE",
-     "count": 477
+     "count": 482
     },
     {
      "term": "AMYLOID RELATED IMAGING ABNORMALITY-MICROHAEMORRHAGES AND HAEMOSIDERIN DEPOSITS",
-     "count": 452
+     "count": 454
     }
    ]
   },
   {
-   "drug": "KISUNLA",
-   "generic_total": 0,
-   "brand_total": 2535,
-   "counted_on": "brand_name",
+   "drug": "DONANEMAB",
+   "generic_total": 2535,
+   "brand_total": 0,
+   "counted_on": "generic_name",
    "top_reactions": [
     {
      "term": "AMYLOID RELATED IMAGING ABNORMALITY-OEDEMA/EFFUSION",
@@ -47,6 +60,13 @@
      "count": 321
     }
    ]
+  },
+  {
+   "drug": "ADUCANUMAB",
+   "generic_total": 0,
+   "brand_total": 0,
+   "counted_on": "generic_name",
+   "top_reactions": []
   }
  ]
 }
