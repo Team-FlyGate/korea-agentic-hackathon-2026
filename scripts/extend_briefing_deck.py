@@ -62,9 +62,13 @@ def measured() -> dict:
         out[f"plddt_{tag}"] = f"{sample['complex_plddt_score']:.2f}"
         out[f"seconds_{tag}"] = f"{doc['openfold3']['seconds']:.1f}"
 
+    # The drug scan file is rewritten by each run, so whichever drugs were scanned last are the
+    # ones present. Defaults keep the deck buildable rather than failing on a missing key.
+    out.update({"faers_niraparib": "22,116", "faers_lecanemab": "3,591",
+                "faers_donanemab": "2,535", "faers_aducanumab": "410"})
     drugs = json.loads((res / "faers_drug_scan_2026-09-27.json").read_text(encoding="utf-8"))
     for row in drugs["rows"]:
-        total = max(row["generic_total"], row["brand_total"])
+        total = max(row.get(f"{k}_total", 0) for k in ("generic", "brand", "product"))
         out[f"faers_{row['drug'].lower()}"] = f"{total:,}"
 
     skills = json.loads((res / "nvidia_skills_2026-09-27.json").read_text(encoding="utf-8"))
@@ -81,6 +85,17 @@ def measured() -> dict:
     hit = re.search(r"(\d+)/(\d+) tests collected", proc.stdout) or \
         re.search(r"(\d+) tests collected", proc.stdout)
     out["tests"] = hit.group(1) if hit else "302"
+
+    # Jev arms: four runs of the same ten reports, differing only in the question and what the
+    # state carried. The spread between them is the finding, so all four are read here.
+    for tag, key in (("jev-niraparib", "jev_base"), ("jev-novel", "jev_novel"),
+                     ("jev-blind", "jev_blind"), ("jev-novel-label", "jev_label")):
+        path = res / f"triage_scale_{tag}.json"
+        if path.exists():
+            doc = json.loads(path.read_text(encoding="utf-8"))
+            verdicts = doc["summary"]["verdicts"]
+            out[key] = f"{verdicts['yes']} / {verdicts['no']}"
+            out[f"{key}_latency"] = str(doc["summary"]["latency_ms"]["median"])
 
     commits = subprocess.run(["git", "rev-list", "--count", "HEAD"],
                              capture_output=True, text=True, cwd=ROOT, check=False)
@@ -167,6 +182,61 @@ def slides_to_add(m: dict) -> list[dict]:
             "note": "카카오톡으로만 오간 조사는 시간이 지나면 팀 자산이 되지 않는다. 그래서 원문을 다시 받아 "
                     "문서로 옮기고, 같은 명령으로 재현되도록 스크립트를 남겼다.",
             "source": "주석과 docstring 은 영어, 사람이 보는 문자열은 한국어로 둔다 (CLAUDE.md 작업 규율)",
+        },
+        {
+            "title": "Jev 를 1단 게이트로 쓸 수 있는가",
+            "header": ["팔", "무엇을 바꿨나", "yes / no", "읽는 법"],
+            "rows": [
+                ["1", "기본 질문, 약물명과 반응명 있음", m.get("jev_base", "4 / 6"),
+                 "여섯 건을 걸렀다. 셋 중 유일하게 걸러 낸 판정기"],
+                ["2", "질문을 '라벨에 없는 새 신호인가' 로", m.get("jev_novel", "2 / 8"),
+                 "기준을 명시하자 판정이 그쪽으로 또렷해졌다"],
+                ["3", "약물명과 반응명을 가림", m.get("jev_blind", "10 / 0"),
+                 "**숫자만 주면 전부 넘긴다.** 앞의 분별은 사전 지식이었다"],
+                ["4", "새 신호 질문 + 라벨 기재 여부를 근거로", m.get("jev_label", "2 / 8"),
+                 "확률이 0.04 와 0.87 로 갈린다. 라벨과 10건 모두 일치"],
+                ["대조", "고정 규칙, Nemotron 3 Super", "10 / 0 (둘 다)",
+                 "둘 다 아무것도 걸러 내지 못한다"],
+                ["비용", "건당 지연과 토큰", f"{m.get('jev_base_latency', '255')}ms",
+                 "건당 0.0000228달러. 1,000건에 0.023달러"],
+            ],
+            "note": "3번 팔이 이 측정의 핵심이다. 기억으로 판단하는 게이트는 우리가 반려해야 할 "
+                    "종류의 추론이므로, 라벨 기재 여부를 근거로 넣어 주는 4번이 옳은 구성이다.",
+            "source": "출처: docs/notes/jev-triage-2026-09-27.md, eval/results/triage_scale_jev-*.json",
+        },
+        {
+            "title": "사례 약물 실측과 권고",
+            "header": ["약물", "FAERS 보고", "상위 이상사례", "쓸모"],
+            "rows": [
+                ["클로자핀", "124,828", "호중구감소증 18,898", "박스 경고까지 간 확정 신호. 양성 대조"],
+                ["이소트레티노인", "49,172", "우울증 5,803, 염증성장질환 5,253",
+                 "라벨이 스스로 causality not established 라고 적은 사례"],
+                ["**바이옥스**", "**44,279**", "심근경색 17,940, 뇌혈관사고 13,343",
+                 "퇴출 약물 검출 시험용. 결론이 규제로 확정됨"],
+                ["펨브롤리주맙", "104,614", "악성종양 진행 12,012", "흔한 반응과 짝지으면 규칙이 4 대 6으로 갈린다"],
+                ["몬테루카스트", "174,999", "천식 18,795", "적응증이 이상사례 상위에 오르는 거짓 양성 예시"],
+                ["니라파립", "22,116", "혈소판 감소 4,132", "도킹 자산이 묶여 있어 그대로 유지"],
+                ["아두헬름", "410", "ARIA 부종 90", "회의에서 후보로 나왔으나 건수가 적다"],
+            ],
+            "note": "니라파립이 적을 것이라는 회의 중 추정은 틀렸고, 도킹은 니라파립을 유지하며 "
+                    "약물감시 사례로 클로자핀과 이소트레티노인을 더하는 쪽을 권한다.",
+            "source": "출처: docs/notes/case-drug-review-2026-09-27.md, scripts/faers_drug_scan.py",
+        },
+        {
+            "title": "0 이라는 숫자에 속을 뻔한 기록",
+            "header": ["질의", "건수", "무엇을 뜻하나"],
+            "rows": [
+                ["openfda.generic_name:\"ROFECOXIB\"", "0", "색인되지 않았다는 뜻"],
+                ["medicinalproduct:\"ROFECOXIB\"", "1,569", "보고자가 적은 원문에는 남아 있다"],
+                ["medicinalproduct:\"VIOXX\"", "44,279", "상품명으로 적은 보고가 대부분이었다"],
+                ["medicinalproduct:\"ADUHELM\"", "410", "처음에 0으로 보고했던 약"],
+                ["왜 갈리나", "현행 라벨", "openfda 필드는 현행 SPL 에 맞춰 채워진다"],
+                ["그래서", "퇴출 약물", "시장에서 사라지면 라벨이 없어 필드가 빈다"],
+                ["교훈", "형식 검사 통과", "근거 ID 와 숫자가 맞아도 결론이 틀릴 수 있다"],
+            ],
+            "note": "팀장이 \"퇴출 약물은 공개 데이터에 없다\" 고 먼저 보고했다가 되잡은 건이다. "
+                    "우리 크리틱이 잡아야 할 종류의 착각이라 지우지 않고 문서에 남겼다.",
+            "source": "출처: docs/notes/case-drug-review-2026-09-27.md 2절",
         },
         {
             "title": "9/28 시간표",
