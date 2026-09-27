@@ -55,7 +55,7 @@ def fetch(url: str) -> str:
 
 
 def parse_catalog(readme: str) -> list[dict]:
-    """README 의 제품별 표를 뜯는다. 행 하나가 제품 하나이고 스킬 여러 개를 담는다."""
+    """Parse the product table out of the README: one row per product, several skills each."""
     rows = []
     for line in readme.splitlines():
         if not line.startswith("| **"):
@@ -84,7 +84,12 @@ def relevant(rows: list[dict]) -> list[dict]:
 
 
 def frontmatter(name: str) -> dict:
-    """SKILL.md 앞머리와 본문에서 쓸 값만 뽑는다."""
+    """Pull the fields we need from a SKILL.md, both its frontmatter and its body.
+
+    Endpoints are scraped from the body rather than the frontmatter because that is where the
+    real call sites appear, and knowing which host a skill talks to decides whether it fits
+    inside our sandbox policy at all.
+    """
     try:
         text = fetch(f"{RAW}/skills/{name}/SKILL.md")
     except Exception as exc:  # noqa: BLE001

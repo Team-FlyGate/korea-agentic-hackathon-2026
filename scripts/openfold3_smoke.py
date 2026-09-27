@@ -39,7 +39,7 @@ OF3_URL = "https://health.api.nvidia.com/v1/biology/openfold/openfold3/predict"
 
 
 def rel(path: Path) -> str:
-    """저장소 안이면 상대 경로로, 밖이면 그대로 보여 준다(테스트가 임시 폴더를 쓴다)."""
+    """Show a path relative to the repository, or as-is when it sits outside (tests use tmp)."""
     try:
         return str(path.relative_to(ROOT))
     except ValueError:

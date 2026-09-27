@@ -1,15 +1,22 @@
-"""제출용 그림 생성기.
+"""Build the figures that go into the submission.
 
-  1) docs/figures/architecture_pipeline.png      파이프라인 구조와 크리틱 3단
-  2) docs/figures/results_case.png               니라파립 두 경로 대조
-  3) docs/figures/architecture_pharmasignal.png  PharmaSignal 데이터 흐름 도식
-  4) docs/figures/results_pharmasignal.png       케이스 3건 PRR 포레스트 플롯
+  1) docs/figures/architecture_pipeline.png      the pipeline and the critic's three stages
+  2) docs/figures/results_case.png               niraparib compared along two paths
+  3) docs/figures/architecture_pharmasignal.png  PharmaSignal data flow
+  4) docs/figures/results_pharmasignal.png       PRR forest plot over three cases
 
-1) 과 2) 가 이번 제출용이고 3) 과 4) 는 PharmaSignal 도메인 자산으로 남겨 둔다.
-수치는 전부 eval/results/ 의 결과 JSON 에서 읽는다(하드코딩 금지).
-폰트는 docs/figures/fonts/Pretendard-*.ttf 를 fontManager 에 등록해 쓴다.
+The first two belong to this submission; the last two are kept as PharmaSignal domain assets
+from the earlier project.
 
-실행: .venv/bin/python scripts/make_figures.py
+Every number is read from the result JSON under eval/results/ and none are written into this
+file. A figure is the easiest place for a stale number to survive unnoticed, because nobody
+diffs a PNG.
+
+Korean text is drawn with Pretendard, registered with fontManager from
+docs/figures/fonts/Pretendard-*.ttf. The bundled font matters: without it matplotlib falls
+back to a face with no Hangul coverage and every label renders as tofu boxes.
+
+Run: .venv/bin/python scripts/make_figures.py
 """
 
 from __future__ import annotations
@@ -37,12 +44,13 @@ CASE_JSON = ROOT / "eval" / "results" / "case_niraparib.json"
 
 DPI = 300
 
-# 프로젝트 이름은 아직 확정되지 않았다. 확정되면 이 한 줄만 바꾼다.
-# 파일 이름에는 넣지 않는다(architecture_pipeline.png, results_case.png).
+# The project name appears in figure titles, so it lives in one constant. It is deliberately
+# absent from the filenames (architecture_pipeline.png, results_case.png) so that renaming the
+# project never invalidates a path already cited in a document.
 PROJECT_NAME = "FlyGate"
 
 # ---------------------------------------------------------------------------
-# 팔레트: 차분한 Tableau 뮤트 톤. 원색을 쓰지 않는다.
+# Palette: muted Tableau tones. Saturated primaries were tried and looked cheap in print.
 # ---------------------------------------------------------------------------
 INK = "#2E3338"
 INK_SOFT = "#5B646C"
@@ -69,7 +77,10 @@ CHECK_TICK = "#6F9C96"
 
 
 def register_fonts() -> str:
-    """Pretendard 4종을 등록하고 기본 family 로 지정한다."""
+    """Register the four Pretendard weights and make the family the default.
+
+    Without this the Korean labels render as tofu boxes, which is easy to miss until print.
+    """
     found = sorted(FONT_DIR.glob("Pretendard-*.ttf"))
     if not found:
         raise FileNotFoundError(
@@ -85,7 +96,7 @@ def register_fonts() -> str:
 
 
 # ---------------------------------------------------------------------------
-# 그림 1 보조: 상자, 화살표, 플랫 아이콘
+# Figure 1 helpers: boxes, arrows, flat icons
 # ---------------------------------------------------------------------------
 def box(ax, x, y, w, h, *, edge, face, lw=1.0, radius=1.1, shadow=True, ls="solid", z=2):
     if shadow:
@@ -165,7 +176,7 @@ def icon_block(ax, cx, cy, color, r=1.15):
 
 
 # ---------------------------------------------------------------------------
-# 그림 1: 아키텍처
+# Figure 1: architecture
 # ---------------------------------------------------------------------------
 def make_architecture(out_path: Path) -> Path:
     fig = plt.figure(figsize=(8.0, 5.0))
@@ -179,7 +190,7 @@ def make_architecture(out_path: Path) -> Path:
             "약물과 이상사례 한 쌍을 받아 근거 ID를 붙인 메모를 내고, 크리틱이 검증한 뒤 사람에게 넘긴다.",
             fontsize=6.6, color=INK_SOFT)
 
-    # --- OpenShell 샌드박스 경계 ---------------------------------------------
+    # --- OpenShell sandbox boundary -------------------------------------------
     sx0, sy0, sx1, sy1 = 15.0, 12.5, 98.5, 53.0
     ax.add_patch(
         FancyBboxPatch((sx0, sy0), sx1 - sx0, sy1 - sy0,
@@ -194,7 +205,7 @@ def make_architecture(out_path: Path) -> Path:
     ax.text(sx0 + 1.6, 50.6, "쓰기는 /work/out만, 네트워크는 deny-by-default",
             fontsize=5.4, color=INK_FAINT, va="center")
 
-    # --- 사용자 입력 ---------------------------------------------------------
+    # --- user input -----------------------------------------------------------
     box(ax, 1.0, 34.0, 12.5, 14.0, edge=GREY, face=GREY_BG)
     icon_person(ax, 7.25, 44.3, GREY)
     ax.text(7.25, 41.0, "사용자 입력", ha="center", va="center", fontsize=7.2,
@@ -203,13 +214,15 @@ def make_architecture(out_path: Path) -> Path:
             ha="center", va="center", fontsize=5.8, color=INK_SOFT, zorder=8,
             linespacing=1.45)
     arrow(ax, (13.5, 41.0), (17.3, 41.0))
-    # 판정 모델(NemoGuard 토픽 제어)은 호스팅 쪽 500 으로 차단 시연을 못 했다.
-    # 배선이 확인된 계층(NAT Guardrails 미들웨어 + NeMo Guardrails Colang 정책)만 적는다.
+    # The judging model (NemoGuard topic control) could not be demonstrated: the hosted service
+    # answered 500. Only the layers we actually verified are drawn, namely the NAT Guardrails
+    # middleware and the NeMo Guardrails Colang policy. Drawing the rest would claim a capability
+    # we never saw work.
     tag(ax, 7.25, 31.0, "NeMo Guardrails 정책", color=PLUM, bg=PLUM_BG, size=5.0, ha="center")
     ax.text(7.25, 28.0, "환자 개별 복약 조언을\n차단 주제로 정의", ha="center", va="center",
             fontsize=5.0, color=INK_FAINT, linespacing=1.45)
 
-    # --- 1. 계획 수립 --------------------------------------------------------
+    # --- 1. planning ----------------------------------------------------------
     box(ax, 17.5, 34.0, 16.0, 14.0, edge=BLUE, face=BLUE_BG, lw=1.1)
     ax.text(25.5, 45.4, "1. 계획 수립", ha="center", va="center", fontsize=7.4,
             fontweight="bold", color=INK, zorder=8)
@@ -220,7 +233,7 @@ def make_architecture(out_path: Path) -> Path:
             fontsize=5.0, color=INK_FAINT, zorder=8)
     arrow(ax, (33.5, 41.0), (36.3, 41.0))
 
-    # --- 2. 도구 3종 ---------------------------------------------------------
+    # --- 2. the three tools ---------------------------------------------------
     box(ax, 36.5, 28.0, 21.0, 20.0, edge=TEAL, face=TEAL_BG, lw=1.1)
     ax.text(47.0, 45.6, "2. 도구 3종 (읽기 전용)", ha="center", va="center",
             fontsize=7.2, fontweight="bold", color=INK, zorder=8)
@@ -241,7 +254,7 @@ def make_architecture(out_path: Path) -> Path:
             fontsize=5.0, color=INK_FAINT, style="italic", zorder=8)
     arrow(ax, (57.5, 41.0), (60.3, 41.0))
 
-    # --- 3. 파이썬 계산 (핵심 메시지) ---------------------------------------
+    # --- 3. arithmetic in Python (the central message) ------------------------
     box(ax, 60.5, 34.0, 17.0, 14.0, edge=GREEN, face=GREEN_BG, lw=1.7)
     icon_table(ax, 64.0, 44.6, GREEN)
     ax.text(66.4, 44.6, "3. 지표 계산", ha="left", va="center", fontsize=7.4,
@@ -253,7 +266,7 @@ def make_architecture(out_path: Path) -> Path:
         color=GREEN, bg=PAPER, size=5.2, ha="center")
     arrow(ax, (77.5, 41.0), (80.3, 41.0))
 
-    # --- 4. 트리아지 메모 ----------------------------------------------------
+    # --- 4. triage note -------------------------------------------------------
     box(ax, 80.5, 34.0, 16.0, 14.0, edge=SAND, face=SAND_BG, lw=1.1)
     ax.text(88.5, 45.4, "4. 트리아지 메모", ha="center", va="center", fontsize=7.4,
             fontweight="bold", color=INK, zorder=8)
@@ -265,7 +278,7 @@ def make_architecture(out_path: Path) -> Path:
             fontsize=5.0, color=INK_FAINT, zorder=8)
     arrow(ax, (88.5, 34.0), (88.5, 28.2))
 
-    # --- 5. 독립 크리틱 ------------------------------------------------------
+    # --- 5. the independent critic --------------------------------------------
     box(ax, 60.5, 16.5, 36.0, 11.5, edge=PLUM, face=PLUM_BG, lw=1.3)
     ax.text(62.6, 25.6, "5. 독립 크리틱 에이전트", ha="left", va="center",
             fontsize=7.4, fontweight="bold", color=INK, zorder=8)
@@ -285,7 +298,7 @@ def make_architecture(out_path: Path) -> Path:
     ax.text(90.7, 13.6, "반려", ha="left", va="center", fontsize=5.6,
             fontweight="semibold", color=BRICK, zorder=8)
 
-    # --- 사람 / 반려 ---------------------------------------------------------
+    # --- human handoff and rejection ------------------------------------------
     box(ax, 60.0, 2.2, 21.0, 8.5, edge=TEAL, face=TEAL_BG)
     icon_person(ax, 63.6, 6.3, TEAL)
     ax.text(66.0, 7.5, "사람에게 전달", ha="left", va="center", fontsize=6.8,
@@ -299,7 +312,7 @@ def make_architecture(out_path: Path) -> Path:
     ax.text(91.0, 4.6, "실패한 검사 항목을 적어\n작성자에게 되돌린다", ha="center", va="center",
             fontsize=5.2, color=INK_SOFT, zorder=8, linespacing=1.4)
 
-    # --- 경계 밖 시도 차단 ---------------------------------------------------
+    # --- calls outside the boundary, refused ----------------------------------
     arrow(ax, (42.0, 28.0), (33.6, 15.4), color=BRICK, lw=1.0, ls=(0, (3, 2)))
     icon_block(ax, 32.0, 13.0, BRICK)
     box(ax, 17.0, 2.2, 28.0, 8.5, edge=BRICK, face=PAPER, lw=1.0, ls=(0, (4, 2.5)))
@@ -315,7 +328,7 @@ def make_architecture(out_path: Path) -> Path:
 
 
 # ---------------------------------------------------------------------------
-# 그림 2: 케이스 3건 결과
+# Figure 2: results across three cases
 # ---------------------------------------------------------------------------
 def load_cases(path: Path) -> tuple[list[dict], str]:
     payload = json.loads(path.read_text(encoding="utf-8"))
@@ -335,8 +348,9 @@ def load_cases(path: Path) -> tuple[list[dict], str]:
             "sections": summary.get("label_sections") or [],
             "pubmed": summary["pubmed_total"],
             "signal": summary["evans_signal"],
-            # 2026-09-25 추가. evans_signal 의 판정 근거가 Yates 보정 카이제곱으로 바뀌었고,
-            # ROR 계열 판정(ror_signal)이 새로 생겼다. 두 계열이 어긋나는지 그림에서 한 줄로 밝힌다.
+            # Added 2026-09-25: evans_signal now decides on a Yates-corrected chi-square, and
+            # a separate ROR-family verdict (ror_signal) was added. The figure states in one line
+            # whether the two families agree, because a reader who sees only one would assume they do.
             "chi2_yates": summary.get("chi2_yates"),
             "ror_signal": summary.get("ror_signal"),
         })
@@ -354,7 +368,8 @@ def make_results(out_path: Path) -> tuple[Path, list[dict]]:
              "불균형 지표는 openFDA FAERS 2x2 카운트에서 파이썬이 계산했다. 점은 PRR, 가로 막대는 95% 신뢰구간을 뜻한다.",
              fontsize=6.8, color=INK_SOFT, va="center")
 
-    # Evans 계열과 ROR 계열은 관례가 달라 어긋날 수 있다. 몇 건이 같았는지는 데이터에서 센다.
+    # The Evans and ROR families follow different conventions and can disagree, so the count of
+    # agreements is taken from the data rather than asserted in the caption.
     agree = sum(1 for r in rows if bool(r["signal"]) == bool(r["ror_signal"]))
     if agree == n:
         cross = "ROR 기준(a≥3, ROR 95%% CI 하한 > 1)과 판정은 %d건 모두 같았다." % n
@@ -408,7 +423,7 @@ def make_results(out_path: Path) -> tuple[Path, list[dict]]:
         ax.plot([r["prr"]], [i], marker="o", markersize=6.2, color=color,
                 markeredgecolor=PAPER, markeredgewidth=1.0, zorder=5)
 
-        # 왼쪽 라벨
+        # label on the left
         ax_lab.text(1.0, i - 0.12, r["drug"], ha="right", va="center", fontsize=7.6,
                     fontweight="bold", color=INK)
         ax_lab.text(1.0, i + 0.14, r["reaction"], ha="right", va="center", fontsize=6.4,
@@ -416,7 +431,7 @@ def make_results(out_path: Path) -> tuple[Path, list[dict]]:
         ax_lab.text(1.0, i + 0.36, "FAERS 동반보고 %s건" % f"{r['a']:,}", ha="right",
                     va="center", fontsize=5.4, color=INK_FAINT)
 
-        # 오른쪽 수치
+        # value on the right
         ax_txt.text(0.0, i - 0.12, "%.2f  (%.2f~%.2f)" % (r["prr"], r["lo"], r["hi"]),
                     ha="left", va="center", fontsize=6.6, color=INK, fontweight="semibold")
         if r["labeled"]:
@@ -459,25 +474,27 @@ def make_results(out_path: Path) -> tuple[Path, list[dict]]:
 
 
 # ---------------------------------------------------------------------------
-# 그림 3: 파이프라인 아키텍처 (구조에서 사람까지, 크리틱 3단)
+# Figure 3: the pipeline, from structure through to human evidence, then the three-stage critic
 # ---------------------------------------------------------------------------
-# 색 약속. 심사 1번 항목이 NVIDIA 기술 활용 심도라 NVIDIA 쪽을 한 색으로 몰아 둔다.
+# Colour convention: the first judging criterion is depth of NVIDIA technology use, so every
+# NVIDIA component shares one colour and can be taken in at a glance.
 NVIDIA_C = GREEN          # NVIDIA NIM 과 Nemotron 과 NeMo Agent Toolkit
 NVIDIA_BG = GREEN_BG
 PUBLIC_C = BLUE           # 공개 API 와 외부 실측(FDDD, 초파리 커넥톰)
 PUBLIC_BG = BLUE_BG
 
-# 이름과 버전은 저장소 상태에서 가져온 것이다.
-#   모델 이름과 도구 구성: docs/notes/topic-decision.md "도구 구성"
-#   NeMo Agent Toolkit 버전: .venv 의 nvidia-nat 1.9.0 (pip show)
-#   허용 호스트 7곳: docs/notes/topic-decision.md "도구 구성" 의 정책 항목
+# Names and versions come from the repository state, not from memory:
+#   model names and tool layout: the "도구 구성" section of docs/notes/topic-decision.md
+#   NeMo Agent Toolkit version: nvidia-nat 1.9.0 in .venv (pip show)
+#   the seven allowed hosts: the policy entry in the same section
 NAT_VERSION = "1.9.0"
 MODEL_PLAN = "nemotron-3-super-120b-a12b"
 MODEL_LOOP = "nemotron-3.5-lightning-30b-a3b"
 MODEL_GATE = "nemotron-3.5-lightning"
 MODEL_CRITIC = "nemotron-3-super-120b-a12b"
-# 코드가 실제로 부르는 호스트만 적는다. 정책 파일과 일치해야 한다.
-# BindingDB 참조는 bindingdb.org 를 직접 부르지 않고 FDDD 가 캡처해 둔 근거 요약을 읽는다.
+# Only hosts the code actually calls, and the list must match the policy file. BindingDB is the
+# subtle one: we never call bindingdb.org, we read the evidence summary FDDD captured, so
+# drawing that host would overstate what the sandbox has to allow.
 ALLOWED_HOSTS = [
     "health.api.nvidia.com",
     "integrate.api.nvidia.com",
@@ -488,8 +505,9 @@ ALLOWED_HOSTS = [
     "eutils.ncbi.nlm.nih.gov",
 ]
 
-# 네 번째 값은 구현 여부다. False 면 점선과 "계획" 표시로 그린다.
-# 되지 않는 것을 되는 것처럼 그리지 않는다는 저장소 규율을 그림에도 적용한다.
+# The fourth value says whether the tool is implemented. False draws a dashed box marked as
+# planned. The repository rule about never presenting unfinished work as finished applies to
+# pictures too, and a diagram is where that slip is easiest to make.
 BIND_TOOLS = [
     ("diffdock_nim", "NVIDIA NIM 포즈와 confidence", NVIDIA_C, True),
     ("vina_reference", "FDDD AutoDock Vina 실측", PUBLIC_C, True),
@@ -504,10 +522,10 @@ HUMAN_TOOLS = [
 
 
 def _tool_row(ax, x0, x1, cy, name, desc, color, h=1.9, implemented=True):
-    """도구 한 줄. 왼쪽 색 칩과 배경으로 NVIDIA 와 공개 API 를 가른다.
+    """One tool row. The colour chip on the left separates NVIDIA services from public APIs.
 
-    implemented 가 False 면 점선 테두리와 흐린 글자로 그리고 "계획" 태그를 붙인다.
-    아직 등록되지 않은 도구를 등록된 것처럼 보이지 않게 하기 위한 것이다.
+    When implemented is False the row is drawn with a dashed border, dimmed text and a
+    "planned" tag, so a tool that is not registered yet cannot be mistaken for one that is.
     """
     nvidia = color == NVIDIA_C
     box(ax, x0, cy - h / 2, x1 - x0, h,
@@ -523,8 +541,8 @@ def _tool_row(ax, x0, x1, cy, name, desc, color, h=1.9, implemented=True):
         ax.text(x1 - 0.6, cy, desc, ha="right", va="center", fontsize=4.6,
                 color=INK_SOFT, zorder=8)
     else:
-        # 미구현 행은 설명 대신 "계획" 만 오른쪽에 둔다. 이름과 겹치지 않게 하고
-        # 등록된 도구와 한눈에 구분되게 한다.
+        # Unimplemented rows carry only the "planned" marker on the right, with no description,
+        # which keeps them clear of the name and visibly different from a registered tool.
         ax.text(x1 - 0.6, cy, "계획. 아직 NAT 에 등록 안 됨",
                 ha="right", va="center", fontsize=4.4, color=BRICK,
                 fontweight="semibold", zorder=8)
@@ -545,7 +563,7 @@ def make_pipeline_architecture(out_path: Path) -> Path:
     tag(ax, 76.0, 62.2, "NVIDIA 기술", color=NVIDIA_C, bg=NVIDIA_BG, size=5.2)
     tag(ax, 85.0, 62.2, "공개 API 와 외부 실측", color=PUBLIC_C, bg=PUBLIC_BG, size=5.2)
 
-    # --- OpenShell 정책 경계 -------------------------------------------------
+    # --- OpenShell policy boundary --------------------------------------------
     bx0, by0, bx1, by1 = 16.5, 11.8, 98.6, 55.0
     ax.add_patch(
         FancyBboxPatch((bx0, by0), bx1 - bx0, by1 - by0,
@@ -557,7 +575,7 @@ def make_pipeline_architecture(out_path: Path) -> Path:
     ax.text(18.0, 53.2, "네트워크 deny-by-default. 쓰기는 /work/out 만",
             fontsize=5.0, color=INK_FAINT, ha="left", va="center", zorder=8)
 
-    # --- 입력 ---------------------------------------------------------------
+    # --- input ----------------------------------------------------------------
     box(ax, 0.8, 37.6, 14.4, 13.4, edge=GREY, face=GREY_BG)
     ax.text(8.0, 48.6, "입력", ha="center", va="center", fontsize=7.2,
             fontweight="bold", color=INK, zorder=8)
@@ -571,7 +589,7 @@ def make_pipeline_architecture(out_path: Path) -> Path:
             color=INK_FAINT, zorder=8)
     arrow(ax, (15.2, 44.3), (17.8, 44.3))
 
-    # --- 허용 호스트 목록 ----------------------------------------------------
+    # --- list of allowed hosts ------------------------------------------------
     box(ax, 0.8, 14.6, 14.4, 17.0, edge=GREY, face=PAPER, lw=0.9,
         ls=(0, (4, 2.5)), shadow=False)
     ax.text(8.0, 29.9, "허용 호스트 7곳", ha="center", va="center", fontsize=5.8,
@@ -582,7 +600,7 @@ def make_pipeline_architecture(out_path: Path) -> Path:
     ax.text(8.0, 12.9, "그 밖은 차단되고 감사 로그에 남는다", ha="center", va="center",
             fontsize=4.7, color=BRICK, zorder=8)
 
-    # --- 선택 게이트 ---------------------------------------------------------
+    # --- optional gate --------------------------------------------------------
     box(ax, 18.0, 37.6, 12.4, 13.4, edge=GREY, face=PAPER, lw=1.0,
         ls=(0, (4, 2.5)))
     ax.text(24.2, 48.6, "선택 게이트", ha="center", va="center", fontsize=6.8,
@@ -597,7 +615,7 @@ def make_pipeline_architecture(out_path: Path) -> Path:
             fontsize=4.7, color=INK_FAINT, zorder=8)
     arrow(ax, (30.4, 44.3), (32.2, 44.3))
 
-    # --- 작성자 워크플로 -----------------------------------------------------
+    # --- author workflow ------------------------------------------------------
     box(ax, 32.4, 35.8, 16.2, 15.4, edge=NVIDIA_C, face=NVIDIA_BG, lw=1.1)
     ax.text(40.5, 49.4, "작성자 워크플로", ha="center", va="center", fontsize=7.2,
             fontweight="bold", color=INK, zorder=8)
@@ -611,7 +629,7 @@ def make_pipeline_architecture(out_path: Path) -> Path:
             va="center", fontsize=5.0, color=INK_FAINT, zorder=8)
     arrow(ax, (48.6, 44.3), (50.4, 44.3))
 
-    # --- 도구 묶음 -------------------------------------------------------------
+    # --- the tool set -----------------------------------------------------------
     box(ax, 50.6, 30.0, 29.0, 24.2, edge=GREY, face="#F7F9FA", lw=1.0)
     ax.text(52.0, 52.6, "도구 묶음", ha="left", va="center", fontsize=7.0,
             fontweight="bold", color=INK, zorder=8)
@@ -633,13 +651,13 @@ def make_pipeline_architecture(out_path: Path) -> Path:
         _tool_row(ax, 52.4, 77.8, 38.4 - i * 2.0, name, desc, color, h=1.8)
     arrow(ax, (79.6, 44.3), (81.4, 44.3))
 
-    # --- 경계 밖 호출 차단 ---------------------------------------------------
+    # --- calls outside the boundary, refused ----------------------------------
     arrow(ax, (65.0, 54.4), (65.0, 55.6), color=BRICK, lw=1.0, ls=(0, (3, 2)))
     icon_block(ax, 65.0, 56.6, BRICK, r=1.0)
     ax.text(66.8, 56.6, "허용 밖 호스트 요청은 경계에서 막힌다", ha="left",
             va="center", fontsize=5.0, color=BRICK, zorder=8)
 
-    # --- 근거 ID 붙은 주장 JSON ---------------------------------------------
+    # --- claims as JSON, each carrying its evidence ids -----------------------
     box(ax, 81.6, 37.6, 16.4, 13.4, edge=SAND, face=SAND_BG, lw=1.1)
     ax.text(89.8, 48.8, "근거 ID 붙은", ha="center", va="center", fontsize=6.4,
             fontweight="bold", color=INK, zorder=8)
@@ -655,7 +673,7 @@ def make_pipeline_architecture(out_path: Path) -> Path:
                 fontsize=4.2, color=INK_SOFT, zorder=8)
     arrow(ax, (89.8, 37.6), (89.8, 28.9))
 
-    # --- 크리틱 3단 ----------------------------------------------------------
+    # --- the critic, three stages ---------------------------------------------
     box(ax, 18.0, 12.5, 78.6, 16.1, edge=PLUM, face=PLUM_BG, lw=1.3)
     ax.text(19.4, 27.0, "크리틱 3단", ha="left", va="center", fontsize=7.4,
             fontweight="bold", color=INK, zorder=8)
@@ -704,7 +722,7 @@ def make_pipeline_architecture(out_path: Path) -> Path:
     ax.text(84.8, 10.8, "반려", ha="left", va="center", fontsize=5.6,
             fontweight="semibold", color=BRICK, zorder=8)
 
-    # --- 결과 ---------------------------------------------------------------
+    # --- outcome --------------------------------------------------------------
     box(ax, 18.0, 1.7, 34.0, 7.2, edge=TEAL, face=TEAL_BG)
     icon_person(ax, 22.2, 5.2, TEAL)
     ax.text(25.2, 6.5, "사람 검토로 전달", ha="left", va="center", fontsize=6.6,
@@ -729,17 +747,17 @@ def make_pipeline_architecture(out_path: Path) -> Path:
 
 
 # ---------------------------------------------------------------------------
-# 그림 4: 케이스 결과 (니라파립 두 경로 대조)
+# Figure 4: case results, niraparib compared along two paths
 # ---------------------------------------------------------------------------
 class CaseKeyError(RuntimeError):
-    """케이스 JSON 에 그림이 요구하는 키가 없을 때. 그리지 않고 멈춘다."""
+    """Raised when the case JSON lacks a key the figure needs. Nothing is drawn."""
 
 
 _MISSING = object()
 
 
 def _dig(payload, dotted: str):
-    """'paths.0.steps.vina.score_kcal_mol' 처럼 점으로 이어진 경로를 따라간다."""
+    """Follow a dotted path such as 'paths.0.steps.vina.score_kcal_mol' into the JSON."""
     cur = payload
     for part in dotted.split("."):
         if isinstance(cur, list):
@@ -754,9 +772,10 @@ def _dig(payload, dotted: str):
 
 
 def load_case(path: Path) -> dict:
-    """케이스 JSON 에서 그림에 쓰는 값만 꺼낸다.
+    """Extract only the values this figure draws from the case JSON.
 
-    하나라도 없으면 무엇이 없는지 모두 모아 알리고 그리지 않는다.
+    Missing keys are collected and reported together rather than one at a time, and nothing is
+    drawn until every one of them is present.
     """
     if not path.exists():
         raise CaseKeyError(f"케이스 파일이 없습니다: {path}")
@@ -848,7 +867,7 @@ def make_case_results(out_path: Path) -> tuple[Path, dict]:
     def rect(x0, y0, x1, y1):
         return [x0 / 100.0, y0 / H, (x1 - x0) / 100.0, (y1 - y0) / H]
 
-    # --- 결합 1: Vina 막대 --------------------------------------------------
+    # --- binding 1: Vina bars -------------------------------------------------
     ax_vina = fig.add_axes(rect(13.5, 49.0, 99.0, 62.0))
     scores = [a["vina_score"], b["vina_score"]]
     floor = min(scores) * 1.18
@@ -878,7 +897,7 @@ def make_case_results(out_path: Path) -> tuple[Path, dict]:
         ax_vina.text(cx, score - abs(floor) * 0.140, "kcal/mol", ha="center",
                      va="top", fontsize=5.0, color=INK_FAINT, zorder=6)
 
-    # --- 결합 2: DiffDock 신뢰도 -------------------------------------------
+    # --- binding 2: DiffDock confidence ---------------------------------------
     ax_dd = fig.add_axes(rect(13.5, 34.6, 99.0, 46.8))
     ax_dd.set_xlim(0, 1)
     conf_all = list(a["diffdock"]) + list(b["diffdock"])
@@ -909,7 +928,7 @@ def make_case_results(out_path: Path) -> tuple[Path, dict]:
                        va="bottom" if value >= 0 else "top", fontsize=5.2,
                        fontweight="semibold", color=color, zorder=6)
 
-    # --- 배경 도화지 (마지막에 얹어 안내선과 상자를 위로 둔다) --------------
+    # --- backing canvas, drawn last so guides and boxes stay on top -----------
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, 100)
     ax.set_ylim(0, H)
@@ -922,7 +941,7 @@ def make_case_results(out_path: Path) -> tuple[Path, dict]:
             "같은 화합물을 같은 도구로 두 번 돌렸다. 두 경로를 가른 것은 점수 차이가 아니라 그 점수를 받쳐 줄 실험 근거의 유무다.",
             fontsize=6.6, color=INK_SOFT)
 
-    # 경로 머리
+    # path headers
     box(ax, 13.5, 63.4, 42.0, 5.2, edge=BLUE, face=BLUE_BG, lw=1.0, radius=0.7)
     ax.text(34.5, 66.9, "경로 A. %s" % a["title"], ha="center", va="center",
             fontsize=6.8, fontweight="bold", color=INK, zorder=8)
@@ -934,7 +953,7 @@ def make_case_results(out_path: Path) -> tuple[Path, dict]:
     ax.text(78.0, 64.8, "PDB %s chain %s, role %s" % (b["pdb_id"], b["chain"], b["vina_role"]),
             ha="center", va="center", fontsize=4.6, color=INK_FAINT, zorder=8)
 
-    # 왼쪽 단계 이름
+    # stage names down the left
     rows = [
         (56.5, "결합 1", ["AutoDock Vina 실측", "kcal/mol, 1순위 포즈"]),
         (41.5, "결합 2", ["DiffDock NIM", "position_confidence", "포즈 3개"]),
@@ -949,7 +968,8 @@ def make_case_results(out_path: Path) -> tuple[Path, dict]:
             ax.text(9.8, cy - 2.2 - i * 1.7, line, ha="right", va="center",
                     fontsize=4.7, color=INK_FAINT, zorder=8)
 
-    # 두 경로를 가르는 선과 교차 비교 금지 경고
+    # The divider between the two paths, plus the warning against comparing across them. This
+    # is rule 1 of the overclaim list, drawn where the temptation actually occurs.
     ax.add_line(Line2D([56.25, 56.25], [24.6, 62.4], color="#D7DCE1",
                        linewidth=0.9, linestyle=(0, (2, 2.6)), zorder=3))
     icon_block(ax, 56.25, 57.6, BRICK, r=1.35)
@@ -964,13 +984,13 @@ def make_case_results(out_path: Path) -> tuple[Path, dict]:
     ax.text(13.5, 47.9, "두 막대는 같은 눈금이지만 같은 자리에서 잰 값이 아니다",
             ha="left", va="center", fontsize=4.8, color=INK_FAINT, zorder=8)
 
-    # DiffDock 주석
+    # DiffDock annotation
     ax.text(14.6, 38.4, "음수는 확률이 아니라 로짓 척도로 읽는다. 친화도로 환산하지 않는다.",
             ha="left", va="center", fontsize=4.9, color=INK_SOFT, zorder=8)
     ax.text(14.6, 36.6, "음수가 결합하지 않는다는 증거는 아니다.",
             ha="left", va="center", fontsize=4.9, color=INK_SOFT, zorder=8)
 
-    # --- 참조 집합 ----------------------------------------------------------
+    # --- reference sets -------------------------------------------------------
     box(ax, 13.5, 24.9, 42.0, 7.4, edge=BLUE, face=PAPER, lw=0.9, radius=0.7,
         shadow=False)
     ax.text(34.5, 30.3, "레코드 %s건, 화합물 %s종" % (f"{a['bdb_records']:,}",
@@ -994,7 +1014,7 @@ def make_case_results(out_path: Path) -> tuple[Path, dict]:
     ax.text(78.0, 25.8, "이 공백이 두 경로를 가른다", ha="center", va="center",
             fontsize=5.0, fontweight="semibold", color=BRICK, zorder=8)
 
-    # --- 사람 근거 ----------------------------------------------------------
+    # --- human evidence -------------------------------------------------------
     same_human = (a["prr"] == b["prr"] and a["labeled"] == b["labeled"]
                   and a["pubmed_total"] == b["pubmed_total"])
     box(ax, 13.5, 13.9, 85.5, 9.3, edge=SAND, face=SAND_BG, lw=1.1)
@@ -1026,7 +1046,7 @@ def make_case_results(out_path: Path) -> tuple[Path, dict]:
         ax.text(cx, 15.4, line3, ha="center", va="center", fontsize=4.6,
                 color=INK_FAINT, zorder=8)
 
-    # --- 크리틱 3단 판정 ----------------------------------------------------
+    # --- verdicts from the three stages ---------------------------------------
     sup, over = crit["supported"], crit["overclaim"]
     stage1_both = bool(sup["stage1_passed"]) and bool(over["stage1_passed"])
     stage2_both = bool(sup["stage2_ok"]) and bool(over["stage2_ok"])
@@ -1080,9 +1100,10 @@ def make_case_results(out_path: Path) -> tuple[Path, dict]:
 
 
 def make_overview(out_path: Path) -> Path:
-    """한 장 요약 그림. 상세는 architecture_pipeline.png 가 맡고 이쪽은 글자를 줄인다.
+    """The one-glance summary figure; architecture_pipeline.png carries the detail.
 
-    발표와 제출물 앞에 놓는다. 다섯 칸의 흐름과 크리틱이 가르는 지점만 남겼다.
+    It opens the talk and the submission, so it keeps only the five-column flow and the point
+    where the critic separates accepted claims from rejected ones.
     """
     fig = plt.figure(figsize=(8.0, 3.6))
     ax = fig.add_axes([0, 0, 1, 1])
@@ -1093,7 +1114,7 @@ def make_overview(out_path: Path) -> Path:
     ax.text(2.0, 37.8, f"{PROJECT_NAME}는 후보 하나를 구조에서 사람 근거까지 잇고, "
             "근거를 넘어선 주장을 되돌린다.", fontsize=7.4, color=INK_SOFT)
 
-    # --- 흐름 다섯 칸 -------------------------------------------------------
+    # --- the five columns of the flow -----------------------------------------
     steps = [("구조", "타깃과 후보", TEAL, TEAL_BG),
              ("결합", "DiffDock, Vina", BLUE, BLUE_BG),
              ("참조", "실험 친화도", TEAL, TEAL_BG),
@@ -1111,7 +1132,7 @@ def make_overview(out_path: Path) -> Path:
             arrow(ax, (x + w + 0.5, y + h / 2), (x + w + gap - 0.5, y + h / 2),
                   color=INK_FAINT, lw=1.3)
 
-    # --- 크리틱 -------------------------------------------------------------
+    # --- critic ---------------------------------------------------------------
     cy, ch = 6.0, 12.4
     box(ax, 2.0, cy, 96.0, ch, edge=PLUM, face=PLUM_BG, lw=1.4, radius=1.3)
     ax.text(5.0, cy + ch - 3.4, "크리틱", fontsize=10.0, fontweight="bold", color=INK,
@@ -1120,7 +1141,8 @@ def make_overview(out_path: Path) -> Path:
             "추론이 넘었는지는 모델이 본다.",
             fontsize=6.6, color=INK_SOFT, ha="left", va="center", linespacing=1.6)
 
-    # 세 조건을 나란히. 규칙이 더하는 몫까지 보여야 과장이 아니다.
+    # All three conditions side by side. Showing only the best number would overstate what the
+    # rules contribute, which is the failure this project exists to catch.
     for x0, big, lab, col in ((40.0, "1 / 16", "고정 규칙만", INK_FAINT),
                               (59.5, "13 / 16", "모델 판단만", INK_SOFT),
                               (79.0, "16 / 16", "규칙 15종을 주면", PLUM)):

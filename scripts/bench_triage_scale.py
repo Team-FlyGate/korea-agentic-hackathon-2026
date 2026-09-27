@@ -152,10 +152,11 @@ def cache_only_network(*modules: Any):
 
 def fetch_events(drug: str, *, limit: int = DEFAULT_LIMIT, name_field: str = "generic",
                  use_cache: bool = True, offline: bool = False) -> dict[str, Any]:
-    """한 화합물의 이상사례를 보고 건수 많은 순으로 앞의 N 건 받아 온다.
+    """Fetch a compound's adverse events, most-reported first, keeping the top N.
 
-    반환: drug, name_field, url, events[{term, count}], total_terms, errors, cache.
-    결과 없음(404 NOT_FOUND)은 오류가 아니라 0건으로 읽는다.
+    Returns drug, name_field, url, events[{term, count}], total_terms, errors and cache.
+    An empty result (404 NOT_FOUND) is read as zero events rather than as an error, since
+    openFDA uses that status for "nothing matched".
     """
     if name_field not in ofda.NAME_FIELDS:
         raise ValueError(f"name_field 는 {sorted(ofda.NAME_FIELDS)} 중 하나여야 합니다: {name_field!r}")
@@ -238,9 +239,10 @@ def parse_verdict(text: str) -> tuple[str | None, str]:
 
 
 def rule_verdict(faers: dict[str, Any]) -> str | None:
-    """LLM 없이 도는 고정 규칙. Evans 신호나 ROR 신호가 서면 사람이 먼저 본다.
+    """The fixed rule, running without an LLM: an Evans or ROR signal sends the case to a human.
 
-    집계를 못 받은 건은 판정하지 않고 None 을 돌려준다.
+    A report whose counts could not be fetched returns None instead of a verdict. Guessing
+    there would quietly turn a data gap into a decision.
     """
     if not faers.get("counts"):
         return None

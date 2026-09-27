@@ -1,0 +1,58 @@
+{
+ "ran_at": "2026-09-27T13:29:01+00:00",
+ "state": {
+  "drug": "NIRAPARIB",
+  "reaction": "THROMBOCYTOPENIA",
+  "faers_reports_for_drug": 22116,
+  "reports_with_this_reaction": 4132,
+  "contingency_2x2": {
+   "a": 4132,
+   "b": 17984,
+   "c": 120000,
+   "d": 20550574
+  },
+  "measures": {
+   "PRR": 9.13,
+   "ROR": 9.96,
+   "chi_square": 1861.0
+  },
+  "label_status": "thrombocytopenia appears in the approved label",
+  "record_fields_present": {
+   "drug_start_date": true,
+   "improved_after_withdrawal": true,
+   "recurred_on_rechallenge": false
+  },
+  "note": "Public FAERS carries no causality assessment and no narrative."
+ },
+ "questions": {
+  "needs_human": {
+   "type": "noul",
+   "instructions": "Should a pharmacovigilance reviewer read this case before it goes to the automated queue? Judge only from the counts, the measures and which record fields exist."
+  },
+  "time_order": {
+   "type": "choice",
+   "instructions": "The Korean causality algorithm scores a time-order item: +3 when the record supports the order of dosing then reaction, -3 when it contradicts it, 0 when the information is absent. Which applies here?",
+   "choices": [
+    "supports",
+    "contradicts",
+    "absent"
+   ]
+  },
+  "signal_score": {
+   "type": "score",
+   "instructions": "Rate how strong the disproportionality evidence is on a 0 to 100 scale. A disproportionality measure is a screening signal, not a causal claim, so a labelled and expected reaction should not score high merely for being frequent.",
+   "min": 0,
+   "max": 100
+  }
+ },
+ "routes": {
+  "direct": {
+   "skipped": "TYPESAFE_API_KEY 없음",
+   "endpoint": "https://api.typesafe.ai/v1/systemone"
+  },
+  "gateway": {
+   "skipped": "AI_GATEWAY_API_KEY 없음",
+   "endpoint": "https://ai-gateway.vercel.sh/v1/systemone"
+  }
+ }
+}

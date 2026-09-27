@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
-"""제출용 PDF 생성기.
+"""Build the PDF we submit.
 
-  docs/submission/flygate.html   중간 산출물. 눈으로 확인한다
-  docs/submission/flygate.pdf    제출물
+  docs/submission/flygate.html   intermediate output, meant to be read with your own eyes
+  docs/submission/flygate.pdf    the file that gets submitted
 
-실행: .venv/bin/python scripts/make_submission_pdf.py
+Run: .venv/bin/python scripts/make_submission_pdf.py
 
-수치 규율. **모든 수치를 결과 파일에서 읽는다. 하드코딩하지 않는다.**
-필요한 키나 줄이 없으면 무엇이 없는지 알리고 PDF 를 만들지 않는다.
-`scripts/make_figures.py` 의 `load_case()` 와 `CaseKeyError` 가 쓰는 방식을 그대로 따른다.
+Rule about numbers: **every figure is read from a result file; none are hardcoded.** When a
+key or a line is missing, the script says what is missing and refuses to build the PDF. A
+submission that quietly carries a stale number is worse than one that is late, and this
+project claims to catch exactly that failure in other people's work. Same approach as
+`load_case()` and `CaseKeyError` in `scripts/make_figures.py`.
 
-경로 규율. 저장소에 커밋되는 HTML 에 개인 경로가 남으면 안 된다.
-폰트와 그림은 `docs/submission/` 기준 상대 경로로만 건다.
+Rule about paths: the committed HTML must not leak a personal directory. Fonts and figures
+are referenced only as paths relative to `docs/submission/`.
 """
 
 from __future__ import annotations
@@ -26,13 +28,14 @@ from datetime import date
 from pathlib import Path
 
 # ---------------------------------------------------------------------------
-# 확정되면 바꾸는 상수
+# Constants to change once each is settled
 # ---------------------------------------------------------------------------
 TEAM_NAME = "FlyGate"  # 2026-09-27 회의에서 팀명과 프로젝트명을 FlyGate 로 통일
 PROJECT_NAME = "FlyGate"
 
-# DLI S-FX-43 수료증 이미지. 아직 수료 전이라 비워 둔다.
-# 확정되면 docs/submission/ 기준 상대 경로를 넣는다. 예: "cert_dli_sfx43.png"
+# Certificate image for DLI S-FX-43. Left empty until the course is finished; the PDF then
+# shows a placeholder block instead, so a missing certificate is visible rather than silent.
+# Set it to a path relative to docs/submission/, for example "cert_dli_sfx43.png".
 CERT_IMAGE = None
 
 DLI_COURSE_ID = "S-FX-43"
@@ -40,7 +43,7 @@ CONTEST = "NVIDIA x 패스트캠퍼스 Korea Agentic AI Hackathon 2026 온라인
 TAGLINE = "도킹 점수에서 나올 수 없는 주장을 잡는 신약 후보 검증 에이전트"
 
 # ---------------------------------------------------------------------------
-# 경로
+# Paths
 # ---------------------------------------------------------------------------
 ROOT = Path(__file__).resolve().parents[1]
 OUT_DIR = ROOT / "docs" / "submission"
@@ -64,7 +67,7 @@ AUTHOR_RUN_JSON = RESULTS / "nat_run_author_flydock.json"
 SMOKE_TXT = RESULTS / "openshell_smoke_flydock.txt"
 DIFFDOCK_TXT = RESULTS / "diffdock_smoke.txt"
 
-# docs/submission/ 기준 상대 경로
+# Relative to docs/submission/, never absolute: see the path rule in the module docstring
 REL_FONT_DIR = "../../assets/video/fonts"
 REL_FIG_DIR = "../figures"
 
@@ -72,7 +75,8 @@ CHROME = os.environ.get(
     "CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 
 # ---------------------------------------------------------------------------
-# 팔레트: scripts/make_figures.py 와 같은 차분한 뮤트 톤
+# Palette: the same muted tones as scripts/make_figures.py, so the PDF and the figures it
+# embeds do not look like two different documents
 # ---------------------------------------------------------------------------
 INK = "#2E3338"
 INK_SOFT = "#5B646C"
@@ -92,17 +96,17 @@ BRICK_BG = "#F7EDEA"
 
 
 # ---------------------------------------------------------------------------
-# 없는 값에서 멈추기
+# Failing loudly on a missing value
 # ---------------------------------------------------------------------------
 class SubmissionDataError(RuntimeError):
-    """결과 파일에 PDF 가 요구하는 값이 없을 때. 만들지 않고 멈춘다."""
+    """Raised when a result file lacks a value the PDF needs. Nothing is built."""
 
 
 _MISSING = object()
 
 
 def _dig(payload, dotted: str):
-    """'paths.0.steps.vina.score_kcal_mol' 처럼 점으로 이어진 경로를 따라간다."""
+    """Follow a dotted path such as 'paths.0.steps.vina.score_kcal_mol' into the JSON."""
     cur = payload
     for part in dotted.split("."):
         if isinstance(cur, list):
@@ -117,7 +121,11 @@ def _dig(payload, dotted: str):
 
 
 class JsonReader:
-    """결과 JSON 하나를 읽고 없는 키를 모아 한 번에 알린다."""
+    """Read one result JSON and report every missing key at once.
+
+    Reporting them one per run would mean rebuilding after each fix, and the point of this
+    check is to fail before the PDF exists rather than during the upload.
+    """
 
     def __init__(self, path: Path):
         if not path.exists():
@@ -161,10 +169,10 @@ def need_match(pattern: str, text: str, path: Path, what: str, flags=0) -> re.Ma
 
 
 # ---------------------------------------------------------------------------
-# 마크다운 조각 읽기
+# Reading fragments of Markdown
 # ---------------------------------------------------------------------------
 def md_section(text: str, heading: str, path: Path) -> str:
-    """'## 제목' 아래에서 다음 '## ' 전까지의 본문을 돌려준다."""
+    """Return the body under a '## heading', up to the next '## '."""
     lines = text.splitlines()
     start = None
     for i, line in enumerate(lines):
@@ -182,7 +190,7 @@ def md_section(text: str, heading: str, path: Path) -> str:
 
 
 def md_fenced(text: str, heading: str, path: Path) -> str:
-    """절 안의 첫 코드펜스 내용을 돌려준다."""
+    """Return the contents of the first fenced code block inside a section."""
     body = md_section(text, heading, path)
     m = need_match(r"```[a-zA-Z]*\n(.*?)\n```", body, path,
                    f"'{heading}' 절의 코드블록", re.S)
@@ -190,7 +198,7 @@ def md_fenced(text: str, heading: str, path: Path) -> str:
 
 
 def md_table(text: str, heading: str, path: Path) -> tuple[list[str], list[list[str]]]:
-    """절 안의 첫 마크다운 표를 (머리, 행들) 로 돌려준다."""
+    """Return the first Markdown table in a section as (header, rows)."""
     body = md_section(text, heading, path)
     rows: list[list[str]] = []
     collecting = False
@@ -212,10 +220,14 @@ def md_table(text: str, heading: str, path: Path) -> tuple[list[str], list[list[
 
 
 # ---------------------------------------------------------------------------
-# 결과 파일에서 수치 읽기
+# Reading numbers out of result files
 # ---------------------------------------------------------------------------
 def load_verdict_eval(path: Path) -> dict:
-    """nat eval 결과에서 적발률을 센다. reasoning 의 expected/got 을 그대로 쓴다."""
+    """Count the detection rate from a nat eval result.
+
+    It reads expected and got out of the reasoning field verbatim instead of recomputing a
+    verdict, so the PDF can only report what the evaluation itself recorded.
+    """
     r = JsonReader(path)
     avg = r.need("average_score")
     items = r.need("eval_output_items")
@@ -249,7 +261,7 @@ def load_verdict_eval(path: Path) -> dict:
 
 
 def load_case() -> dict:
-    """케이스 JSON 에서 표에 쓰는 값만 꺼낸다."""
+    """Extract only the values the table shows from the case JSON."""
     r = JsonReader(CASE_JSON)
     out = {
         "case_id": r.need("case_id"),
@@ -306,7 +318,7 @@ def load_case() -> dict:
 
 
 def _soft(reader: JsonReader, dotted: str):
-    """없어도 되는 값(경로 B 의 BindingDB 처럼 null 이 정답인 자리)."""
+    """A value allowed to be absent, such as BindingDB on path B where null is the truth."""
     value = _dig(reader.payload, dotted)
     return None if value is _MISSING else value
 
@@ -323,7 +335,7 @@ def load_author_run() -> dict:
 
 
 def load_smoke() -> dict:
-    """OpenShell 스모크 결과를 절 단위로 읽는다."""
+    """Read the OpenShell smoke results section by section."""
     text = need_text(SMOKE_TXT)
     summary = need_match(r"summary:\s*pass=(\d+)\s+fail=(\d+)", text, SMOKE_TXT, "summary 줄")
     policy = need_match(r"^policy:\s*(\S+)\s+sandbox:\s*(\S+)", text, SMOKE_TXT,
@@ -333,7 +345,7 @@ def load_smoke() -> dict:
     policy_hash = need_match(r"^Hash:\s*([0-9a-f]{16,})", text, SMOKE_TXT,
                              "유효 정책 해시", re.M)
 
-    # 절별 PASS 건수
+    # PASS counts per section
     sections: list[tuple[str, int]] = []
     current = None
     count = 0
@@ -355,7 +367,8 @@ def load_smoke() -> dict:
 
     blocked = re.findall(r"^PASS blocked (\S+)\s+http=(\S+)\s+rc=(\S+)", text, re.M)
 
-    # 차단 로그 원문. 한 종류씩 첫 줄만 뽑는다
+    # Verbatim denial log lines, one example per kind: the point is to show the real output,
+    # and repeating twenty near-identical lines would only pad the page
     log_lines = [ln for ln in text.splitlines()
                  if ("DENIED" in ln or "CONFIG:APPLYING" in ln) and ln.startswith("[")]
     if not log_lines:
@@ -445,7 +458,11 @@ def load_case_count() -> int:
 
 
 def load_offline_test_count() -> tuple[int, str]:
-    """pytest --collect-only 로 실측한다. 실패하면 HANDOFF 표에서 읽고 출처를 바꾼다."""
+    """Measure the test count with pytest --collect-only.
+
+    If collection fails, fall back to the number written in the HANDOFF table and say that the
+    source changed, so a reader can tell a measured figure from a quoted one.
+    """
     env = dict(os.environ)
     env.pop("NVIDIA_API_KEY", None)
     try:
@@ -468,7 +485,7 @@ def load_offline_test_count() -> tuple[int, str]:
 
 
 def load_dli_course() -> dict:
-    """과정 이름은 docs/COURSE-GUIDE.md, 진도는 docs/HANDOFF.md 에서 읽는다."""
+    """Take the course title from docs/COURSE-GUIDE.md and the progress from docs/HANDOFF.md."""
     guide = need_text(COURSE_MD)
     name = need_match(rf'"(.+?)"\(DLI {DLI_COURSE_ID}\)', guide, COURSE_MD, "과정 이름")
     url = need_match(r"(https://learn\.nvidia\.com/\S+)", guide, COURSE_MD, "과정 주소")
@@ -485,14 +502,14 @@ def load_repo_url() -> str:
 
 
 # ---------------------------------------------------------------------------
-# HTML 조립 도구
+# HTML assembly helpers
 # ---------------------------------------------------------------------------
 def esc(text) -> str:
     return html_mod.escape("" if text is None else str(text), quote=False)
 
 
 def inline_md(cell: str) -> str:
-    """표 칸의 굵게와 코드 표기만 옮긴다."""
+    """Convert only bold and inline code inside a table cell, leaving other markup alone."""
     out = esc(cell)
     out = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", out)
     out = re.sub(r"`(.+?)`", r"<code>\1</code>", out)
@@ -675,7 +692,7 @@ li {{ margin-bottom: 1.2mm; }}
 
 
 # ---------------------------------------------------------------------------
-# 절별 본문
+# Section bodies
 # ---------------------------------------------------------------------------
 def cover_html(data: dict) -> str:
     team = TEAM_NAME.strip() or "미정"
@@ -940,7 +957,9 @@ def credits_html(data: dict) -> str:
     c_header, c_rows = data["credits_table"]
     a_header, a_rows = data["assets_table"]
 
-    # credits.md 의 규칙 수가 지금 코드와 다르면 그 사실을 적는다. 원본은 고치지 않는다
+    # If credits.md states a rule count that no longer matches the code, say so in the PDF
+    # rather than editing the source file: that document records what a person wrote, and
+    # silently correcting it would erase the discrepancy instead of surfacing it
     stale = ""
     for row in c_rows:
         m = re.search(r"규칙\s*(\d+)\s*종", " ".join(row))
@@ -1030,9 +1049,10 @@ def collect() -> dict:
 
 
 def fix_solution(raw: str, tool_names: list[str]) -> tuple[str, str]:
-    """`flybrain_pose` 가 등록되지 않았으면 '세 경로' 를 '두 경로' 로 맞춘다.
+    """Say "two paths" instead of "three" while `flybrain_pose` is unregistered.
 
-    `docs/submission-flygate.md` 가 스스로 정해 둔 규칙을 그대로 따른다.
+    This follows the rule `docs/submission-flygate.md` sets for itself. The submission text
+    must not describe a path the code cannot run.
     """
     if "flybrain_pose" in tool_names or "세 경로" not in raw:
         return raw, ""
@@ -1135,7 +1155,8 @@ def main() -> int:
         print(f"팀명이 아직 비어 있다. 확정되면 TEAM_NAME 을 채우고 다시 만든 뒤 다음처럼 복사한다.")
         print(f'  cp {_rel(PDF_PATH)} "docs/submission/[NVIDIA 해커톤_<팀명>_{PROJECT_NAME}].pdf"')
     else:
-        # 폼이 요구하는 파일명으로 사본을 함께 남긴다. 제출 때 이 파일을 올린다.
+        # Also leave a copy under the filename the submission form demands, so the upload step
+        # is a choice between two files rather than a rename done at the last minute
         import shutil
         final = PDF_PATH.parent / f"[NVIDIA 해커톤_{TEAM_NAME}_{PROJECT_NAME}].pdf"
         shutil.copyfile(PDF_PATH, final)
