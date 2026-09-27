@@ -85,7 +85,7 @@
 | 9/25(금) | DLI 4모듈 수강(약 4시간), 수료증 또는 완료 화면 캡처. 공통 하네스: author/critic 워크플로 뼈대, 정책 템플릿, eval 골격. Multipass Ubuntu VM에 OpenShell 설치 시도(팀원 서버 있으면 그쪽). **밤에 후보 결정** | 교육 미션 증빙, 하네스 뼈대 동작, OpenShell 설치 결과, 후보 확정 |
 | 9/26(토) | 도메인 도구 구현. PharmaSignal이면 도구 3종 + 라벨 RAG, Night Shift면 실험 루프 + 테스트·벤치마크 실행기 + 크리틱 규칙. 케이스 E2E | E2E 결과 JSON, 크리틱 반려 예시 1건 |
 | 9/27(일) | OpenShell 정책 적용과 차단 로그 확보. NemoGuard 연결. `nat eval` 수치. 아키텍처 그림(matplotlib, Pretendard, 뮤트 팔레트, PNG 직접 확인). 데모 영상 2~3분 | 정책 YAML, 평가 수치, architecture.png, 영상 URL |
-| 9/28(월) | README 완성. 신청서 문안(문제 300자, 솔루션 500자, 기술 스택). PDF, 파일명 `[NVIDIA 해커톤_팀명_프로젝트명]`. 팀원 각자 폼 제출 확인. **18:00까지 제출** | 제출 완료 캡처 |
+| 9/28(월) | README 완성. 신청서 문안(문제 300자, 솔루션 500자, 기술 스택). PDF, 파일명 `[NVIDIA 해커톤_팀명_프로젝트명]`. 팀원 각자 폼 제출 확인. **22:00까지 제출** | 제출 완료 캡처 |
 
 시간이 모자랄 때 줄이는 순서: 라벨 RAG 또는 벤치마크 재측정 → NemoGuard → UI(`nat run` CLI 출력으로 대체). **줄이지 않는 것**: Nemotron 도구 호출, 크리틱 검증, OpenShell 정책과 차단 로그, 교육 미션, 영상.
 
