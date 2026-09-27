@@ -107,7 +107,7 @@ def slides_to_add(m: dict) -> list[dict]:
     """The slides appended to the deck, in order. Numbers come from `m`, never inline."""
     return [
         {
-            "title": "9/27 오후에 더한 것: 측정과 스킬",
+            "title": "9/27 오후의 측정과 스킬",
             "header": ["무엇", "결과", "근거 파일"],
             "rows": [
                 ["OpenFold3 구조 예측",
@@ -132,7 +132,7 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "수치는 전부 방금 실행한 결과 파일에서 가져왔다. 이 슬라이드를 만드는 스크립트도 "
                     "같은 파일을 읽는다(scripts/extend_briefing_deck.py).",
-            "source": "출처: eval/results/ 의 결과 JSON, docs/notes/openfold3-2026-09-27.md",
+            "source": "팀장 추가(9/28) · 출처: eval/results/ 의 결과 JSON, docs/notes/openfold3-2026-09-27.md",
         },
         {
             "title": "이 브리핑에서 고칠 곳",
@@ -148,10 +148,10 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "나머지는 사실과 맞았다. 특히 미시행 사항 슬라이드(17)는 그대로 둔다. "
                     "되지 않는 것을 되는 것처럼 적지 않는다는 규율이 그 장에 그대로 들어가 있다.",
-            "source": "대조: git log, eval/results/, docs/notes/nvidia-skills-catalog.md, 9/27 저녁 카카오톡",
+            "source": "팀장 추가(9/28) · 대조: git log, eval/results/, 9/27 저녁 카카오톡",
         },
         {
-            "title": "NVIDIA 스킬: 쓴 것과 미룬 것",
+            "title": "NVIDIA 스킬의 사용 현황",
             "header": ["스킬", "출처", "상태"],
             "rows": [
                 ["diffdock-nim", "bionemo-agent-toolkit", "설치해 사용 중. 호출 규격과 규칙 10번의 출처"],
@@ -165,7 +165,7 @@ def slides_to_add(m: dict) -> list[dict]:
             "note": f"카탈로그 {m['skill_count']}개에서 {m['skill_relevant']}개를 후보로 걸러 "
                     f"{m['skill_detailed']}개는 SKILL.md 원문까지 읽었다. 공고의 \"Skill API\" 는 "
                     "스킬을 만들어 올리라는 뜻이 아니라 카탈로그를 활용하라는 뜻으로 읽는다.",
-            "source": "출처: docs/notes/nvidia-skills-catalog.md, scripts/fetch_nvidia_skills.py",
+            "source": "팀장 추가(9/28) · 출처: docs/notes/nvidia-skills-catalog.md, scripts/fetch_nvidia_skills.py",
         },
         {
             "title": "팀 자산으로 남긴 것",
@@ -181,10 +181,10 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "카카오톡으로만 오간 조사는 시간이 지나면 팀 자산이 되지 않는다. 그래서 원문을 다시 받아 "
                     "문서로 옮기고, 같은 명령으로 재현되도록 스크립트를 남겼다.",
-            "source": "주석과 docstring 은 영어, 사람이 보는 문자열은 한국어로 둔다 (CLAUDE.md 작업 규율)",
+            "source": "팀장 추가(9/28) · 주석은 영어, 사람이 보는 문자열은 한국어 (CLAUDE.md 작업 규율)",
         },
         {
-            "title": "Jev 를 1단 게이트로 쓸 수 있는가",
+            "title": "Jev 의 1단 게이트 적합성",
             "header": ["팔", "무엇을 바꿨나", "yes / no", "읽는 법"],
             "rows": [
                 ["1", "기본 질문, 약물명과 반응명 있음", m.get("jev_base", "4 / 6"),
@@ -202,10 +202,10 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "3번 팔이 이 측정의 핵심이다. 기억으로 판단하는 게이트는 우리가 반려해야 할 "
                     "종류의 추론이므로, 라벨 기재 여부를 근거로 넣어 주는 4번이 옳은 구성이다.",
-            "source": "출처: docs/notes/jev-triage-2026-09-27.md, eval/results/triage_scale_jev-*.json",
+            "source": "팀장 추가(9/28) · 출처: docs/notes/jev-triage-2026-09-27.md, eval/results/triage_scale_jev-*.json",
         },
         {
-            "title": "사례 약물 실측과 권고",
+            "title": "사례 약물의 실측과 권고",
             "header": ["약물", "FAERS 보고", "상위 이상사례", "쓸모"],
             "rows": [
                 ["클로자핀", "124,828", "호중구감소증 18,898", "박스 경고까지 간 확정 신호. 양성 대조"],
@@ -220,10 +220,10 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "니라파립이 적을 것이라는 회의 중 추정은 틀렸고, 도킹은 니라파립을 유지하며 "
                     "약물감시 사례로 클로자핀과 이소트레티노인을 더하는 쪽을 권한다.",
-            "source": "출처: docs/notes/case-drug-review-2026-09-27.md, scripts/faers_drug_scan.py",
+            "source": "팀장 추가(9/28) · 출처: docs/notes/case-drug-review-2026-09-27.md, scripts/faers_drug_scan.py",
         },
         {
-            "title": "0 이라는 숫자에 속을 뻔한 기록",
+            "title": "0 이라는 숫자의 함정",
             "header": ["질의", "건수", "무엇을 뜻하나"],
             "rows": [
                 ["openfda.generic_name:\"ROFECOXIB\"", "0", "색인되지 않았다는 뜻"],
@@ -236,7 +236,43 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "팀장이 \"퇴출 약물은 공개 데이터에 없다\" 고 먼저 보고했다가 되잡은 건이다. "
                     "우리 크리틱이 잡아야 할 종류의 착각이라 지우지 않고 문서에 남겼다.",
-            "source": "출처: docs/notes/case-drug-review-2026-09-27.md 2절",
+            "source": "팀장 추가(9/28) · 출처: docs/notes/case-drug-review-2026-09-27.md 2절",
+        },
+        {
+            "title": "인과성 여덟 항목의 실측",
+            # The cloned table has three columns, so a fourth is dropped. Score and confidence
+            # ride in one column rather than being silently lost.
+            "header": ["항목", "고른 것", "점수 (확신도)"],
+            "rows": [
+                ["시간적 선후관계", "정보없음", "0 (0.93)"],
+                ["감량 또는 중단", "정보없음", "0 (0.35)"],
+                ["병용약물", "정보없음", "0 (0.54)"],
+                ["약물에 대해 알려진 정보", "허가사항에 반영됨", "**+3** (0.99)"],
+                ["재투약", "정보없음", "0 (0.99)"],
+                ["나머지 세 항목", "과거력, 비약물요인, 특이적 검사", "0"],
+                ["합계", "+3점, 가능성 있음", "**빈 항목 7/8**"],
+            ],
+            "note": "점수가 전부 라벨 기재 한 항목에서 나왔다. 발현일이 공개본에 없어 선후관계를 가릴 수 "
+                    "없다. 빈 칸을 채우면 +3이 +11이 되어 등급이 올라가는데 근거는 그대로다.",
+            "source": "팀장 추가(9/28) · 출처: docs/notes/causality-assessment.md 3-1절, "
+                      "eval/results/jev_causality_13497451.json",
+        },
+        {
+            "title": "규칙이 갈리는 약물, 키트루다",
+            "header": ["약물", "사람에게 / 자동 큐", "무엇을 뜻하나"],
+            "rows": [
+                ["니라파립 (상위 반응)", "10 / 0", "규칙이 전부 넘김"],
+                ["**키트루다**", "**4 / 6**", "신호와 잡음이 섞임"],
+                ["와파린", "6 / 4", "같음"],
+                ["레날리도마이드", "4 / 6", "같음"],
+                ["무엇을 바꿨나", "흔한 반응 10개와 짝지음", "상위 반응만 보면 늘 넘김"],
+                ["걸러진 것", "약효 없음 0.39, 두통 0.43", "PRR 1 미만"],
+                ["다음 측정", "키트루다로", "니라파립으로는 비교 불가"],
+            ],
+            "note": "팀원 A의 제안대로 키트루다가 니라파립보다 다섯 배 많았다. 다만 건수가 많은 것과 "
+                    "사례로 좋은 것은 다르다.",
+            "source": "팀장 추가(9/28) · 출처: docs/notes/case-drug-review-2026-09-27.md 4-1절, "
+                      "eval/results/rule_split_scan_2026-09-27.json",
         },
         {
             "title": "9/28 시간표",
@@ -246,47 +282,76 @@ def slides_to_add(m: dict) -> list[dict]:
                 ["10:30 이후", "주최 측 문의 4건 발송. 수료 범위, 진도 장애, 스킬 제출, 본선 참석", "팀장"],
                 ["낮", "DLI 모듈 3과 4. 실습 환경 5시간 안에 체크포인트 다섯", "전원"],
                 ["낮", "대시보드 소스와 근거 파일을 저장소로", "팀원 C"],
-                ["20:00", "카카오톡 음성 20분. 제출 직전 점검", "전원"],
+                ["종일", "따로 모이지 않고 확인은 카카오톡으로", "전원"],
                 ["20~22시", "수료증 삽입, PDF 재생성, 수치 검사와 테스트", "팀장"],
                 ["22:00", "폼 제출. 팀명 FlyGate 를 띄어쓰기까지 같게", "전원 각자"],
             ],
             "note": "마감은 23:59 이고 목표는 22:00 이다. 두 시간 여유를 둔다. "
                     "팀장이 근무 시간에는 손을 대기 어려우므로 낮에 할 것은 문의와 수강으로 좁혔다.",
-            "source": "출처: docs/SESSION-2026-09-27.md, docs/notes/work-assignment.md",
+            "source": "팀장 추가(9/28) · 출처: docs/SESSION-2026-09-27.md, docs/notes/work-assignment.md",
         },
         {
             "title": "아직 비어 있는 것",
             "header": ["무엇", "상태"],
             "rows": [
-                ["주제 서술 방향", "미정. 약물감시를 앞세울지 신약개발을 앞세울지 9/28 오전 투표"],
-                ["대시보드 소스", "저장소에 없다. 폼이 요구하는 것은 깃허브 주소다"],
-                ["대시보드 수치 세 건", "근거 파일이 없어 인용하지 못한다 (Spearman 0.767, 절감 70%, 신호 54건)"],
-                ["가드레일 정책 산출물", "스킬 설치까지. 정책 문서와 분류 체계는 아직 만들지 않았다"],
-                ["Jev 호출", "키가 없어 건너뛰었다. 스크립트는 준비됐다"],
-                ["DLI 진도", "50퍼센트. 모듈 3과 4는 실습 환경을 확보해야 오른다"],
-                ["이름 통일", "FlyVigilante 저장소는 팀원 A 계정이라 그쪽에서 바꿔야 한다"],
+                ["주제 서술 방향", "9/28 오전 카톡 투표로 확정 예정"],
+                ["대시보드 소스", "저장소에 없음. 폼이 요구하는 것은 깃허브 주소"],
+                ["대시보드 수치 세 건", "근거 파일이 없어 인용 불가 (Spearman 0.767, 절감 70%, 신호 54건)"],
+                ["가드레일 정책 산출물", "스킬 설치까지. 정책 문서와 분류 체계는 미작성"],
+                ["인과성 점수의 빈 칸", "여덟 항목 중 일곱이 정보 없음. 공개 데이터의 한계"],
+                ["DLI 진도", "50퍼센트. 모듈 3과 4는 실습 환경이 있어야 오름"],
+                ["이름 통일", "FlyVigilante 저장소는 팀원 A 계정에서 변경 필요"],
             ],
             "note": "원본 브리핑 17번 슬라이드와 같은 규율을 따른다. 되지 않는 것을 되는 것처럼 적지 않는다.",
-            "source": "출처: docs/SESSION-2026-09-27.md, _local/team-messages/14_이름통일과_소스요청.md",
+            "source": "팀장 추가(9/28) · 출처: docs/SESSION-2026-09-27.md, 팀 전달사항 문안",
         },
     ]
 
 
-def set_text(shape, text: str) -> None:
-    """Replace a shape's text while keeping the first run's formatting.
+BOLD = re.compile(r"\*\*(.+?)\*\*")
 
-    Assigning to `.text` would drop the run properties and the slide would lose its font.
+
+def set_text(shape, text: str) -> None:
+    """Replace a shape's text, keeping its formatting and honouring **bold** markers.
+
+    Assigning to `.text` would drop the run properties and the slide would lose its font, so
+    the first run is reused as a template. `**...**` is split into separate runs with bold set
+    rather than left in place: python-pptx does not read Markdown, and the asterisks were
+    showing up as literal characters on the rendered slide.
     """
     tf = shape.text_frame
     para = tf.paragraphs[0]
-    if para.runs:
-        para.runs[0].text = text
-        for extra in para.runs[1:]:
-            extra._r.getparent().remove(extra._r)
-    else:
-        tf.text = text
     for extra in tf.paragraphs[1:]:
         extra._p.getparent().remove(extra._p)
+
+    if not para.runs:
+        tf.text = text
+        return
+
+    template = para.runs[0]
+    pieces: list[tuple[str, bool]] = []
+    cursor = 0
+    for match in BOLD.finditer(text):
+        if match.start() > cursor:
+            pieces.append((text[cursor:match.start()], False))
+        pieces.append((match.group(1), True))
+        cursor = match.end()
+    if cursor < len(text):
+        pieces.append((text[cursor:], False))
+    if not pieces:
+        pieces = [(text, False)]
+
+    template.text = pieces[0][0]
+    if pieces[0][1]:
+        template.font.bold = True
+    for extra in para.runs[1:]:
+        extra._r.getparent().remove(extra._r)
+    for chunk, bold in pieces[1:]:
+        new_run = copy.deepcopy(template._r)
+        template._r.addnext(new_run)
+        template = para.runs[-1]
+        template.text = chunk
+        template.font.bold = bool(bold)
 
 
 def fill_table(table, header: list[str], rows: list[list[str]]) -> None:
@@ -299,10 +364,17 @@ def fill_table(table, header: list[str], rows: list[list[str]]) -> None:
     while len(table.rows) - 1 < len(rows):
         table._tbl.append(copy.deepcopy(body_template))
 
-    for cell, text in zip(table.rows[0].cells, header):
+    # Pad each row to the table's column count. The template's own text survives in any column
+    # a spec does not fill, which silently left a stale deadline column on two slides.
+    width = len(table.columns)
+
+    def pad(values: list[str]) -> list[str]:
+        return list(values) + [""] * (width - len(values))
+
+    for cell, text in zip(table.rows[0].cells, pad(header)):
         set_text(cell, text)
     for row, values in zip(list(table.rows)[1:], rows):
-        for cell, text in zip(row.cells, values):
+        for cell, text in zip(row.cells, pad(values)):
             set_text(cell, text)
 
 
