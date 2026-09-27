@@ -43,15 +43,25 @@ def get(params: dict) -> dict:
 
 def scan(drug: str, top: int) -> dict:
     row: dict = {"drug": drug}
+    # Three fields, not two. The openfda.* names are populated by matching a report to a
+    # current SPL, so a drug that has been withdrawn carries none of them and returns zero
+    # however many reports exist. medicinalproduct is the free text the reporter wrote, which
+    # survives withdrawal. Measured: rofecoxib returns 0 on openfda.generic_name and 1,569 on
+    # medicinalproduct, while its brand VIOXX returns 44,279. Reading the first zero as "no
+    # reports" would have dropped exactly the drugs a withdrawal case study needs.
     for label, field in (("generic", "patient.drug.openfda.generic_name"),
-                         ("brand", "patient.drug.openfda.brand_name")):
+                         ("brand", "patient.drug.openfda.brand_name"),
+                         ("product", "patient.drug.medicinalproduct")):
         d = get({"search": f'{field}:"{drug}"', "limit": 1})
         row[f"{label}_total"] = d.get("meta", {}).get("results", {}).get("total", 0)
         if d.get("error"):
             row[f"{label}_error"] = d["error"]
         time.sleep(0.3)
-    field = ("patient.drug.openfda.generic_name" if row["generic_total"] >= row["brand_total"]
-             else "patient.drug.openfda.brand_name")
+    fields = {"generic": "patient.drug.openfda.generic_name",
+              "brand": "patient.drug.openfda.brand_name",
+              "product": "patient.drug.medicinalproduct"}
+    best = max(fields, key=lambda k: row[f"{k}_total"])
+    field = fields[best]
     row["counted_on"] = field.rsplit(".", 1)[-1]
     d = get({"search": f'{field}:"{drug}"',
              "count": "patient.reaction.reactionmeddrapt.exact", "limit": top})
@@ -73,7 +83,7 @@ def main() -> int:
     for drug in a.drugs:
         row = scan(drug.upper(), a.top)
         rows.append(row)
-        tot = max(row["generic_total"], row["brand_total"])
+        tot = max(row[f"{k}_total"] for k in ("generic", "brand", "product"))
         print(f"{drug.upper():<16} 보고 {tot:>8,}건  ({row['counted_on']} 기준)")
         for r in row["top_reactions"]:
             print(f"    {r['count']:>6,}  {r['term']}")
