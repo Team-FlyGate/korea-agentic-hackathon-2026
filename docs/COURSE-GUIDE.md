@@ -88,6 +88,21 @@ https://learn.nvidia.com/courses/course-detail?course_id=course-v1:DLI+S-FX-43+V
 진도 50퍼센트 위로 가려면 NemoClaw 런타임이 도는 실습 환경이 필요합니다.
 **길이 둘이고 무료 쪽을 먼저 보세요.**
 
+### 03a 화면에서 실제로 요구하는 것 (2026-09-27 페이지 원문 확인)
+
+상단에 **`No OpenClaw`** 가 떠 있으면 설정 문제가 아니라 **붙일 실습 환경이 없는 상태**입니다.
+진도 50퍼센트에서 멈추는 원인이 이것입니다. 03a 본문이 요구하는 절차는 넷입니다.
+
+1. NemoClaw launchable 을 띄우고 로그인합니다. 페이지가 거는 주소는
+   `brev.nvidia.com/launchable/deploy/now?launchableID=env-3Azt0aYgVNFEuz7opyx3gscmowS` 입니다
+2. `<launchable>/dashboard` 를 엽니다
+3. 돌고 있는 **`my-assistant` 카드**를 찾아 **`Chat with Agent`** 를 누릅니다
+4. 강좌로 돌아와 **launchable 주소를 입력합니다.** 강좌를 그 환경 바깥에서 열었다면
+   접근 세션 쿠키도 함께 넣습니다
+
+즉 **강좌를 launchable 안에서 열면 쿠키 절차가 사라집니다.** 본문에 "If this course is not
+served by the launchable, paste the launchable's browser access session too" 라고 적혀 있습니다.
+
 ### 길 1. DLI 무료 실습 환경 (권장)
 
 강좌 페이지에 **"Brev 없이 로컬 환경으로 수강하는 실험적 옵션"** 이 있고 `START` 버튼으로 엽니다.
@@ -101,6 +116,13 @@ https://learn.nvidia.com/courses/course-detail?course_id=course-v1:DLI+S-FX-43+V
 
 이 환경에 **강의와 OpenClaw 런타임과 모델 릴레이가 모두 들어 있습니다.**
 Brev 크레딧이 필요 없고, 강좌가 그 환경에서 서빙되므로 아래 쿠키 절차도 건너뜁니다.
+
+> **작성자가 직접 확인하지 못한 경로입니다 [unverified].** 03a 페이지 본문에는 Brev launchable
+> 하나만 적혀 있고 무료 환경 이야기가 없습니다. Brev 콘솔은 로그인이 필요해 터미널에서 확인할
+> 수 없습니다. 크레딧이 없는 상태라면 **강좌 페이지(learn.nvidia.com)의 `START` 또는 `LAUNCH`
+> 버튼이 있는지 먼저 보고**, 없으면 팀원 A에게 어디서 띄웠는지 물어보는 쪽이 빠릅니다.
+> 물어볼 것은 셋입니다. 어느 화면의 어떤 버튼인지, Brev 로그인이 필요했는지,
+> 크레딧 잔액이 0인 상태에서도 떴는지.
 
 **5시간 안에 다섯 체크포인트를 끝내야 합니다.** 아홉 동작뿐이니 미리 읽어 두고
 환경을 띄운 뒤에는 그것만 하세요. 무엇을 해야 하는지는 `체크포인트마다 실제로 필요한 동작` 표에 있습니다.

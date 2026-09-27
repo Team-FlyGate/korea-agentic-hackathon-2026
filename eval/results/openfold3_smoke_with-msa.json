@@ -1,0 +1,33 @@
+{
+ "ran_at": "2026-09-27T13:04:47+00:00",
+ "pdb_id": "4R6E",
+ "chain": "A",
+ "residues": 358,
+ "msa_used": true,
+ "skill": "msa-structure-prediction-pipeline",
+ "msa": {
+  "status": 200,
+  "seconds": 19.9,
+  "databases_returned": [
+   "Uniref30_2302"
+  ],
+  "database_used": "Uniref30_2302",
+  "alignment_lines": 203
+ },
+ "openfold3": {
+  "status": 200,
+  "seconds": 21.4,
+  "samples": [
+   {
+    "confidence_score": 0.736862063407898,
+    "complex_plddt_score": 90.07719421386719,
+    "ptm_score": 0.736862063407898,
+    "iptm_score": null,
+    "pde_score": null,
+    "format": "pdb",
+    "file": "openfold3_4R6E_A_1.pdb",
+    "atom_lines": 2824
+   }
+  ]
+ }
+}

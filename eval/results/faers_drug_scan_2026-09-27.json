@@ -1,0 +1,52 @@
+{
+ "fetched_at": "2026-09-27",
+ "rows": [
+  {
+   "drug": "ADUHELM",
+   "generic_total": 0,
+   "brand_total": 0,
+   "counted_on": "generic_name",
+   "top_reactions": []
+  },
+  {
+   "drug": "LEQEMBI",
+   "generic_total": 0,
+   "brand_total": 3576,
+   "counted_on": "brand_name",
+   "top_reactions": [
+    {
+     "term": "AMYLOID RELATED IMAGING ABNORMALITY-OEDEMA/EFFUSION",
+     "count": 491
+    },
+    {
+     "term": "HEADACHE",
+     "count": 477
+    },
+    {
+     "term": "AMYLOID RELATED IMAGING ABNORMALITY-MICROHAEMORRHAGES AND HAEMOSIDERIN DEPOSITS",
+     "count": 452
+    }
+   ]
+  },
+  {
+   "drug": "KISUNLA",
+   "generic_total": 0,
+   "brand_total": 2535,
+   "counted_on": "brand_name",
+   "top_reactions": [
+    {
+     "term": "AMYLOID RELATED IMAGING ABNORMALITY-OEDEMA/EFFUSION",
+     "count": 421
+    },
+    {
+     "term": "AMYLOID RELATED IMAGING ABNORMALITY-MICROHAEMORRHAGES AND HAEMOSIDERIN DEPOSITS",
+     "count": 343
+    },
+    {
+     "term": "INFUSION RELATED REACTION",
+     "count": 321
+    }
+   ]
+  }
+ ]
+}

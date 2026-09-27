@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "msa-structure-prediction-pipeline": {
+      "source": "NVIDIA/skills",
+      "sourceType": "github",
+      "skillPath": "skills/bionemo-msa-structure-prediction-pipeline/SKILL.md",
+      "computedHash": "51cc875556a86a0e3f0519f181f6bcfc65790b8062bd0d20c7dbef3424d67e76"
+    },
+    "nemotron-policy-generator": {
+      "source": "NVIDIA/skills",
+      "sourceType": "github",
+      "skillPath": "skills/nemotron-policy-generator/SKILL.md",
+      "computedHash": "052f54e1bbef8ed61e232de8b27502f0af457b0a097825c53e80070eda3d059b"
+    }
+  }
+}

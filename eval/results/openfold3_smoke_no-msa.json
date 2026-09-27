@@ -1,0 +1,27 @@
+{
+ "ran_at": "2026-09-27T13:02:25+00:00",
+ "pdb_id": "4R6E",
+ "chain": "A",
+ "residues": 358,
+ "msa_used": false,
+ "skill": "msa-structure-prediction-pipeline",
+ "msa": {
+  "note": "히트 없이 질의 서열만 담은 a3m. 스킬 문서 기준으로 약한 근거다"
+ },
+ "openfold3": {
+  "status": 200,
+  "seconds": 5.3,
+  "samples": [
+   {
+    "confidence_score": 0.12282346189022064,
+    "complex_plddt_score": 31.892698287963867,
+    "ptm_score": 0.12282346189022064,
+    "iptm_score": null,
+    "pde_score": null,
+    "format": "pdb",
+    "file": "openfold3_4R6E_A_1.pdb",
+    "atom_lines": 2824
+   }
+  ]
+ }
+}
