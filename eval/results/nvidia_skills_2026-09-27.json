@@ -1,0 +1,1451 @@
+{
+ "fetched_at": "2026-09-27",
+ "source": "github.com/NVIDIA/skills",
+ "product_count": 96,
+ "skill_count": 380,
+ "products": [
+  {
+   "product": "AIQ",
+   "description": "NVIDIA AI-Q Blueprint - deploy local AI-Q services and run shallow or deep research workflows as agent skills.",
+   "skills": [
+    "aiq-research",
+    "aiq-deploy"
+   ]
+  },
+  {
+   "product": "BioNeMo Libraries",
+   "description": "GPU-accelerated cheminformatics with nvMolKit for molecular fingerprints, similarity search, conformer generation, and optimization.",
+   "skills": [
+    "bionemo-nvmolkit-usage"
+   ]
+  },
+  {
+   "product": "BioNeMo NIMs",
+   "description": "OpenFold2 predicts single-chain protein structures. The MSA pipeline uses MSA-Search alignments to guide OpenFold3 structure prediction.",
+   "skills": [
+    "bionemo-msa-structure-prediction-pipeline",
+    "bionemo-openfold2-nim"
+   ]
+  },
+  {
+   "product": "BioNeMo Open Models",
+   "description": "KERMT skills for container setup, molecular model pretraining and finetuning, inference, embedding extraction, and run monitoring.",
+   "skills": [
+    "bionemo-kermt-add-cmim-pretrain",
+    "bionemo-kermt-continue-pretrain",
+    "bionemo-kermt-embed",
+    "bionemo-kermt-finetune",
+    "bionemo-kermt-infer",
+    "bionemo-kermt-monitor",
+    "bionemo-kermt-pretrain-scratch",
+    "bionemo-kermt-setup"
+   ]
+  },
+  {
+   "product": "CUDA-Q",
+   "description": "Use for CUDA-Q setup, simulation targets, QPU access, and @cudaq.kernel authoring guidance.",
+   "skills": [
+    "cudaq-guide",
+    "cudaq-importing"
+   ]
+  },
+  {
+   "product": "cuDF",
+   "description": "Official NVIDIA-authored guidance for NVIDIA cuDF GPU DataFrames, pandas acceleration, dask-cuDF, ETL, joins, groupby, CSV/Parquet I/O, nullable semantics, and multi-GPU DataFrame workloads.",
+   "skills": [
+    "accelerated-computing-cudf"
+   ]
+  },
+  {
+   "product": "cuOpt",
+   "description": "GPU-accelerated optimization — vehicle routing, linear programming, quadratic programming, installation, server deployment, and developer tools.",
+   "skills": [
+    "cuopt-install",
+    "cuopt-multi-objective-exploration",
+    "cuopt-numerical-optimization-api",
+    "cuopt-numerical-optimization-formulation",
+    "cuopt-routing-api-python",
+    "cuopt-server-api-python"
+   ]
+  },
+  {
+   "product": "DALI",
+   "description": "GPU-accelerated data loading and processing with NVIDIA DALI.",
+   "skills": [
+    "dali-dynamic-mode"
+   ]
+  },
+  {
+   "product": "Data Designer",
+   "description": "Build declarative synthetic dataset generation pipelines with NeMo Data Designer.",
+   "skills": [
+    "data-designer"
+   ]
+  },
+  {
+   "product": "DeepStream",
+   "description": "Agentic skills for guided DeepStream development.",
+   "skills": [
+    "amc-run-rtsp-calibration",
+    "amc-run-sample-calibration",
+    "amc-run-video-calibration",
+    "amc-setup-calibration-stack",
+    "deepstream-dev",
+    "deepstream-generate-pipeline",
+    "deepstream-import-vision-model",
+    "deepstream-profile-pipeline",
+    "deepstream-run-mv3dt",
+    "deepstream-sop",
+    "rtvi-cv-customize-model",
+    "rtvi-cv-scaffold-vss-service",
+    "rtvi-vlm-customize-model"
+   ]
+  },
+  {
+   "product": "Digital Health",
+   "description": "Agent skills for the clinical ASR evaluation flywheel — term curation, synthetic clinical-speech benchmark generation, KER (Keyword Error Rate) scoring, and fine-tune guidance.",
+   "skills": [
+    "digital-health-clinical-asr-setup",
+    "digital-health-clinical-asr-build",
+    "digital-health-clinical-asr-eval",
+    "digital-health-clinical-asr-finetune"
+   ]
+  },
+  {
+   "product": "DOCA",
+   "description": "Teach AI agents to use the NVIDIA DOCA SDK on BlueField DPUs and ConnectX NICs — setup, libraries, services, tools, deployment, and debugging.",
+   "skills": [
+    "doca-bare-metal-deployment",
+    "doca-bf3-deployment",
+    "doca-bf4-deployment",
+    "doca-collectx-deployment",
+    "doca-container-deployment",
+    "doca-debug",
+    "doca-hardware-safety",
+    "doca-programming-guide",
+    "doca-public-knowledge-map",
+    "doca-setup",
+    "doca-structured-tools-contract",
+    "doca-upgrade",
+    "doca-version",
+    "doca-aes-gcm",
+    "doca-argp",
+    "doca-comch",
+    "doca-common",
+    "doca-compress",
+    "doca-devemu",
+    "doca-dma",
+    "doca-dpa",
+    "doca-dpdk-bridge",
+    "doca-erasure-coding",
+    "doca-eth",
+    "doca-flow",
+    "doca-flow-dpa-provider",
+    "doca-gpi",
+    "doca-gpunetio",
+    "doca-mgmt",
+    "doca-pcc",
+    "doca-pcc-ztr-rttcc-algo",
+    "doca-rdma",
+    "doca-rdmi",
+    "doca-rmax",
+    "doca-sha",
+    "doca-sta",
+    "doca-telemetry",
+    "doca-telemetry-exporter",
+    "doca-urom",
+    "doca-verbs",
+    "doca-argus",
+    "doca-dms",
+    "doca-firefly",
+    "doca-urom-svc",
+    "doca-bench",
+    "doca-bench-extension",
+    "doca-caps",
+    "doca-comm-channel-admin",
+    "doca-dpa-hl-tracer",
+    "doca-flow-dpa-perf",
+    "doca-flow-grpc-server",
+    "doca-flow-perf",
+    "doca-flow-tune",
+    "doca-gpunetio-ib-write-bw",
+    "doca-gpunetio-ib-write-lat",
+    "doca-pcc-counters",
+    "doca-sha-offload-engine",
+    "doca-socket-relay",
+    "doca-spcx-cc",
+    "doca-telemetry-utils"
+   ]
+  },
+  {
+   "product": "Dynamo",
+   "description": "NVIDIA Dynamo deployment bring-up on Kubernetes — pick and deploy recipes, start router modes, validate disagg NIXL/UCX/NCCL interconnect, and triage day-2 failures.",
+   "skills": [
+    "dynamo-interconnect-check",
+    "dynamo-recipe-runner",
+    "dynamo-router-starter",
+    "dynamo-troubleshoot"
+   ]
+  },
+  {
+   "product": "Earth2Studio",
+   "description": "Open-source deep-learning framework for exploring, building and deploying AI weather/climate workflows.",
+   "skills": [
+    "earth2studio-create-datasource",
+    "earth2studio-create-diagnostic",
+    "earth2studio-create-prognostic",
+    "earth2studio-data-fetch",
+    "earth2studio-deterministic-forecast",
+    "earth2studio-discover",
+    "earth2studio-install"
+   ]
+  },
+  {
+   "product": "FoundationPose Perception Pipeline",
+   "description": "Set up the FoundationPose perception stack, adapt BOP datasets, and run or evaluate pose inference with TAO Deploy depth.",
+   "skills": [
+    "foundationpose-setup",
+    "foundationpose-pipeline"
+   ]
+  },
+  {
+   "product": "HoloHub",
+   "description": "Build, run, debug, benchmark, and develop HoloHub applications and Holoscan Modules with validated lifecycle workflows.",
+   "skills": [
+    "holohub-app-lifecycle",
+    "holohub-debug-build-run",
+    "holohub-module-lifecycle"
+   ]
+  },
+  {
+   "product": "Holoscan SDK",
+   "description": "Install and set up the Holoscan SDK on any platform (container, Debian, Python, Conda, or source).",
+   "skills": [
+    "holoscan-install-debian",
+    "holoscan-install-source",
+    "holoscan-install-wheel",
+    "holoscan-install-conda",
+    "holoscan-install-container",
+    "holoscan-setup"
+   ]
+  },
+  {
+   "product": "Holoscan Sensor Bridge",
+   "description": "Agent-ready skills for Holoscan Sensor Bridge devkit workflows, including demo environment bring-up, FPGA flashing for Lattice and VB1940 hardware, example application execution, QA test-plan automation, and support for configuring and using the Holoscan Sensor Bridge FPGA intellectual property (IP) core.",
+   "skills": [
+    "hsb-setup",
+    "hsb-flash",
+    "hsb-app",
+    "hsb-test",
+    "hsb-ip-def",
+    "hsb-ip-packetizer",
+    "hsb-ip-create-top"
+   ]
+  },
+  {
+   "product": "Isaac for Healthcare Workflows",
+   "description": "Agent-ready skills for Isaac for Healthcare agentic and catheter-navigation workflows, covering task authoring, data pipelines, policy training and validation, CT-derived digital twins, DRR rendering, and interactive catheter simulation.",
+   "skills": [
+    "i4h-workflow",
+    "i4h-workflow-setup",
+    "i4h-workflow-create",
+    "i4h-workflow-scene-edit",
+    "i4h-workflow-dataset-teleop",
+    "i4h-workflow-dataset-replay",
+    "i4h-workflow-dataset-mimic",
+    "i4h-workflow-dataset-annotate",
+    "i4h-workflow-dataset-convert",
+    "i4h-workflow-finetune",
+    "i4h-workflow-train-rl",
+    "i4h-workflow-validate",
+    "i4h-workflow-e2e",
+    "i4h-lerobot-viz"
+   ]
+  },
+  {
+   "product": "Jetson BSP",
+   "description": "Agentic skills for setting up and customizing an NVIDIA Jetson Linux Board Support Package (BSP) — pick a target, prepare image and sources, customize IO (camera, PCIe, USB, pinmux, clocks, and more), then promote, flash, and validate.",
+   "skills": [
+    "jetson-build-source",
+    "jetson-customize-camera",
+    "jetson-customize-clocks",
+    "jetson-customize-fan",
+    "jetson-customize-mgbe",
+    "jetson-customize-nvpmodel",
+    "jetson-customize-pcie",
+    "jetson-customize-pinmux",
+    "jetson-customize-uphy",
+    "jetson-customize-usb",
+    "jetson-derive-carrier",
+    "jetson-download-bsp",
+    "jetson-flash-image",
+    "jetson-generate-kb",
+    "jetson-init-image",
+    "jetson-init-source",
+    "jetson-init-target",
+    "jetson-link-docs",
+    "jetson-optimize-memory",
+    "jetson-print-bsp-info",
+    "jetson-promote-image",
+    "jetson-quick-start",
+    "jetson-set-target",
+    "jetson-validate-image"
+   ]
+  },
+  {
+   "product": "Jetson Device",
+   "description": "Device-side agent skills for working with a live NVIDIA Jetson after boot — diagnostics, memory auditing, headless setup, inference memory tuning, LLM serving and benchmarking, packaging guidance, and speculative decoding.",
+   "skills": [
+    "jetson-diagnostic",
+    "jetson-headless-mode",
+    "jetson-inference-mem-tune",
+    "jetson-llm-benchmark",
+    "jetson-llm-serve",
+    "jetson-memory-audit",
+    "jetson-package",
+    "jetson-print-device-info",
+    "jetson-speculative-decoding",
+    "jetson-video-benchmark",
+    "jetson-video-capability",
+    "jetson-video-pipeline",
+    "jetson-video-recipe",
+    "jetson-video-setup"
+   ]
+  },
+  {
+   "product": "Medical AI Skills",
+   "description": "Agent-ready medical AI skills built on MONAI for DICOM handling, NVIDIA-hosted medical imaging model workflows, segmentation, synthesis, and evidence-oriented evaluation.",
+   "skills": [
+    "dicom-metadata-extract",
+    "dicom-series-preflight",
+    "dicom-series-to-volume",
+    "medtech-model-evidence-export",
+    "nv-generate-ct-rflow",
+    "nv-generate-mr",
+    "nv-generate-mr-brain",
+    "nv-generate-mr-brain-finetune",
+    "nv-generate-vae-finetune",
+    "nv-reason-cxr",
+    "nv-segment-ct",
+    "nv-segment-ct-finetune",
+    "nv-segment-ctmr"
+   ]
+  },
+  {
+   "product": "Megatron-Core",
+   "description": "Large-scale distributed training — model parallelism, pipeline parallelism, and mixed precision.",
+   "skills": [
+    "mcore-create-issue",
+    "mcore-linting-and-formatting",
+    "mcore-run-on-slurm",
+    "mcore-split-pr",
+    "mcore-testing"
+   ]
+  },
+  {
+   "product": "NeMo AutoModel",
+   "description": "NeMo AutoModel - PyTorch-native distributed training for LLMs/VLMs with Hugging Face support, recipes, launchers, and validation workflows.",
+   "skills": [
+    "nemo-automodel-distributed-training",
+    "nemo-automodel-launcher-config",
+    "nemo-automodel-model-onboarding",
+    "nemo-automodel-recipe-development"
+   ]
+  },
+  {
+   "product": "NeMo Fabric",
+   "description": "Portable skills for integrating applications with NeMo Fabric through its public SDK and building compatible third-party adapters.",
+   "skills": [
+    "nemo-fabric-integrate",
+    "nemo-fabric-build-adapter"
+   ]
+  },
+  {
+   "product": "NeMo MBridge",
+   "description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows.",
+   "skills": [
+    "nemo-mbridge-mlm-bridge-training",
+    "nemo-mbridge-multi-node-slurm",
+    "nemo-mbridge-perf-activation-recompute",
+    "nemo-mbridge-perf-cpu-offloading",
+    "nemo-mbridge-perf-cuda-graphs",
+    "nemo-mbridge-perf-expert-parallel-overlap",
+    "nemo-mbridge-perf-hierarchical-context-parallel",
+    "nemo-mbridge-perf-megatron-fsdp",
+    "nemo-mbridge-perf-memory-tuning",
+    "nemo-mbridge-perf-moe-comm-overlap",
+    "nemo-mbridge-perf-moe-dispatcher-selection",
+    "nemo-mbridge-perf-moe-hardware-configs",
+    "nemo-mbridge-perf-moe-long-context",
+    "nemo-mbridge-perf-moe-optimization-workflow",
+    "nemo-mbridge-perf-moe-vlm-training",
+    "nemo-mbridge-perf-parallelism-strategies",
+    "nemo-mbridge-perf-sequence-packing",
+    "nemo-mbridge-perf-tp-dp-comm-overlap",
+    "nemo-mbridge-recipe-recommender",
+    "nemo-mbridge-resiliency"
+   ]
+  },
+  {
+   "product": "NeMo Relay",
+   "description": "Skills to help get started and use NeMo Relay - a runtime for instrumenting and controlling AI agents across harnesses, applications, and frameworks.",
+   "skills": [
+    "nemo-relay-install",
+    "nemo-relay-get-started",
+    "nemo-relay-instrument-calls",
+    "nemo-relay-instrument-context-isolation",
+    "nemo-relay-instrument-typed-wrappers",
+    "nemo-relay-plugin-adaptive-tuning",
+    "nemo-relay-plugin-build",
+    "nemo-relay-plugin-observability",
+    "nemo-relay-migrate-from-flow",
+    "nemo-relay-debug-runtime-integration"
+   ]
+  },
+  {
+   "product": "NeMo Retriever",
+   "description": "NeMo Retriever - deploy NeMo Retriever Library locally, extract information from corpus of data, and answer questions against the corpus.",
+   "skills": [
+    "nemo-retriever",
+    "nemo-retriever-mcp"
+   ]
+  },
+  {
+   "product": "NeMo-RL",
+   "description": "RLHF training on Ray — GRPO, DPO, and SFT for LLMs and VLMs with FSDP2 and Megatron-Core.",
+   "skills": [
+    "launch-nemo-rl",
+    "nemo-rl-auto-research",
+    "nemo-rl-brev-etiquette",
+    "nemo-rl-docs",
+    "nemo-rl-session-memory"
+   ]
+  },
+  {
+   "product": "NemoClaw",
+   "description": "Secure agent sandboxing — run OpenClaw inside NVIDIA OpenShell with managed inference, policy management, remote deployment, sandbox monitoring.",
+   "skills": [
+    "nemoclaw-user-guide"
+   ]
+  },
+  {
+   "product": "Nemotron",
+   "description": "Author end-to-end model development, customization, evaluation, and deployment pipelines using the NVIDIA AI stack.",
+   "skills": [
+    "nemotron-customize",
+    "nemotron-retrieval-recipes",
+    "nemotron-policy-generator"
+   ]
+  },
+  {
+   "product": "Nemotron Speech",
+   "description": "Deploy and operate NVIDIA Nemotron Speech (Riva) NIMs — ASR, TTS, and NMT, cloud-hosted via build.nvidia.com or self-hosted on your own GPU.",
+   "skills": [
+    "nemotron-speech",
+    "nemotron-asr-finetune"
+   ]
+  },
+  {
+   "product": "Nemotron Voice Agent",
+   "description": "Create or refine NVIDIA voice agents (Cascaded or Omni) with Pipecat or LiveKit — speech customization, model selection, cloud or local deployment, and iteration.",
+   "skills": [
+    "nemotron-voice-agent-builder"
+   ]
+  },
+  {
+   "product": "NVFlare",
+   "description": "Agent skills for converting training code to federated workflows, diagnosing jobs, collecting federated statistics, and running Auto-FL with NVIDIA FLARE. Install the complete NVFlare skill set together so each workflow has its required shared references.",
+   "skills": [
+    "nvflare-autofl",
+    "nvflare-autofl-report",
+    "nvflare-convert-huggingface",
+    "nvflare-convert-lightning",
+    "nvflare-convert-pytorch",
+    "nvflare-diagnose-job",
+    "nvflare-fed-stats",
+    "nvflare-orient",
+    "nvflare-shared"
+   ]
+  },
+  {
+   "product": "Physical AI",
+   "description": "Physical AI skills for simulation, synthetic data generation, training, validation and deployment and more.",
+   "skills": [
+    "isaac-mission-control-showcase",
+    "omniverse-cad-to-simready",
+    "omniverse-realtime-viewer",
+    "omniverse-usd-performance-tuning",
+    "physical-ai-infrastructure-setup-and-resilient-scaling",
+    "physical-ai-neural-reconstruction",
+    "physical-ai-defect-image-generation",
+    "physical-ai-video-data-augmentation"
+   ]
+  },
+  {
+   "product": "Physical AI Augmentation",
+   "description": "Author, validate, and run Physical AI Data Factory augmentation pipelines for image and video generation and transformation.",
+   "skills": [
+    "paidf-augmentation"
+   ]
+  },
+  {
+   "product": "Physical AI Auto-Labeling",
+   "description": "Build and run Physical AI Data Factory auto-labeling pipelines for video enhancement, tracking, captioning, and question generation.",
+   "skills": [
+    "paidf-auto-labeling"
+   ]
+  },
+  {
+   "product": "Physical AI Curation and Retrieval",
+   "description": "Author, validate, and run Physical AI Data Factory curation and retrieval pipelines.",
+   "skills": [
+    "paidf-curation-and-retrieval"
+   ]
+  },
+  {
+   "product": "Physical AI Orchestration",
+   "description": "Build, run and monitor physical AI data factory pipelines for image and video generation and transformation.",
+   "skills": [
+    "paidf-orchestration-write-dag",
+    "paidf-orchestration-setup",
+    "physical-ai-event-video-generation",
+    "physical-ai-image-attribute-augmentation"
+   ]
+  },
+  {
+   "product": "PhysicsNeMo",
+   "description": "NVIDIA PhysicsNeMo - Open-source deep-learning framework for building, training, and fine-tuning deep learning models using state-of-the-art Physics-ML methods.",
+   "skills": [
+    "physicsnemo-discover",
+    "physicsnemo-shard-tensor"
+   ]
+  },
+  {
+   "product": "Portfolio Optimization",
+   "description": "GPU-accelerated Mean-CVaR portfolio optimization with NVIDIA cuOpt — CVaR optimization, efficient frontier, scenario generation, backtesting, and rebalancing.",
+   "skills": [
+    "portfolio-optimization"
+   ]
+  },
+  {
+   "product": "RAG Blueprint",
+   "description": "RAG pipeline — deploy, configure, troubleshoot, and manage retrieval augmented generation with Docker Compose or Helm.",
+   "skills": [
+    "rag-blueprint",
+    "rag-eval",
+    "rag-perf"
+   ]
+  },
+  {
+   "product": "RTX Remix",
+   "description": "Mod and remaster classic games with RTX Remix: manage projects and USD layers, and replace textures and models through the Toolkit MCP server.",
+   "skills": [
+    "rtx-remix-modding"
+   ]
+  },
+  {
+   "product": "Skill Card Generator",
+   "description": "Reads an agent skill's source files and produces a skill card plus a review table. Use when a skill directory exists and a governance card needs to be generated or updated.",
+   "skills": [
+    "skill-card-generator"
+   ]
+  },
+  {
+   "product": "TAO Toolkit",
+   "description": "NVIDIA TAO Toolkit - fine-tune and optimize 100+ pretrained vision AI models with your own data using low-code microservices, then export production-ready models for edge or cloud deployment.",
+   "skills": [
+    "tao-analyze-changenet-rca",
+    "tao-finetune-huggingface-model",
+    "tao-port-huggingface-model",
+    "tao-run-automl",
+    "tao-run-automl-deft-pipeline",
+    "tao-run-deft-aoi",
+    "tao-run-deft-aoi-cosmos3",
+    "tao-run-deft-cr-its-mining",
+    "tao-run-deft-object-detection",
+    "tao-run-inference-service",
+    "tao-train-single-step",
+    "tao-validate-recipe-transfer",
+    "tao-analyze-detection-kpi",
+    "tao-analyze-gaps-od-map",
+    "tao-analyze-gaps-visual-changenet",
+    "tao-analyze-gaps-vlm-bcq",
+    "tao-convert-dataset-format",
+    "tao-generate-image-embeddings",
+    "tao-generate-image-grounding",
+    "tao-generate-referring-expressions",
+    "tao-generate-video-reasoning-annotations",
+    "tao-mine-aoi-images",
+    "tao-mine-nearest-neighbors",
+    "tao-mine-od-images",
+    "tao-route-visual-changenet-samples",
+    "tao-validate-dataset-format",
+    "tao-finetune-clip",
+    "tao-finetune-cosmos-embed",
+    "tao-finetune-cosmos-reason",
+    "tao-finetune-nv-tesseract-ad-diffusion",
+    "tao-finetune-nv-tesseract-forecasting",
+    "tao-finetune-video-clip",
+    "tao-train-action-recognition",
+    "tao-train-bevfusion",
+    "tao-train-centerpose",
+    "tao-train-codetr",
+    "tao-train-deformable-detr",
+    "tao-train-depth-anything-v2",
+    "tao-train-dino",
+    "tao-train-dinov3",
+    "tao-train-fast-foundation-stereo",
+    "tao-train-foundation-stereo",
+    "tao-train-grounding-dino",
+    "tao-train-image-classification",
+    "tao-train-mask-auto-encoder",
+    "tao-train-mask-auto-label",
+    "tao-train-mask-grounding-dino",
+    "tao-train-mask2former",
+    "tao-train-metric-learning-recognition",
+    "tao-train-nvdinov2",
+    "tao-train-nvpanoptix3d",
+    "tao-train-ocdnet",
+    "tao-train-ocrnet",
+    "tao-train-oneformer",
+    "tao-train-optical-inspection",
+    "tao-train-pointpillars",
+    "tao-train-pose-classification",
+    "tao-train-reid",
+    "tao-train-rtdetr",
+    "tao-train-segformer",
+    "tao-train-sparse4d",
+    "tao-train-visual-changenet",
+    "tao-data-io",
+    "tao-run-on-brev",
+    "tao-run-on-docker",
+    "tao-run-on-kubernetes",
+    "tao-run-on-slurm",
+    "tao-run-on-virtualenv",
+    "tao-setup-nvidia-gpu-host",
+    "tao-artifacts",
+    "tao-launch-workflow",
+    "tao-list-capabilities",
+    "tao-setup"
+   ]
+  },
+  {
+   "product": "TileGym",
+   "description": "Tile-based GPU programming — adding new kernels, cross-framework conversion, and performance optimization.",
+   "skills": [
+    "tilegym-adding-cutile-kernel",
+    "tilegym-converting-cutile-to-julia",
+    "tilegym-converting-cutile-to-triton",
+    "tilegym-cutile-autotuning",
+    "tilegym-cutile-python",
+    "tilegym-improve-cutile-kernel-perf",
+    "tilegym-monkey-patch-kernels-to-transformers"
+   ]
+  },
+  {
+   "product": "Video Search and Summarization",
+   "description": "VSS Blueprint — deploy profiles, search and summarize video, generate analysis reports, manage alerts and incidents, query VIOS sensors, and use the RTVI VLM microservice.",
+   "skills": [
+    "vss-ask-video",
+    "vss-deploy-dense-captioning",
+    "vss-deploy-detection-tracking-2d",
+    "vss-deploy-detection-tracking-3d",
+    "vss-deploy-profile",
+    "vss-deploy-video-embedding",
+    "vss-generate-video-calibration",
+    "vss-generate-video-report",
+    "vss-manage-alerts",
+    "vss-manage-video-io-storage",
+    "vss-query-analytics",
+    "vss-search-archive",
+    "vss-setup-behavior-analytics",
+    "vss-setup-video-analytics-api",
+    "vss-summarize-video"
+   ]
+  },
+  {
+   "product": "Warp",
+   "description": "GPU-accelerated simulation, robotics, and machine learning — evaluate Warp candidates, optimize compile times, and debug gradients.",
+   "skills": [
+    "warp-compile-time-optimizer",
+    "warp-debug-gradients",
+    "warp-eval"
+   ]
+  },
+  {
+   "product": "AIQ",
+   "description": "[Issues](https://github.com/NVIDIA-AI-Blueprints/aiq/issues)",
+   "skills": []
+  },
+  {
+   "product": "BioNeMo Libraries",
+   "description": "[Issues](https://github.com/NVIDIA-BioNeMo/nvMolKit/issues)",
+   "skills": []
+  },
+  {
+   "product": "BioNeMo NIMs",
+   "description": "[Issues](https://github.com/NVIDIA-BioNeMo/bionemo-agent-toolkit/issues)",
+   "skills": []
+  },
+  {
+   "product": "BioNeMo Open Models",
+   "description": "[Issues](https://github.com/NVIDIA-BioNeMo/KERMT/issues)",
+   "skills": []
+  },
+  {
+   "product": "CUDA-Q",
+   "description": "[Issues](https://github.com/NVIDIA/cuda-quantum/issues)",
+   "skills": []
+  },
+  {
+   "product": "cuDF",
+   "description": "[Issues](https://github.com/rapidsai/cudf/issues)",
+   "skills": []
+  },
+  {
+   "product": "cuOpt",
+   "description": "[Issues](https://github.com/NVIDIA/cuopt/issues)",
+   "skills": []
+  },
+  {
+   "product": "DALI",
+   "description": "[Issues](https://github.com/NVIDIA/DALI/issues)",
+   "skills": []
+  },
+  {
+   "product": "Data Designer",
+   "description": "[Issues](https://github.com/NVIDIA-NeMo/DataDesigner/issues)",
+   "skills": []
+  },
+  {
+   "product": "DeepStream",
+   "description": "[Issues](https://github.com/NVIDIA/DeepStream/issues)",
+   "skills": []
+  },
+  {
+   "product": "Digital Health",
+   "description": "[Issues](https://github.com/NVIDIA/digital-health-examples/issues)",
+   "skills": []
+  },
+  {
+   "product": "DOCA",
+   "description": "[Issues](https://github.com/NVIDIA-DOCA/doca-skills/issues)",
+   "skills": []
+  },
+  {
+   "product": "Dynamo",
+   "description": "[Issues](https://github.com/ai-dynamo/dynamo/issues)",
+   "skills": []
+  },
+  {
+   "product": "Earth2Studio",
+   "description": "[Issues](https://github.com/NVIDIA/earth2studio/issues)",
+   "skills": []
+  },
+  {
+   "product": "FoundationPose Perception Pipeline",
+   "description": "[Issues](https://github.com/nvidia-isaac/foundationpose_perception_pipeline/issues)",
+   "skills": []
+  },
+  {
+   "product": "HoloHub",
+   "description": "[Issues](https://github.com/nvidia-holoscan/holohub/issues)",
+   "skills": []
+  },
+  {
+   "product": "Holoscan SDK",
+   "description": "[Issues](https://github.com/nvidia-holoscan/holoscan-sdk/issues)",
+   "skills": []
+  },
+  {
+   "product": "Holoscan Sensor Bridge",
+   "description": "[Issues](https://github.com/nvidia-holoscan/holoscan-sensor-bridge/issues)",
+   "skills": []
+  },
+  {
+   "product": "Isaac for Healthcare Workflows",
+   "description": "[Issues](https://github.com/isaac-for-healthcare/i4h-workflows/issues)",
+   "skills": []
+  },
+  {
+   "product": "Jetson BSP",
+   "description": "[Issues](https://github.com/NVIDIA-AI-IOT/jetson-bsp-skills/issues)",
+   "skills": []
+  },
+  {
+   "product": "Jetson Device",
+   "description": "[Issues](https://github.com/NVIDIA-AI-IOT/jetson-device-skills/issues)",
+   "skills": []
+  },
+  {
+   "product": "Medical AI Skills",
+   "description": "[Issues](https://github.com/NVIDIA-Medtech/medical-AI-skills/issues)",
+   "skills": []
+  },
+  {
+   "product": "Megatron-Core",
+   "description": "[Issues](https://github.com/NVIDIA/Megatron-LM/issues)",
+   "skills": []
+  },
+  {
+   "product": "NeMo AutoModel",
+   "description": "[Issues](https://github.com/NVIDIA-NeMo/Automodel/issues)",
+   "skills": []
+  },
+  {
+   "product": "NeMo Fabric",
+   "description": "[Issues](https://github.com/NVIDIA/NeMo-Fabric/issues)",
+   "skills": []
+  },
+  {
+   "product": "NeMo MBridge",
+   "description": "[Issues](https://github.com/NVIDIA-NeMo/Megatron-Bridge/issues)",
+   "skills": []
+  },
+  {
+   "product": "NeMo Relay",
+   "description": "[Issues](https://github.com/NVIDIA/NeMo-Relay/issues)",
+   "skills": []
+  },
+  {
+   "product": "NeMo Retriever",
+   "description": "[Issues](https://github.com/NVIDIA/NeMo-Retriever/issues)",
+   "skills": []
+  },
+  {
+   "product": "NeMo-RL",
+   "description": "[Issues](https://github.com/NVIDIA-NeMo/RL/issues)",
+   "skills": []
+  },
+  {
+   "product": "NemoClaw",
+   "description": "[Issues](https://github.com/NVIDIA/NemoClaw/issues)",
+   "skills": []
+  },
+  {
+   "product": "Nemotron",
+   "description": "[Issues](https://github.com/NVIDIA-NeMo/Nemotron/issues)",
+   "skills": []
+  },
+  {
+   "product": "Nemotron Speech",
+   "description": "[Issues](https://github.com/nvidia-riva/Nemotron-speech-skills/issues)",
+   "skills": []
+  },
+  {
+   "product": "Nemotron Voice Agent",
+   "description": "[Issues](https://github.com/NVIDIA-AI-Blueprints/nemotron-voice-agent/issues)",
+   "skills": []
+  },
+  {
+   "product": "NVFlare",
+   "description": "[Issues](https://github.com/NVIDIA/NVFlare/issues)",
+   "skills": []
+  },
+  {
+   "product": "Physical AI",
+   "description": "[Issues](https://github.com/NVIDIA/physical-ai-data-factory/issues)",
+   "skills": []
+  },
+  {
+   "product": "Physical AI Augmentation",
+   "description": "[Issues](https://github.com/NVIDIA/paidf-augmentation/issues)",
+   "skills": []
+  },
+  {
+   "product": "Physical AI Auto-Labeling",
+   "description": "[Issues](https://github.com/NVIDIA/paidf-auto-labeling/issues)",
+   "skills": []
+  },
+  {
+   "product": "Physical AI Curation and Retrieval",
+   "description": "[Issues](https://github.com/NVIDIA/paidf-curation-and-retrieval/issues)",
+   "skills": []
+  },
+  {
+   "product": "Physical AI Orchestration",
+   "description": "[Issues](https://github.com/NVIDIA/paidf-orchestration/issues)",
+   "skills": []
+  },
+  {
+   "product": "PhysicsNeMo",
+   "description": "[Issues](https://github.com/NVIDIA/physicsnemo/issues)",
+   "skills": []
+  },
+  {
+   "product": "Portfolio Optimization",
+   "description": "[Issues](https://github.com/NVIDIA-AI-Blueprints/portfolio-optimization/issues)",
+   "skills": []
+  },
+  {
+   "product": "RAG Blueprint",
+   "description": "[Issues](https://github.com/NVIDIA-AI-Blueprints/rag/issues)",
+   "skills": []
+  },
+  {
+   "product": "RTX Remix",
+   "description": "[Issues](https://github.com/NVIDIAGameWorks/toolkit-remix/issues)",
+   "skills": []
+  },
+  {
+   "product": "Skill Card Generator",
+   "description": "[Issues](https://github.com/NVIDIA/Trustworthy-AI/issues)",
+   "skills": []
+  },
+  {
+   "product": "TAO Toolkit",
+   "description": "[Issues](https://github.com/NVIDIA-TAO/tao-skill-bank/issues)",
+   "skills": []
+  },
+  {
+   "product": "TileGym",
+   "description": "[Issues](https://github.com/NVIDIA/TileGym/issues)",
+   "skills": []
+  },
+  {
+   "product": "Video Search and Summarization",
+   "description": "[Issues](https://github.com/NVIDIA-AI-Blueprints/video-search-and-summarization/issues)",
+   "skills": []
+  },
+  {
+   "product": "Warp",
+   "description": "[Issues](https://github.com/NVIDIA/warp/issues)",
+   "skills": []
+  }
+ ],
+ "relevant": [
+  {
+   "skill": "aiq-research",
+   "product": "AIQ",
+   "product_description": "NVIDIA AI-Q Blueprint - deploy local AI-Q services and run shallow or deep research workflows as agent skills."
+  },
+  {
+   "skill": "aiq-deploy",
+   "product": "AIQ",
+   "product_description": "NVIDIA AI-Q Blueprint - deploy local AI-Q services and run shallow or deep research workflows as agent skills."
+  },
+  {
+   "skill": "bionemo-nvmolkit-usage",
+   "product": "BioNeMo Libraries",
+   "product_description": "GPU-accelerated cheminformatics with nvMolKit for molecular fingerprints, similarity search, conformer generation, and optimization."
+  },
+  {
+   "skill": "bionemo-msa-structure-prediction-pipeline",
+   "product": "BioNeMo NIMs",
+   "product_description": "OpenFold2 predicts single-chain protein structures. The MSA pipeline uses MSA-Search alignments to guide OpenFold3 structure prediction."
+  },
+  {
+   "skill": "bionemo-openfold2-nim",
+   "product": "BioNeMo NIMs",
+   "product_description": "OpenFold2 predicts single-chain protein structures. The MSA pipeline uses MSA-Search alignments to guide OpenFold3 structure prediction."
+  },
+  {
+   "skill": "bionemo-kermt-add-cmim-pretrain",
+   "product": "BioNeMo Open Models",
+   "product_description": "KERMT skills for container setup, molecular model pretraining and finetuning, inference, embedding extraction, and run monitoring."
+  },
+  {
+   "skill": "bionemo-kermt-continue-pretrain",
+   "product": "BioNeMo Open Models",
+   "product_description": "KERMT skills for container setup, molecular model pretraining and finetuning, inference, embedding extraction, and run monitoring."
+  },
+  {
+   "skill": "bionemo-kermt-embed",
+   "product": "BioNeMo Open Models",
+   "product_description": "KERMT skills for container setup, molecular model pretraining and finetuning, inference, embedding extraction, and run monitoring."
+  },
+  {
+   "skill": "bionemo-kermt-finetune",
+   "product": "BioNeMo Open Models",
+   "product_description": "KERMT skills for container setup, molecular model pretraining and finetuning, inference, embedding extraction, and run monitoring."
+  },
+  {
+   "skill": "bionemo-kermt-infer",
+   "product": "BioNeMo Open Models",
+   "product_description": "KERMT skills for container setup, molecular model pretraining and finetuning, inference, embedding extraction, and run monitoring."
+  },
+  {
+   "skill": "bionemo-kermt-monitor",
+   "product": "BioNeMo Open Models",
+   "product_description": "KERMT skills for container setup, molecular model pretraining and finetuning, inference, embedding extraction, and run monitoring."
+  },
+  {
+   "skill": "bionemo-kermt-pretrain-scratch",
+   "product": "BioNeMo Open Models",
+   "product_description": "KERMT skills for container setup, molecular model pretraining and finetuning, inference, embedding extraction, and run monitoring."
+  },
+  {
+   "skill": "bionemo-kermt-setup",
+   "product": "BioNeMo Open Models",
+   "product_description": "KERMT skills for container setup, molecular model pretraining and finetuning, inference, embedding extraction, and run monitoring."
+  },
+  {
+   "skill": "digital-health-clinical-asr-setup",
+   "product": "Digital Health",
+   "product_description": "Agent skills for the clinical ASR evaluation flywheel — term curation, synthetic clinical-speech benchmark generation, KER (Keyword Error Rate) scoring, and fine-tune guidance."
+  },
+  {
+   "skill": "digital-health-clinical-asr-build",
+   "product": "Digital Health",
+   "product_description": "Agent skills for the clinical ASR evaluation flywheel — term curation, synthetic clinical-speech benchmark generation, KER (Keyword Error Rate) scoring, and fine-tune guidance."
+  },
+  {
+   "skill": "digital-health-clinical-asr-eval",
+   "product": "Digital Health",
+   "product_description": "Agent skills for the clinical ASR evaluation flywheel — term curation, synthetic clinical-speech benchmark generation, KER (Keyword Error Rate) scoring, and fine-tune guidance."
+  },
+  {
+   "skill": "digital-health-clinical-asr-finetune",
+   "product": "Digital Health",
+   "product_description": "Agent skills for the clinical ASR evaluation flywheel — term curation, synthetic clinical-speech benchmark generation, KER (Keyword Error Rate) scoring, and fine-tune guidance."
+  },
+  {
+   "skill": "dicom-metadata-extract",
+   "product": "Medical AI Skills",
+   "product_description": "Agent-ready medical AI skills built on MONAI for DICOM handling, NVIDIA-hosted medical imaging model workflows, segmentation, synthesis, and evidence-oriented evaluation."
+  },
+  {
+   "skill": "dicom-series-preflight",
+   "product": "Medical AI Skills",
+   "product_description": "Agent-ready medical AI skills built on MONAI for DICOM handling, NVIDIA-hosted medical imaging model workflows, segmentation, synthesis, and evidence-oriented evaluation."
+  },
+  {
+   "skill": "dicom-series-to-volume",
+   "product": "Medical AI Skills",
+   "product_description": "Agent-ready medical AI skills built on MONAI for DICOM handling, NVIDIA-hosted medical imaging model workflows, segmentation, synthesis, and evidence-oriented evaluation."
+  },
+  {
+   "skill": "medtech-model-evidence-export",
+   "product": "Medical AI Skills",
+   "product_description": "Agent-ready medical AI skills built on MONAI for DICOM handling, NVIDIA-hosted medical imaging model workflows, segmentation, synthesis, and evidence-oriented evaluation."
+  },
+  {
+   "skill": "nv-reason-cxr",
+   "product": "Medical AI Skills",
+   "product_description": "Agent-ready medical AI skills built on MONAI for DICOM handling, NVIDIA-hosted medical imaging model workflows, segmentation, synthesis, and evidence-oriented evaluation."
+  },
+  {
+   "skill": "nv-segment-ct",
+   "product": "Medical AI Skills",
+   "product_description": "Agent-ready medical AI skills built on MONAI for DICOM handling, NVIDIA-hosted medical imaging model workflows, segmentation, synthesis, and evidence-oriented evaluation."
+  },
+  {
+   "skill": "nv-segment-ct-finetune",
+   "product": "Medical AI Skills",
+   "product_description": "Agent-ready medical AI skills built on MONAI for DICOM handling, NVIDIA-hosted medical imaging model workflows, segmentation, synthesis, and evidence-oriented evaluation."
+  },
+  {
+   "skill": "nv-segment-ctmr",
+   "product": "Medical AI Skills",
+   "product_description": "Agent-ready medical AI skills built on MONAI for DICOM handling, NVIDIA-hosted medical imaging model workflows, segmentation, synthesis, and evidence-oriented evaluation."
+  },
+  {
+   "skill": "nemo-automodel-distributed-training",
+   "product": "NeMo AutoModel",
+   "product_description": "NeMo AutoModel - PyTorch-native distributed training for LLMs/VLMs with Hugging Face support, recipes, launchers, and validation workflows."
+  },
+  {
+   "skill": "nemo-automodel-launcher-config",
+   "product": "NeMo AutoModel",
+   "product_description": "NeMo AutoModel - PyTorch-native distributed training for LLMs/VLMs with Hugging Face support, recipes, launchers, and validation workflows."
+  },
+  {
+   "skill": "nemo-automodel-model-onboarding",
+   "product": "NeMo AutoModel",
+   "product_description": "NeMo AutoModel - PyTorch-native distributed training for LLMs/VLMs with Hugging Face support, recipes, launchers, and validation workflows."
+  },
+  {
+   "skill": "nemo-automodel-recipe-development",
+   "product": "NeMo AutoModel",
+   "product_description": "NeMo AutoModel - PyTorch-native distributed training for LLMs/VLMs with Hugging Face support, recipes, launchers, and validation workflows."
+  },
+  {
+   "skill": "nemo-mbridge-mlm-bridge-training",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-multi-node-slurm",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-activation-recompute",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-cpu-offloading",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-cuda-graphs",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-expert-parallel-overlap",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-hierarchical-context-parallel",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-megatron-fsdp",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-memory-tuning",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-moe-comm-overlap",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-moe-dispatcher-selection",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-moe-hardware-configs",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-moe-long-context",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-moe-optimization-workflow",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-moe-vlm-training",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-parallelism-strategies",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-sequence-packing",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-perf-tp-dp-comm-overlap",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-recipe-recommender",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-mbridge-resiliency",
+   "product": "NeMo MBridge",
+   "product_description": "NeMo MBridge - PyTorch-native bridge between Hugging Face and Megatron-Core for checkpoint conversion, training recipes, and NVIDIA GPU performance workflows."
+  },
+  {
+   "skill": "nemo-retriever",
+   "product": "NeMo Retriever",
+   "product_description": "NeMo Retriever - deploy NeMo Retriever Library locally, extract information from corpus of data, and answer questions against the corpus."
+  },
+  {
+   "skill": "nemo-retriever-mcp",
+   "product": "NeMo Retriever",
+   "product_description": "NeMo Retriever - deploy NeMo Retriever Library locally, extract information from corpus of data, and answer questions against the corpus."
+  },
+  {
+   "skill": "nemo-rl-auto-research",
+   "product": "NeMo-RL",
+   "product_description": "RLHF training on Ray — GRPO, DPO, and SFT for LLMs and VLMs with FSDP2 and Megatron-Core."
+  },
+  {
+   "skill": "nemotron-customize",
+   "product": "Nemotron",
+   "product_description": "Author end-to-end model development, customization, evaluation, and deployment pipelines using the NVIDIA AI stack."
+  },
+  {
+   "skill": "nemotron-retrieval-recipes",
+   "product": "Nemotron",
+   "product_description": "Author end-to-end model development, customization, evaluation, and deployment pipelines using the NVIDIA AI stack."
+  },
+  {
+   "skill": "nemotron-policy-generator",
+   "product": "Nemotron",
+   "product_description": "Author end-to-end model development, customization, evaluation, and deployment pipelines using the NVIDIA AI stack."
+  },
+  {
+   "skill": "nemotron-speech",
+   "product": "Nemotron Speech",
+   "product_description": "Deploy and operate NVIDIA Nemotron Speech (Riva) NIMs — ASR, TTS, and NMT, cloud-hosted via build.nvidia.com or self-hosted on your own GPU."
+  },
+  {
+   "skill": "nemotron-asr-finetune",
+   "product": "Nemotron Speech",
+   "product_description": "Deploy and operate NVIDIA Nemotron Speech (Riva) NIMs — ASR, TTS, and NMT, cloud-hosted via build.nvidia.com or self-hosted on your own GPU."
+  },
+  {
+   "skill": "nemotron-voice-agent-builder",
+   "product": "Nemotron Voice Agent",
+   "product_description": "Create or refine NVIDIA voice agents (Cascaded or Omni) with Pipecat or LiveKit — speech customization, model selection, cloud or local deployment, and iteration."
+  },
+  {
+   "skill": "paidf-curation-and-retrieval",
+   "product": "Physical AI Curation and Retrieval",
+   "product_description": "Author, validate, and run Physical AI Data Factory curation and retrieval pipelines."
+  },
+  {
+   "skill": "rag-blueprint",
+   "product": "RAG Blueprint",
+   "product_description": "RAG pipeline — deploy, configure, troubleshoot, and manage retrieval augmented generation with Docker Compose or Helm."
+  },
+  {
+   "skill": "rag-eval",
+   "product": "RAG Blueprint",
+   "product_description": "RAG pipeline — deploy, configure, troubleshoot, and manage retrieval augmented generation with Docker Compose or Helm."
+  },
+  {
+   "skill": "rag-perf",
+   "product": "RAG Blueprint",
+   "product_description": "RAG pipeline — deploy, configure, troubleshoot, and manage retrieval augmented generation with Docker Compose or Helm."
+  },
+  {
+   "skill": "skill-card-generator",
+   "product": "Skill Card Generator",
+   "product_description": "Reads an agent skill's source files and produces a skill card plus a review table. Use when a skill directory exists and a governance card needs to be generated or updated."
+  }
+ ],
+ "details": [
+  {
+   "skill": "aiq-research",
+   "declared_name": "aiq-research",
+   "description": "Use when asked to run deep research or AI-Q research through a reachable NVIDIA AI-Q Blueprint backend.",
+   "license": "Apache-2.0",
+   "allowed_tools": "Read Bash",
+   "endpoints": [],
+   "lines": 426,
+   "references": []
+  },
+  {
+   "skill": "aiq-deploy",
+   "declared_name": "aiq-deploy",
+   "description": "Use when asked to install, deploy, run, validate, troubleshoot, or stop NVIDIA AI-Q Blueprint infrastructure.",
+   "license": "Apache-2.0",
+   "allowed_tools": "Read Bash",
+   "endpoints": [],
+   "lines": 351,
+   "references": [
+    "configs.md",
+    "docker-compose.md",
+    "end-to-end-validation.md",
+    "env-and-secrets.md",
+    "frag.md",
+    "kubernetes-helm.md",
+    "local-web.md",
+    "locate-or-clone.md",
+    "shutdown.md",
+    "skill-backend.md",
+    "terminal-cli.md",
+    "troubleshooting.md",
+    "validation.md"
+   ]
+  },
+  {
+   "skill": "bionemo-openfold2-nim",
+   "declared_name": "openfold2-nim",
+   "description": "Use this skill for OpenFold2, NVIDIA's BioNeMo NIM microservice for monomer protein structure prediction. Invoke whenever the user mentions OpenFold2, AlphaFold2-like monomer folding, protein sequence-to-structure prediction, A3M MSAs, mmCIF templates, hosted NVIDIA API calls, or local Docker deployment.",
+   "license": "Apache-2.0 AND CC-BY-4.0",
+   "allowed_tools": "Bash, Read, Write, AskUserQuestion",
+   "endpoints": [
+    "https://health.api.nvidia.com/v1/biology/openfold/openfold2/predict-structure-from-msa-and-template",
+    "https://health.api.nvidia.com/v1/biology/openfold/openfold2/predict-structure-from-msa-and-template`"
+   ],
+   "lines": 177,
+   "references": [
+    "api.md",
+    "examples.md",
+    "parameters.md",
+    "science.md",
+    "validation.md"
+   ]
+  },
+  {
+   "skill": "bionemo-msa-structure-prediction-pipeline",
+   "declared_name": "msa-structure-prediction-pipeline",
+   "description": "NOTE: your protein sequence and the retrieved MSA alignment are transmitted to external NVIDIA-hosted APIs (health.api.nvidia.com) on every call. Use local NIM containers for confidential or proprietary sequences. Run a complete protein structure prediction pipeline using NVIDIA BioNeMo NIMs: search for MSA alignments with MSA-Search (ColabFold), then predict the structure with OpenFold3 using the retrieved alignments. Use this skill whenever the user wants to predict a protein structure with maximum accuracy using MSA context, run the full AlphaFold3-style pipeline, generate MSA-informed structure predictions, or improve structure prediction accuracy by providing evolutionary information. Triggers on: MSA structure prediction pipeline, structure prediction pipeline, MSA-informed prediction, OpenFold3, ColabFold MSA, AlphaFold3 pipeline, protein structure, homology search, a3m alignment, UniRef30, NIM microservice. This pipeline chains MSA-Search and OpenFold3.",
+   "license": "Apache-2.0 AND CC-BY-4.0 allowed-tools: Bash, Read, Write, AskUserQuestion",
+   "allowed_tools": "Bash, Read, Write, AskUserQuestion",
+   "endpoints": [
+    "https://health.api.nvidia.com/v1/biology/colabfold/msa-search/paired/predict",
+    "https://health.api.nvidia.com/v1/biology/colabfold/msa-search/predict",
+    "https://health.api.nvidia.com/v1/biology/openfold/openfold3/predict"
+   ],
+   "lines": 197,
+   "references": []
+  },
+  {
+   "skill": "bionemo-nvmolkit-usage",
+   "declared_name": "nvmolkit-usage",
+   "description": "Use when writing or debugging nvMolKit Python code for GPU-accelerated RDKit fingerprints, similarity, conformers, clustering, and molecular searches.",
+   "license": "Apache-2.0",
+   "allowed_tools": "",
+   "endpoints": [],
+   "lines": 355,
+   "references": [
+    "advanced-usage.md"
+   ]
+  },
+  {
+   "skill": "nemo-retriever",
+   "declared_name": "nemo-retriever",
+   "description": "Use when searching, extracting, ingesting, or querying a document collection with the NeMo Retriever 26.8.1 CLI, including local LanceDB indexes and deployed Retriever services. Use for PDFs, images, Office files, HTML, text, audio, and video; not for editing documents or web search.",
+   "license": "Apache-2.0",
+   "allowed_tools": "",
+   "endpoints": [],
+   "lines": 83,
+   "references": []
+  },
+  {
+   "skill": "nemo-retriever-mcp",
+   "declared_name": "nemo-retriever-mcp",
+   "description": "Use when a task needs to search or add documents through NeMo Retriever MCP.",
+   "license": "Apache-2.0",
+   "allowed_tools": "",
+   "endpoints": [],
+   "lines": 34,
+   "references": []
+  },
+  {
+   "skill": "rag-blueprint",
+   "declared_name": "rag-blueprint",
+   "description": "\"NVIDIA RAG Blueprint — deploy, configure, troubleshoot, and manage. Handles any RAG action: deploy, install, start, enable, disable, toggle, change, configure, troubleshoot, debug, fix, shutdown, stop, or tear down any RAG feature or service (Agentic RAG, VLM, guardrails, query rewriting, models, search, ingestion, observability, summarization, reasoning, and more).\"",
+   "license": "Apache-2.0",
+   "allowed_tools": "Bash(echo *) Bash(nvidia-smi *) Bash(curl --version *) Bash(docker ps *) Bash(docker info *) Bash(docker --version *) Bash(docker version *) Bash(docker logs *) Bash(docker inspect *) Bash(docker stats *) Bash(docker compose ps *) Bash(docker compose logs *) Bash(docker compose config *) Bash(docker compose version *) Bash(kubectl get *) Bash(kubectl describe *) Bash(kubectl version *) Bash(kubectl logs *) Bash(kubectl api-resources *) Bash(kubectl rollout status *) Bash(helm version *) Bash(helm list *) Bash(helm status *) Bash(oc get *) Bash(oc describe *) Bash(oc logs *) Bash(oc whoami *) Bash(oc version *) Bash(git rev-parse *) Bash(git describe *) Bash(git status *) Bash(python3 --version *) Bash(pip3 show *) Bash(df *) Bash(du *) Bash(cat /proc/*) Bash(cat /etc/os-release *) Bash(ss *) Bash(netstat *) Bash(ls *) Bash(grep *) Bash(lsof *) Bash(ps aux *) Read Grep Glob",
+   "endpoints": [],
+   "lines": 204,
+   "references": [
+    "deploy.md",
+    "shutdown.md",
+    "troubleshoot.md"
+   ]
+  },
+  {
+   "skill": "rag-eval",
+   "declared_name": "rag-eval",
+   "description": "Filesystem RAG benchmarks: corpus/, train.json, evaluate_rag.py (RAGAS quality). Not for prod monitoring, latency/throughput benchmarking (use rag-perf), or evals outside this repo layout.",
+   "license": "Apache-2.0",
+   "allowed_tools": "Read Grep Glob Bash(ls *) Bash(python3 *) Bash(uv *) Write Edit",
+   "endpoints": [],
+   "lines": 130,
+   "references": [
+    "benchmark-execution.md",
+    "dataset-and-conversion.md",
+    "evaluate-rag-cli.md",
+    "result-analysis.md"
+   ]
+  },
+  {
+   "skill": "medtech-model-evidence-export",
+   "declared_name": "medtech-model-evidence-export",
+   "description": "Exports sanitized metadata, parameters, reproducibility details, quality metrics, and optional review artifacts from Medical AI inference runs or evidence packs to MLflow. Use after inference, including NV-Generate runs; not for live training tracking, model registration, or clinical use.",
+   "license": "Apache-2.0 allowed-tools: Bash",
+   "allowed_tools": "Bash",
+   "endpoints": [],
+   "lines": 118,
+   "references": []
+  },
+  {
+   "skill": "skill-card-generator",
+   "declared_name": "\"skill-card-generator\"",
+   "description": "\"Use only to generate or update a governance skill card for a specified existing agent skill directory. Do not use for explaining, listing, comparing, or discussing skill capabilities.\"",
+   "license": "CC-BY-4.0 AND Apache-2.0",
+   "allowed_tools": "",
+   "endpoints": [],
+   "lines": 131,
+   "references": [
+    "skill-card.md",
+    "style-guide.md"
+   ]
+  },
+  {
+   "skill": "nvidia-skill-finder",
+   "declared_name": "nvidia-skill-finder",
+   "description": "Use for NVIDIA-related requests where an NVIDIA skill might help, even if the user did not ask for a skill. Trigger on NVIDIA products, hardware, software, SDKs, GPUs, Jetson/JetPack/L4T/BSP/SDK Manager/driver/flashing/setup, CUDA, NIM, NeMo, Omniverse/OpenUSD/SimReady, RAPIDS/cuDF, cuPyNumeric, cuOpt, Dynamo, Holoscan, TensorRT, DeepStream, VSS, TAO, NGC/NVCF. Do not use for generic non-NVIDIA route, optimize, deploy, AI, video, data, or infrastructure tasks.",
+   "license": "CC-BY-4.0 AND Apache-2.0",
+   "allowed_tools": "",
+   "endpoints": [],
+   "lines": 179,
+   "references": [
+    "taxonomy-routing.md"
+   ]
+  },
+  {
+   "skill": "nemotron-customize",
+   "declared_name": "nemotron-customize",
+   "description": "\"Plan, configure, and chain repo-native Nemotron customization steps into single-step or multi-step pipelines: curation, translation, SFT/PEFT (AutoModel or Megatron-Bridge), pretraining/CPT, RL alignment (DPO/RLVR/GRPO/RLHF), BYOB/MCQ benchmarks, checkpoint conversion, ModelOpt optimization, env profiles, and evaluation of trained checkpoints or existing/hosted endpoints. Use when a request names a Nemotron step or workflow, or asks to clean, translate, train, fine-tune, align, convert, optimize, evaluate, or compose these into a pipeline. Do NOT use for frontend/dashboard/visualization work, generic ML advice, billing/access, or non-Nemotron coding tasks.\"",
+   "license": "Apache-2.0",
+   "allowed_tools": "",
+   "endpoints": [],
+   "lines": 322,
+   "references": []
+  },
+  {
+   "skill": "nemotron-policy-generator",
+   "declared_name": "\"nemotron-policy-generator\"",
+   "description": "\"Generates BYO custom safety policies for NVIDIA Nemotron content-safety guardrails — Nemotron-Content-Safety-Reasoning-4B (text) and multimodal Nemotron-3-Content-Safety. Produces a Markdown policy, JSON taxonomy, and drop-in inference prompts. Maps rough words or an existing policy to V2 categories, adding custom categories or topic-following rules.\"",
+   "license": "\"Apache-2.0 AND CC-BY-4.0\"",
+   "allowed_tools": "",
+   "endpoints": [],
+   "lines": 222,
+   "references": [
+    "content_safety_taxonomy.md",
+    "policy_patterns.md",
+    "target_models.md"
+   ]
+  },
+  {
+   "skill": "nemotron-retrieval-recipes",
+   "declared_name": "nemotron-retrieval-recipes",
+   "description": "Use when planning, debugging, tuning, evaluating, exporting, or deploying public Nemotron `embed`/`rerank` retrieval recipes.",
+   "license": "Apache-2.0",
+   "allowed_tools": "",
+   "endpoints": [],
+   "lines": 142,
+   "references": [
+    "embed.md",
+    "evaluation.md",
+    "remote.md",
+    "rerank.md"
+   ]
+  },
+  {
+   "skill": "nemo-rl-auto-research",
+   "declared_name": "nemo-rl-auto-research",
+   "description": "\"Autonomous NeMo-RL research agent workflow for directed hypothesis testing and open-ended discovery. Guides agents through the full experiment lifecycle: understanding recipes and environments, wiring RL or NeMo-gym runs, launching reproducible baselines and iterations, analyzing results, preserving human oversight, and using git plus TSV logs as the research ledger. Do NOT use for: bug fixes, code review, documentation, refactoring, dependency updates, or single-file changes.\"",
+   "license": "Apache-2.0",
+   "allowed_tools": "",
+   "endpoints": [],
+   "lines": 108,
+   "references": [
+    "experiment-log-template.md",
+    "exploration-ideas.md",
+    "git-workflow.md"
+   ]
+  }
+ ]
+}
