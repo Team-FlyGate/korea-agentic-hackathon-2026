@@ -256,6 +256,13 @@ v0에서 문제 정의와 검증 설계를 물려받았고, v0이 쓴 외부 플
 | `docs/notes/real-world-cases.md` | 현장에서 실제로 일어난 과잉해석 사례와 확인 결과 |
 | `docs/notes/jev-primer.md` | 판정 전용 모델 Jev 정리. 자체 측정과 독립 검증을 나눠 적음 |
 | `docs/notes/paper-plan.md` | 논문 계획, 선행연구와 정직한 한계 |
+| `docs/notes/case-drug-review-2026-09-27.md` | 사례 약물 열다섯 종 실측. 키트루다로 규칙이 갈리는 것과 퇴출 약물 조회 함정 |
+| `docs/notes/jev-triage-2026-09-27.md` | Jev 를 1단 게이트로 쓸 수 있는지 네 팔 비교 |
+| `docs/notes/openfold3-2026-09-27.md` | OpenFold3 호출과 pLDDT 가 MSA 에 좌우되는 실측 |
+| `docs/notes/structure-rules-2026-09-27.md` | 구조 예측 규칙 2종과 그 규칙이 보태는 값 |
+| `docs/notes/nvidia-skills-catalog.md` | NVIDIA 스킬 380개 가운데 쓸 만한 것 정리 |
+| `docs/notes/causality-assessment.md` | WHO-UMC 와 한국형 알고리즘, 정답 데이터의 소재 |
+| `docs/notes/report-form-mapping.md` | 실제 보고 서식과 우리 산출물의 대응 |
 | `docs/COURSE-GUIDE.md` | NVIDIA DLI 강좌 수강 안내 |
 | `docs/TROUBLESHOOTING.md` | 겪고 푼 문제 열 건 |
 | `docs/HANDOFF.md` | 진행 상황과 검증된 수치 |
