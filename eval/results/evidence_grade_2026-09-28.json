@@ -1,0 +1,185 @@
+{
+ "graded_at": "2026-09-28",
+ "rules": {
+  "A": "확립. 규제기관이 경고로 다룬 조합",
+  "B": "개연. 라벨에 기재되고 신호도 선다",
+  "C": "관찰. 신호는 있으나 인과가 확립되지 않았다",
+  "D": "불충분. 신호가 서지 않는다"
+ },
+ "pairs": [
+  {
+   "drug": "NIRAPARIB",
+   "reaction": "THROMBOCYTOPENIA",
+   "signal": {
+    "counts": {
+     "a": 1065,
+     "b": 21051,
+     "c": 108978,
+     "d": 20561596,
+     "n_drug": 22116,
+     "n_reaction": 110043,
+     "n_total": 20692690
+    },
+    "prr": 9.133910039058993,
+    "prr_ci95": [
+     8.611511892824607,
+     9.687998302729843
+    ],
+    "ror": 9.54541610487999,
+    "ror_ci95": [
+     8.97294506641905,
+     10.1544106133333
+    ],
+    "chi2_yates": 7672.293556659291,
+    "evans_signal": true,
+    "ror_signal": true
+   },
+   "label": {
+    "labeled": true,
+    "sections": [
+     "adverse_reactions",
+     "warnings_and_precautions"
+    ],
+    "section_weight": 2,
+    "causality_disclaimer": null,
+    "errors": []
+   },
+   "literature": {
+    "total_count": 92,
+    "pmids": [
+     "31562799",
+     "27717299",
+     "36792166",
+     "40687421",
+     "39019698"
+    ]
+   },
+   "grade": "B",
+   "meaning": "개연. 라벨에 기재되고 신호도 선다",
+   "reasons": [
+    "불균형 신호 성립 (PRR 9.133910039058993, 보고 1065건)",
+    "라벨 경고 및 주의사항에 기재",
+    "문헌 92편"
+   ],
+   "gaps": [
+    "이 등급은 집단 수준 근거다. 개별 환자의 인과를 뜻하지 않는다"
+   ]
+  },
+  {
+   "drug": "CLOZAPINE",
+   "reaction": "NEUTROPENIA",
+   "signal": {
+    "counts": {
+     "a": 18898,
+     "b": 105930,
+     "c": 114806,
+     "d": 20453056,
+     "n_drug": 124828,
+     "n_reaction": 133704,
+     "n_total": 20692690
+    },
+    "prr": 27.12241746756667,
+    "prr_ci95": [
+     26.736122318780442,
+     27.514293977037763
+    ],
+    "ror": 31.78267844464658,
+    "ror_ci95": [
+     31.261671831356242,
+     32.31236814733011
+    ],
+    "chi2_yates": 410890.04589580186,
+    "evans_signal": true,
+    "ror_signal": true
+   },
+   "label": {
+    "labeled": true,
+    "sections": [
+     "adverse_reactions",
+     "boxed_warning",
+     "warnings_and_precautions"
+    ],
+    "section_weight": 3,
+    "causality_disclaimer": null,
+    "errors": []
+   },
+   "literature": {
+    "total_count": 501,
+    "pmids": [
+     "32503471",
+     "30767710",
+     "34083506",
+     "32815018",
+     "35547265"
+    ]
+   },
+   "grade": "A",
+   "meaning": "확립. 규제기관이 경고로 다룬 조합",
+   "reasons": [
+    "불균형 신호 성립 (PRR 27.12241746756667, 보고 18898건)",
+    "라벨 박스 경고에 기재",
+    "문헌 501편"
+   ],
+   "gaps": [
+    "이 등급은 집단 수준 근거다. 개별 환자의 인과를 뜻하지 않는다"
+   ]
+  },
+  {
+   "drug": "ISOTRETINOIN",
+   "reaction": "INFLAMMATORY BOWEL DISEASE",
+   "signal": {
+    "counts": {
+     "a": 5253,
+     "b": 43919,
+     "c": 4458,
+     "d": 20639060,
+     "n_drug": 49172,
+     "n_reaction": 9711,
+     "n_total": 20692690
+    },
+    "prr": 494.69004860462337,
+    "prr_ci95": [
+     475.8067581467113,
+     514.3227581332242
+    ],
+    "ror": 553.7386113068727,
+    "ror_ci95": [
+     531.4963720193406,
+     576.9116513196183
+    ],
+    "chi2_yates": 1188447.2209602103,
+    "evans_signal": true,
+    "ror_signal": true
+   },
+   "label": {
+    "labeled": true,
+    "sections": [
+     "adverse_reactions",
+     "warnings_and_precautions"
+    ],
+    "section_weight": 2,
+    "causality_disclaimer": "d in patients taking Isotretinoin Capsules; in some cases, the hearing impairment has been reported to persist after treatment has been discontinued. Mechanism(s) and causality for this reaction have not been established. Discontinue Isotretinoin Capsules trea",
+    "errors": []
+   },
+   "literature": {
+    "total_count": 94,
+    "pmids": [
+     "34379039",
+     "36337815",
+     "37010780",
+     "32682880",
+     "40730431"
+    ]
+   },
+   "grade": "C",
+   "meaning": "관찰. 신호는 있으나 인과가 확립되지 않았다",
+   "reasons": [
+    "불균형 신호 성립 (PRR 494.69004860462337, 보고 5253건)",
+    "라벨 경고 및 주의사항에 기재",
+    "라벨이 인과 미확립을 명시",
+    "문헌 94편"
+   ],
+   "gaps": []
+  }
+ ]
+}
