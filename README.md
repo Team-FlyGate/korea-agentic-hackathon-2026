@@ -10,6 +10,16 @@ NVIDIA x 패스트캠퍼스 Korea Agentic AI Hackathon 2026 온라인 사전 챌
 
 ![한 장 요약](docs/figures/architecture_overview.png)
 
+## 팀 데모와 저장소 두 곳
+
+팀이 만든 데모는 **<https://flyvigilante.vercel.app>** 이고 저장소는
+**<https://github.com/Team-FlyGate/FlyVigilante>** 이다. 데모에는 웹과 api, FAERS 창고
+파이프라인, 벤치마크, 에이전트 스킬 7종이 있다.
+
+이 저장소는 그 데모가 쓰는 **규칙 원본과 측정 스크립트**다. NAT 도구 등록, OpenShell 정책,
+과잉해석 규칙 17종, 평가 케이스, 근거 등급 시제품이 여기 있다. 두 저장소를 합치지 않고
+양쪽에서 서로를 가리킨다. 검토 기록은 `docs/notes/flyvigilante-review-2026-09-28.md`에 있다.
+
 ## 형식 검사의 한계
 
 안전성 검토자가 감당할 양이 사람 수를 넘었다. FDA 이상사례 보고만 2천만 건이 넘고, 그 가운데
@@ -257,6 +267,7 @@ v0에서 문제 정의와 검증 설계를 물려받았고, v0이 쓴 외부 플
 | `docs/notes/jev-primer.md` | 판정 전용 모델 Jev 정리. 자체 측정과 독립 검증을 나눠 적음 |
 | `docs/notes/paper-plan.md` | 논문 계획, 선행연구와 정직한 한계 |
 | `docs/notes/case-drug-review-2026-09-27.md` | 사례 약물 열다섯 종 실측. 키트루다로 규칙이 갈리는 것과 퇴출 약물 조회 함정 |
+| `docs/notes/flyvigilante-review-2026-09-28.md` | 팀 데모 저장소 실측 검토. 선행 일수와 Jev 대 Nemotron 주장 재측정, 저장소 분리 결정 |
 | `docs/notes/jev-triage-2026-09-27.md` | Jev 를 1단 게이트로 쓸 수 있는지 네 팔 비교 |
 | `docs/notes/openfold3-2026-09-27.md` | OpenFold3 호출과 pLDDT 가 MSA 에 좌우되는 실측 |
 | `docs/notes/structure-rules-2026-09-27.md` | 구조 예측 규칙 2종과 그 규칙이 보태는 값 |
