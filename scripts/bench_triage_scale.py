@@ -272,10 +272,12 @@ def rule_one(faers: dict[str, Any]) -> dict[str, Any]:
 # threshold rather than a parse. That removes the failure mode the LLM path has to guard
 # against, where a reply arrives without the VERDICT line and the report cannot be scored.
 #
-# The state deliberately carries only the counts, the measures and which record fields exist.
-# Sending the reaction's name and nothing else would let the model answer from prior knowledge
-# of the drug rather than from this report, and then the benchmark would measure recall of
-# drug labels instead of triage.
+# The state carries the drug name, the reaction name, the counts and the measures. Keeping the
+# names in means the model can also draw on what it already knows about that drug, and the
+# first run showed it doing exactly that: thrombocytopenia, which niraparib's label describes,
+# scored lower than off-label use despite a PRR of 38 against 2.5. That is defensible triage,
+# but it is not a judgment from the numbers alone, so the measurement must be read as "numbers
+# plus priors". An ablation with the names redacted would separate the two.
 # --------------------------------------------------------------------------------------
 JEV_QUESTION_KEY = "needs_human"
 
