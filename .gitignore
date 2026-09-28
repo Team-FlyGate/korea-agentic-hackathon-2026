@@ -56,3 +56,5 @@ _local/
 .scratch/
 !/CONTEXT.md
 eval/results/pubmed_cache/
+eval/results/omics_cache/
+eval/results/metric_validation_jev_cache_*.json

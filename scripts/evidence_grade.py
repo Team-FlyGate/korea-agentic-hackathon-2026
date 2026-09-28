@@ -80,7 +80,7 @@ GRADES = {
     "A": "확립. 규제기관이 경고로 다룬 조합",
     "B": "개연. 라벨에 기재되고 신호도 선다",
     "C": "관찰. 신호는 있으나 인과가 확립되지 않았다",
-    "D": "불충분. 신호가 서지 않는다",
+    "D": "신호 미성립. 불균형 신호가 서지 않는다. 라벨 기재 여부와는 별개다",
 }
 
 
@@ -101,6 +101,59 @@ def literature_read_for(drug: str, reaction: str) -> dict | None:
     return None
 
 
+# 번호 붙은 소항목 제목. fetch_label_sections 는 공백을 한 칸으로 접으므로 "5.9 Hearing Impairment"
+# 같은 제목이 본문 한가운데 그대로 남는다. "(5.9)" 같은 교차 참조와 "0.5 mg" 같은 용량은 앞 글자와
+# 뒤따르는 대문자 조건으로 걸러 낸다. "5.2 iPLEDGE" 처럼 소문자 하나 뒤에 대문자가 오는 제목도 받는다.
+SUBSECTION_HEADING = re.compile(r"(?<![\w.(\[])(\d{1,2})\.(\d{1,2})\s+(?=[A-Z]|[a-z][A-Z])")
+
+
+def split_subsections(text: str) -> list[str]:
+    """경고 절 텍스트를 소항목 단위로 나눈다.
+
+    번호 제목(5.9, 5.10 등)이 있으면 그 자리에서 자른다. 절 번호가 섞여 잡히지 않도록 가장 흔한
+    큰 번호(보통 5)를 가진 제목만 쓴다. 번호가 없으면 빈 줄이나 줄바꿈을 문단 경계로 삼는다.
+    첫 제목 앞의 절 머리말은 따로 한 덩어리로 둔다.
+    """
+    heads = list(SUBSECTION_HEADING.finditer(text))
+    if heads:
+        majors = [m.group(1) for m in heads]
+        major = max(set(majors), key=majors.count)
+        cuts = [m.start() for m in heads if m.group(1) == major]
+        bounds = [0, *cuts, len(text)]
+        chunks = [text[s:e] for s, e in zip(bounds, bounds[1:])]
+    else:
+        chunks = re.split(r"\n\s*\n|\n", text)
+    return [c.strip() for c in chunks if c.strip()]
+
+
+def find_disclaimer(sections: dict, reaction: str) -> dict | None:
+    """반응명이 나오는 소항목 안에서만 인과 미확립 문구를 찾는다.
+
+    2026-09-28 약사 검토 전에는 경고 절 전체에서 처음 걸린 문구를 반응과 상관없이 붙였다. 그래서
+    이소트레티노인 청력 손상 소항목의 단서가 염증성장질환에도, 라벨에 없는 반응에도 붙었다.
+    반응명 대조는 find_label_mentions 와 같이 대소문자를 가리지 않는 문자열 검색이다.
+    찾으면 {section, subsection(소항목 앞 120자), text(문구 주변)} 을, 못 찾으면 None 을 돌려준다.
+    """
+    term = re.compile(re.escape(reaction.strip()), re.I)
+    for name in DISCLAIMER_SECTIONS:
+        text = sections.get(name, "")
+        if not text:
+            continue
+        for sub in split_subsections(text):
+            if not term.search(sub):
+                continue
+            for pattern in DISCLAIMERS:
+                found = re.search(pattern, sub)
+                if not found:
+                    continue
+                window = sub[max(0, found.start() - 200):found.end() + 40]
+                if BOILERPLATE.search(window):
+                    continue          # the generic section preamble, not about this reaction
+                return {"section": name, "subsection": " ".join(sub[:120].split()),
+                        "text": " ".join(window[-260:].split())}
+    return None
+
+
 def label_evidence(drug: str, reaction: str) -> dict:
     """Read the label for this reaction: which sections mention it, and any causality caveat."""
     mentions = dmed.find_label_mentions(drug, reaction)
@@ -111,24 +164,12 @@ def label_evidence(drug: str, reaction: str) -> dict:
     setids = [c.get("setid") for c in mentions.get("labels_checked") or [] if c.get("setid")]
     if setids:
         full = dmed.fetch_label_sections(setids[0])
-        for name in DISCLAIMER_SECTIONS:
-            text = (full.get("sections") or {}).get(name, "")
-            if not text:
-                continue
-            for pattern in DISCLAIMERS:
-                found = re.search(pattern, text)
-                if not found:
-                    continue
-                window = text[max(0, found.start() - 200):found.end() + 40]
-                if BOILERPLATE.search(window):
-                    continue          # the generic section preamble, not about this reaction
-                disclaimer = " ".join(window[-260:].split())
-                break
-            if disclaimer:
-                break
+        disclaimer = find_disclaimer(full.get("sections") or {}, reaction)
 
     return {"labeled": mentions.get("labeled"), "sections": sections,
-            "section_weight": weight, "causality_disclaimer": disclaimer,
+            "section_weight": weight,
+            "causality_disclaimer": disclaimer["text"] if disclaimer else None,
+            "disclaimer_subsection": disclaimer["subsection"] if disclaimer else None,
             "errors": mentions.get("errors", [])}
 
 
@@ -153,6 +194,12 @@ def grade(signal: dict, label: dict, literature: dict) -> dict:
         reasons.append("라벨 이상반응에만 기재")
     else:
         gaps.append("라벨에 기재되지 않음")
+
+    # 라벨에 적힌 반응은 허가 심사에서 임상 근거를 거친 것이다. 신호가 서지 않았다고 해서 근거가
+    # 모자라다고 부르면 틀린 말이 된다(2026-09-28 약사 검토).
+    label_listed_no_signal = weight >= 1 and not has_signal
+    if label_listed_no_signal:
+        reasons.append("허가사항 기재(임상 근거 있음), 신호 해당 없음")
 
     if label.get("causality_disclaimer"):
         reasons.append("라벨이 인과 미확립을 명시")
@@ -183,7 +230,8 @@ def grade(signal: dict, label: dict, literature: dict) -> dict:
 
     if letter in ("A", "B"):
         gaps.append("이 등급은 집단 수준 근거다. 개별 환자의 인과를 뜻하지 않는다")
-    return {"grade": letter, "meaning": GRADES[letter], "reasons": reasons, "gaps": gaps}
+    return {"grade": letter, "meaning": GRADES[letter], "reasons": reasons, "gaps": gaps,
+            "label_listed_no_signal": label_listed_no_signal}
 
 
 def assess(drug: str, reaction: str) -> dict:

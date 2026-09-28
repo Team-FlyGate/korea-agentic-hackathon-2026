@@ -22,16 +22,24 @@
 그린다. novel 팔은 일점쇄선, blind 팔은 점선이고 범례에 AUC 와 쌍 수를 적는다. `--jev` 가 없으면
 그림은 전과 같다. 확률이 하나도 없는 파일(dry-run)은 건너뛴다.
 
+`--omics` 로 `scripts/omics_plausibility.py --refset` 결과를 주면 다른 그림을 그린다. 오믹스 점수가
+있는 행(약 해석, 표적 있음, PT 매핑)만으로 잰 지표 넷(prr, ror_lo, ic025, chi2_yates)의 곡선을 그 결과
+JSON 에서 읽어 그리고, 그 위에 Open Targets 곡선 셋(전체, 문헌 제외 API, 문헌 제외 로컬)을 먹색으로
+더한다. 선 모양은 실선, 일점쇄선, 점선이고 범례에 AUC 와 쌍 수를 적는다. 고정 규칙 점은 전체 행 기준이라
+이 그림에는 찍지 않는다. 출력은 `metric_roc_omics_<date>.png` 이다.
+
 matplotlib 이 필요하다. 저장소 `.venv` 에는 없으므로 matplotlib 이 있는 파이썬으로 돌린다.
 
 사용법:
   <matplotlib 있는 python> scripts/plot_metric_roc.py \\
       --results eval/results/metric_validation_2026-09-28.json \
-      [--jev eval/results/metric_validation_jev_novel_<date>.json ...]
+      [--jev eval/results/metric_validation_jev_novel_<date>.json ...] \\
+      [--omics eval/results/omics_plausibility_refset_<date>.json.gz]
 """
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 from pathlib import Path
 
@@ -66,6 +74,11 @@ RULES = {
     "evans_signal": ("o", "Evans"),
     "ror_signal": ("s", "ROR 신호"),
     "ic_signal": ("^", "IC 신호"),
+}
+OMICS_STYLE = {
+    "max_score": ("Open Targets 연관 (전체)", "-"),
+    "max_score_no_literature_api": ("문헌 제외 API", "-."),
+    "max_score_no_literature_local": ("문헌 제외 로컬", ":"),
 }
 JEV_STYLE = {"novel": ("Jev novel", "-."), "blind": ("Jev blind", ":")}
 WIDTH_IN, HEIGHT_IN, DPI = 8.0, 8.4, 200     # 1600 x 1680 px
@@ -155,14 +168,80 @@ def draw(res: dict, out: Path, stamp: str, jev: list[dict] | None = None) -> Non
     plt.close(fig)
 
 
+def draw_omics(res: dict, omics: dict, out: Path, stamp: str) -> None:
+    """오믹스 점수가 있는 같은 행에서 지표 넷과 Open Targets 점수 셋의 ROC 를 그린다."""
+    register_fonts()
+    ev = omics["evaluation"]
+    fig = plt.figure(figsize=(WIDTH_IN, HEIGHT_IN), dpi=DPI, facecolor=SURFACE)
+    ax = fig.add_axes([0.10, 0.17, 0.86, 0.68], facecolor=SURFACE)
+    ax.plot([0, 1], [0, 1], color=AXIS, lw=1, zorder=1)
+    ax.text(0.83, 0.79, "무작위", color=MUTED, fontsize=9, rotation=45, ha="center", va="center")
+    blocks = ev["metrics_same_rows"]
+    for key in sorted(blocks, key=lambda k: -(blocks[k]["auc"] or 0)):
+        color, label, ls = SERIES[key]
+        pts = blocks[key]["roc"]
+        ax.plot([p[0] for p in pts], [p[1] for p in pts], color=color, lw=2, ls=ls,
+                solid_capstyle="round", dash_capstyle="round", zorder=3,
+                label=f"{label}  AUC {blocks[key]['auc']:.3f}")
+    for key, (name, ls) in OMICS_STYLE.items():
+        b = ev["scores"].get(key)
+        if not b or b["auc"] is None:
+            continue
+        pts = b["roc"]
+        ax.plot([p[0] for p in pts], [p[1] for p in pts], color=INK, lw=2, ls=ls, zorder=4,
+                label=f"{name}  AUC {b['auc']:.3f} ({b['n_used']:,}쌍)")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, 1)
+    ax.set_aspect("equal")
+    ax.set_xlabel("1 - 특이도(라벨 부재 쌍 중 신호로 잡힌 비율)", color=INK_SOFT, fontsize=10.5)
+    ax.set_ylabel("민감도(라벨 기재 쌍 중 신호로 잡힌 비율)", color=INK_SOFT, fontsize=10.5)
+    ax.grid(color=GRID, lw=1)
+    ax.set_axisbelow(True)
+    ax.tick_params(colors=MUTED, labelsize=9, length=0)
+    for side in ("top", "right"):
+        ax.spines[side].set_visible(False)
+    for side in ("left", "bottom"):
+        ax.spines[side].set_color(AXIS)
+    leg = ax.legend(loc="lower right", fontsize=9.5, frameon=True, framealpha=1,
+                    edgecolor=GRID, facecolor=SURFACE, labelcolor=INK, handlelength=2.6,
+                    title="지표(색)와 Open Targets 기전 점수(먹색)", title_fontsize=9.5)
+    leg.get_title().set_color(INK_SOFT)
+    fig.text(0.10, 0.962, "기전 타당성 점수와 불균형 지표의 라벨 기재 판별 (같은 행)", fontsize=15,
+             color=INK, weight="bold", ha="left")
+    fig.text(0.10, 0.930, f"Open Targets {omics['source']['data_version']} 표적-질환 연관 점수의 표적별 최댓값. "
+             "문헌 제외는 Europe PMC 가중치 0(API) 또는\nliterature 외 유형 최댓값(로컬). "
+             "두 문헌 제외 곡선이 서로 겹치면 점선이 일점쇄선 밑에 가려진다.",
+             fontsize=10, color=INK_SOFT, ha="left", va="top", linespacing=1.4)
+    ex = ev["excluded"]
+    text = (f"참조 세트: SIDER 4.1 라벨 PT 대 FAERS 웨어하우스 {res['warehouse_asof']}, 전체 {ev['n_rows_total']:,}쌍 가운데 "
+            f"오믹스 점수가 있는 {ev['n_rows_evaluated']:,}쌍(양성 {ev['n_positive']:,}, 음성 {ev['n_negative']:,}).\n"
+            f"제외: 약 미해석 {ex['drug_unresolved']:,}, 약 표적 없음 {ex['drug_no_targets']:,}, "
+            f"PT 매핑 없음(라벨 정확 일치 실패) {ex['pt_unmapped']:,}. 지표 곡선도 같은 행에서 다시 쟀다.\n"
+            f"라벨 기재 예측이며 인과성 아님. 실행일 {stamp}(한국 표준시 기준).")
+    fig.text(0.10, 0.10, text, fontsize=9, color=INK_SOFT, ha="left", va="top", linespacing=1.6)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(out, dpi=DPI, facecolor=SURFACE)
+    plt.close(fig)
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--results", type=Path, required=True)
     ap.add_argument("--out", type=Path, default=None)
     ap.add_argument("--jev", type=Path, action="append", default=[],
                     help="metric_validation_jev.py 결과. 여러 번 줄 수 있다")
+    ap.add_argument("--omics", type=Path, default=None,
+                    help="omics_plausibility.py --refset 결과. 주면 같은 행 기준 오믹스 그림을 그린다")
     args = ap.parse_args(argv)
     res = json.loads(args.results.read_text())
+    if args.omics:
+        raw = args.omics.read_bytes()
+        omics = json.loads(gzip.decompress(raw) if args.omics.suffix == ".gz" else raw)
+        stamp = args.omics.name.split(".")[0].rsplit("_", 1)[-1]
+        out = args.out or FIG_DIR / f"metric_roc_omics_{stamp}.png"
+        draw_omics(res, omics, out, stamp)
+        print(out)
+        return 0
     jev = []
     for path in args.jev:
         doc = json.loads(path.read_text())
