@@ -271,6 +271,8 @@ v0에서 문제 정의와 검증 설계를 물려받았고, v0이 쓴 외부 플
 | `docs/notes/case-drug-review-2026-09-27.md` | 사례 약물 열다섯 종 실측. 키트루다로 규칙이 갈리는 것과 퇴출 약물 조회 함정 |
 | `docs/notes/flyvigilante-review-2026-09-28.md` | 팀 데모 저장소 실측 검토. 선행 일수와 Jev 대 Nemotron 주장 재측정, 저장소 분리 결정 |
 | `scripts/collect_call_log.py` | 데모 에이전트를 한 바퀴 돌려 NVIDIA 호출 기록을 모으고 요약한다 |
+| `scripts/render_submission_md.py` | 팀 저장소의 제출 문서를 표지와 구조도와 증거 쪽을 붙여 제출용 PDF로 만든다 |
+| `scripts/ocr_screen_recording.py` | 화면 녹화를 프레임으로 잘라 OCR 해 읽을 수 있는 기록으로 만든다 |
 | `docs/notes/team-repo-conventions.md` | 팀 저장소의 폴더와 문서와 주석 규약. 기여 전에 확인할 것 |
 | `docs/notes/jev-triage-2026-09-27.md` | Jev 를 1단 게이트로 쓸 수 있는지 네 팔 비교 |
 | `docs/notes/openfold3-2026-09-27.md` | OpenFold3 호출과 pLDDT 가 MSA 에 좌우되는 실측 |
