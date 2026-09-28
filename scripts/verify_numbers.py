@@ -37,7 +37,8 @@ if str(ROOT / "src") not in sys.path:
 
 # Documents expected to carry these numbers. A value missing from any one of them counts as
 # a mismatch: partial updates are the failure we are guarding against.
-DOCS = ["README.md", "docs/HANDOFF.md", "docs/video/script_flygate.md"]
+DOCS = ["README.md", "docs/HANDOFF.md", "docs/video/script_flygate.md",
+        "docs/notes/metric-validation-2026-09-28.md"]
 
 
 def read(rel: str) -> str:
@@ -104,6 +105,19 @@ def bench_numbers() -> tuple[int, str]:
     return per, f'{s["latency_ms"]["median"]:,.0f}'
 
 
+def metric_validation() -> dict[str, str]:
+    """Headline numbers of the SIDER label reference-set run (docs/notes/metric-validation-2026-09-28.md)."""
+    d = json.loads(read("eval/results/metric_validation_2026-09-28.json"))
+    evans, grade = d["fixed_rules"]["evans_signal"], d["fixed_rules"]["grade_signal"]
+    aucs = [m["auc"] for m in d["metrics"].values()]
+    return {
+        "positives": f'{d["n_positive"]:,}쌍',
+        "evans": f'Evans 규칙 민감도 {evans["sensitivity"]:.3f}',
+        "grade_d": f'{grade["fn"] / d["n_positive"]:.1%}({grade["fn"]:,}쌍)',
+        "auc_range": f"AUC {min(aucs):.2f}~{max(aucs):.2f}",
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="문서 수치와 출처 대조")
     ap.add_argument("--quiet", action="store_true", help="어긋난 항목만 출력한다")
@@ -111,6 +125,7 @@ def main(argv: list[str] | None = None) -> int:
 
     cases, rejects = eval_cases()
     per_tok, median_ms = bench_numbers()
+    mv = metric_validation()
 
     # (label, the exact string the documents must contain, where the value came from)
     checks = [
@@ -124,6 +139,10 @@ def main(argv: list[str] | None = None) -> int:
         ("DiffDock 소요", f"{diffdock_seconds()}초", "diffdock_smoke.txt"),
         ("3단 건당 출력 토큰", f"{per_tok}개", "bench_nemotron-super-run2.json"),
         ("3단 지연 중앙값", f"{median_ms}ms", "bench_nemotron-super-run2.json"),
+        ("라벨 기재 양성 쌍", mv["positives"], "metric_validation_2026-09-28.json"),
+        ("Evans 민감도", mv["evans"], "metric_validation_2026-09-28.json"),
+        ("등급 D 라벨 기재 쌍", mv["grade_d"], "metric_validation_2026-09-28.json"),
+        ("지표 AUC 범위", mv["auc_range"], "metric_validation_2026-09-28.json"),
     ]
 
     texts = {d: read(d) for d in DOCS}

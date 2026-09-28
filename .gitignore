@@ -51,3 +51,7 @@ assets/video/[st]_*.mp3
 # 안에 든 것: 팀 메시지(실명), 렌더 산출물, 강좌 원문 노트.
 # git clean -fdx 는 이 폴더를 지우므로 그 명령은 쓰지 않는다.
 _local/
+
+# wayfinder 지도와 티켓 (로컬 전용, A14)
+.scratch/
+!/CONTEXT.md

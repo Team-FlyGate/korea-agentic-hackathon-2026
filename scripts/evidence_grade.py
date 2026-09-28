@@ -84,6 +84,23 @@ GRADES = {
 }
 
 
+# literature_read.py 의 설계 선택지 이름. 근거 줄에 한국어로 찍는다.
+DESIGN_NAMES = {"case_report": "증례보고", "case_series": "증례군", "observational": "관찰연구",
+                "randomized_trial": "무작위시험", "meta_analysis_or_review": "메타분석·리뷰",
+                "mechanistic_or_preclinical": "기전·전임상", "other": "기타"}
+
+
+def literature_read_for(drug: str, reaction: str) -> dict | None:
+    """가장 최근 eval/results/literature_read_*.json 에서 이 쌍의 판독 집계를 찾는다. 없으면 None."""
+    for path in sorted(OUT_DIR.glob("literature_read_*.json"), reverse=True):
+        doc = json.loads(path.read_text(encoding="utf-8"))
+        for pair in doc.get("pairs") or []:
+            if (pair.get("drug"), pair.get("reaction")) == (drug, reaction):
+                return pair
+        return None
+    return None
+
+
 def label_evidence(drug: str, reaction: str) -> dict:
     """Read the label for this reaction: which sections mention it, and any causality caveat."""
     mentions = dmed.find_label_mentions(drug, reaction)
@@ -142,7 +159,12 @@ def grade(signal: dict, label: dict, literature: dict) -> dict:
 
     papers = literature.get("total_count")
     if isinstance(papers, int) and papers > 0:
-        reasons.append(f"문헌 {papers}편")
+        line = f"문헌 {papers}편"
+        if literature.get("read_n") is not None:        # scripts/literature_read.py 의 판독 결과
+            designs = ", ".join(f"{DESIGN_NAMES.get(k, k)} {n}"
+                                for k, n in (literature.get("by_design") or {}).items())
+            line += f", 판독 {literature['read_n']}편" + (f": {designs}" if designs else "")
+        reasons.append(line)
     else:
         gaps.append("문헌을 찾지 못함")
 
@@ -168,15 +190,19 @@ def assess(drug: str, reaction: str) -> dict:
     signal = ofda.faers_disproportionality(drug, reaction)
     label = label_evidence(drug, reaction)
     literature = pubmed.search_pubmed(drug, reaction, retmax=5)
-    verdict = grade(signal, label, literature)
+    literature_fields = {"total_count": literature.get("total_count"),
+                         "pmids": (literature.get("pmids") or [])[:5]}
+    read = literature_read_for(drug, reaction)
+    if read is not None:
+        literature_fields.update(read_n=read.get("read_n"), by_design=read.get("by_design") or {})
+    verdict = grade(signal, label, literature_fields)
     return {
         "drug": drug, "reaction": reaction,
         "signal": {k: signal.get(k) for k in
                    ("counts", "prr", "prr_ci95", "ror", "ror_ci95", "chi2_yates",
                     "evans_signal", "ror_signal")},
         "label": label,
-        "literature": {"total_count": literature.get("total_count"),
-                       "pmids": (literature.get("pmids") or [])[:5]},
+        "literature": literature_fields,
         **verdict,
     }
 
