@@ -1,0 +1,595 @@
+{
+ "ran_at": "2026-09-28T01:00:29+00:00",
+ "date": "2026-09-28",
+ "tz": "Asia/Seoul",
+ "dry_run": false,
+ "refset": null,
+ "source": {
+  "name": "Open Targets Platform GraphQL",
+  "url": "https://api.platform.opentargets.org/api/v4/graphql",
+  "api_version": "26.9.0",
+  "data_version": "26.09",
+  "meta_request": {
+   "source": "opentargets",
+   "operation": "Meta",
+   "variables": null,
+   "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/b49d4c353aadd92872e330b2a93e485e0e5037b6.json",
+   "from_cache": false,
+   "error": null
+  },
+  "meta_cache_changed": false,
+  "licence": "CC0 1.0 (https://platform-docs.opentargets.org/licence)"
+ },
+ "rules": {
+  "drug": "search(entityNames:[drug]) hit 의 name 이 입력과 대소문자 무시로 같을 때만. 없으면 ChEMBL molecule.json?pref_name__iexact=, 그래도 없으면 표적 없음.",
+  "pt": "search(entityNames:[disease]) 첫 hit 의 name 이 PT 와 대소문자 무시로 같을 때만(label).",
+  "association": "target.associatedDiseases(Bs:[질환 ID]) 의 score. 행이 없으면 0.0.",
+  "no_literature_api": {
+   "argument": "datasources",
+   "value": [
+    {
+     "id": "europepmc",
+     "weight": 0.0,
+     "propagate": true
+    }
+   ]
+  },
+  "no_literature_local": "max(datatypeScores[id != 'literature'].score), 행이나 해당 유형이 없으면 0.0",
+  "aggregate": "max_score = 표적별 score 최댓값, has_association = max_score > 0.",
+  "caveat": "라벨 기재 예측용 기전 근거이며, 개별 사례에서 약이 반응을 일으켰다는 인과 근거가 아니다."
+ },
+ "http": {
+  "calls": 1,
+  "cache_hits": 16,
+  "failures": 0,
+  "sleep": 0.2
+ },
+ "cache_dir": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility",
+ "pairs": [
+  {
+   "drug": "NIRAPARIB",
+   "pt": "THROMBOCYTOPENIA",
+   "drug_resolution": {
+    "query": "NIRAPARIB",
+    "id": "CHEMBL1094636",
+    "name": "NIRAPARIB",
+    "match": "name_exact",
+    "chembl_version": null,
+    "error": null
+   },
+   "targets": [
+    {
+     "symbol": "PARP2",
+     "ensembl": "ENSG00000129484",
+     "actionType": "INHIBITOR",
+     "mechanism": "Poly [ADP-ribose] polymerase 2 inhibitor"
+    },
+    {
+     "symbol": "PARP1",
+     "ensembl": "ENSG00000143799",
+     "actionType": "INHIBITOR",
+     "mechanism": "Poly [ADP-ribose] polymerase-1 inhibitor"
+    }
+   ],
+   "term": {
+    "query": "THROMBOCYTOPENIA",
+    "mapped": {
+     "id": "HP_0001873",
+     "name": "Thrombocytopenia",
+     "match": "label"
+    },
+    "first_hit": {
+     "id": "HP_0001873",
+     "name": "Thrombocytopenia",
+     "score": 4886.2246,
+     "match": "label"
+    },
+    "error": null
+   },
+   "associations": [
+    {
+     "symbol": "PARP2",
+     "ensembl": "ENSG00000129484",
+     "disease_id": "HP_0001873",
+     "count": 1,
+     "row_found": true,
+     "score": 0.005523165606121377,
+     "score_no_literature": 0.0,
+     "score_no_literature_local": 0.0,
+     "datatypeScores": [
+      {
+       "id": "literature",
+       "score": 0.04542594015486835
+      }
+     ],
+     "datasourceScores": [
+      {
+       "id": "europepmc",
+       "score": 0.04542594015486835
+      }
+     ],
+     "error": null
+    },
+    {
+     "symbol": "PARP1",
+     "ensembl": "ENSG00000143799",
+     "disease_id": "HP_0001873",
+     "count": 1,
+     "row_found": true,
+     "score": 0.012495594582700076,
+     "score_no_literature": 0.0,
+     "score_no_literature_local": 0.0,
+     "datatypeScores": [
+      {
+       "id": "literature",
+       "score": 0.10277152129643326
+      }
+     ],
+     "datasourceScores": [
+      {
+       "id": "europepmc",
+       "score": 0.10277152129643326
+      }
+     ],
+     "error": null
+    }
+   ],
+   "has_target": true,
+   "n_targets": 2,
+   "has_association": true,
+   "max_score": 0.012495594582700076,
+   "max_score_no_literature": 0.0,
+   "max_score_no_literature_local": 0.0,
+   "incomplete": false,
+   "evidence": {
+    "id": "omics:opentargets@26.09:NIRAPARIB:thrombocytopenia",
+    "what": "약 NIRAPARIB(CHEMBL1094636)의 작용기전 표적은 PARP2, PARP1이다. 반응 THROMBOCYTOPENIA의 매핑 용어는 HP_0001873(Thrombocytopenia, 라벨 일치)이다. 표적별 연관 점수는 PARP2 0.005523(literature 제외 0); PARP1 0.0125(literature 제외 0)이고, 최댓값은 0.0125, literature 제외 최댓값은 0이다. 조회일 2026-09-28, 소스 Open Targets Platform 26.09. 라벨 기재 예측용 기전 근거이며, 개별 사례에서 약이 반응을 일으켰다는 인과 근거가 아니다."
+   },
+   "requests": [
+    {
+     "source": "opentargets",
+     "operation": "DrugSearch",
+     "variables": {
+      "q": "NIRAPARIB"
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/bb19206d349af1546d0b73853718af457a7b9e7d.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "DrugMechanisms",
+     "variables": {
+      "id": "CHEMBL1094636"
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/a023054762570979b1a2dd292c9d6ebde1722611.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "DiseaseSearch",
+     "variables": {
+      "q": "THROMBOCYTOPENIA"
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/9fec815558f703d8a4e2329b66d069f2230eaf23.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "TargetDiseaseAssociation",
+     "variables": {
+      "id": "ENSG00000129484",
+      "bs": [
+       "HP_0001873"
+      ],
+      "noLit": [
+       {
+        "id": "europepmc",
+        "weight": 0.0,
+        "propagate": true
+       }
+      ]
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/70daa2dc0c1b3e6f6e5fba1dd598a6091a1ce6be.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "TargetDiseaseAssociation",
+     "variables": {
+      "id": "ENSG00000143799",
+      "bs": [
+       "HP_0001873"
+      ],
+      "noLit": [
+       {
+        "id": "europepmc",
+        "weight": 0.0,
+        "propagate": true
+       }
+      ]
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/66ebe2286bbe79cd167787c745ab28c5fd6429a7.json",
+     "from_cache": true,
+     "error": null
+    }
+   ]
+  },
+  {
+   "drug": "CLOZAPINE",
+   "pt": "NEUTROPENIA",
+   "drug_resolution": {
+    "query": "CLOZAPINE",
+    "id": "CHEMBL42",
+    "name": "CLOZAPINE",
+    "match": "name_exact",
+    "chembl_version": null,
+    "error": null
+   },
+   "targets": [
+    {
+     "symbol": "HTR2A",
+     "ensembl": "ENSG00000102468",
+     "actionType": "ANTAGONIST",
+     "mechanism": "Serotonin 2a (5-HT2a) receptor antagonist"
+    },
+    {
+     "symbol": "DRD2",
+     "ensembl": "ENSG00000149295",
+     "actionType": "ANTAGONIST",
+     "mechanism": "Dopamine D2 receptor antagonist"
+    }
+   ],
+   "term": {
+    "query": "NEUTROPENIA",
+    "mapped": {
+     "id": "MONDO_0001475",
+     "name": "neutropenia",
+     "match": "label"
+    },
+    "first_hit": {
+     "id": "MONDO_0001475",
+     "name": "neutropenia",
+     "score": 5163.393,
+     "match": "label"
+    },
+    "error": null
+   },
+   "associations": [
+    {
+     "symbol": "HTR2A",
+     "ensembl": "ENSG00000102468",
+     "disease_id": "MONDO_0001475",
+     "count": 1,
+     "row_found": true,
+     "score": 0.0014783194187388072,
+     "score_no_literature": 0.0,
+     "score_no_literature_local": 0.0,
+     "datatypeScores": [
+      {
+       "id": "literature",
+       "score": 0.012158615952232422
+      }
+     ],
+     "datasourceScores": [
+      {
+       "id": "europepmc",
+       "score": 0.012158615952232422
+      }
+     ],
+     "error": null
+    },
+    {
+     "symbol": "DRD2",
+     "ensembl": "ENSG00000149295",
+     "disease_id": "MONDO_0001475",
+     "count": 0,
+     "row_found": false,
+     "score": 0.0,
+     "score_no_literature": 0.0,
+     "score_no_literature_local": 0.0,
+     "datatypeScores": [],
+     "datasourceScores": [],
+     "error": null
+    }
+   ],
+   "has_target": true,
+   "n_targets": 2,
+   "has_association": true,
+   "max_score": 0.0014783194187388072,
+   "max_score_no_literature": 0.0,
+   "max_score_no_literature_local": 0.0,
+   "incomplete": false,
+   "evidence": {
+    "id": "omics:opentargets@26.09:CLOZAPINE:neutropenia",
+    "what": "약 CLOZAPINE(CHEMBL42)의 작용기전 표적은 HTR2A, DRD2이다. 반응 NEUTROPENIA의 매핑 용어는 MONDO_0001475(neutropenia, 라벨 일치)이다. 표적별 연관 점수는 HTR2A 0.001478(literature 제외 0); DRD2 0(literature 제외 0)이고, 최댓값은 0.001478, literature 제외 최댓값은 0이다. 조회일 2026-09-28, 소스 Open Targets Platform 26.09. 라벨 기재 예측용 기전 근거이며, 개별 사례에서 약이 반응을 일으켰다는 인과 근거가 아니다."
+   },
+   "requests": [
+    {
+     "source": "opentargets",
+     "operation": "DrugSearch",
+     "variables": {
+      "q": "CLOZAPINE"
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/ec9353166687a55b0a499be95fd05c1d23f2d87e.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "DrugMechanisms",
+     "variables": {
+      "id": "CHEMBL42"
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/e9c1d2a3fde2851e23eb0114df56c0e82013b2f1.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "DiseaseSearch",
+     "variables": {
+      "q": "NEUTROPENIA"
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/722a079dc80a58f455383845b68cbb40cf0cf740.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "TargetDiseaseAssociation",
+     "variables": {
+      "id": "ENSG00000102468",
+      "bs": [
+       "MONDO_0001475"
+      ],
+      "noLit": [
+       {
+        "id": "europepmc",
+        "weight": 0.0,
+        "propagate": true
+       }
+      ]
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/9af917798c07fdfc8eb65c9b7ad0cdf2e515cbdb.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "TargetDiseaseAssociation",
+     "variables": {
+      "id": "ENSG00000149295",
+      "bs": [
+       "MONDO_0001475"
+      ],
+      "noLit": [
+       {
+        "id": "europepmc",
+        "weight": 0.0,
+        "propagate": true
+       }
+      ]
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/f57c4e4c7c69da79d02522cd5ad80620497740cc.json",
+     "from_cache": true,
+     "error": null
+    }
+   ]
+  },
+  {
+   "drug": "ISOTRETINOIN",
+   "pt": "INFLAMMATORY BOWEL DISEASE",
+   "drug_resolution": {
+    "query": "ISOTRETINOIN",
+    "id": "CHEMBL547",
+    "name": "ISOTRETINOIN",
+    "match": "name_exact",
+    "chembl_version": null,
+    "error": null
+   },
+   "targets": [
+    {
+     "symbol": "RARG",
+     "ensembl": "ENSG00000172819",
+     "actionType": "AGONIST",
+     "mechanism": "Retinoic acid receptor agonist"
+    },
+    {
+     "symbol": "RARB",
+     "ensembl": "ENSG00000077092",
+     "actionType": "AGONIST",
+     "mechanism": "Retinoic acid receptor agonist"
+    },
+    {
+     "symbol": "RARA",
+     "ensembl": "ENSG00000131759",
+     "actionType": "AGONIST",
+     "mechanism": "Retinoic acid receptor agonist"
+    }
+   ],
+   "term": {
+    "query": "INFLAMMATORY BOWEL DISEASE",
+    "mapped": {
+     "id": "MONDO_0005265",
+     "name": "inflammatory bowel disease",
+     "match": "label"
+    },
+    "first_hit": {
+     "id": "MONDO_0005265",
+     "name": "inflammatory bowel disease",
+     "score": 6345.8413,
+     "match": "label"
+    },
+    "error": null
+   },
+   "associations": [
+    {
+     "symbol": "RARG",
+     "ensembl": "ENSG00000172819",
+     "disease_id": "MONDO_0005265",
+     "count": 0,
+     "row_found": false,
+     "score": 0.0,
+     "score_no_literature": 0.0,
+     "score_no_literature_local": 0.0,
+     "datatypeScores": [],
+     "datasourceScores": [],
+     "error": null
+    },
+    {
+     "symbol": "RARB",
+     "ensembl": "ENSG00000077092",
+     "disease_id": "MONDO_0005265",
+     "count": 1,
+     "row_found": true,
+     "score": 0.00846194141728923,
+     "score_no_literature": 0.0,
+     "score_no_literature_local": 0.0,
+     "datatypeScores": [
+      {
+       "id": "literature",
+       "score": 0.06959625544991038
+      }
+     ],
+     "datasourceScores": [
+      {
+       "id": "europepmc",
+       "score": 0.06959625544991038
+      }
+     ],
+     "error": null
+    },
+    {
+     "symbol": "RARA",
+     "ensembl": "ENSG00000131759",
+     "disease_id": "MONDO_0005265",
+     "count": 1,
+     "row_found": true,
+     "score": 0.006878291739965283,
+     "score_no_literature": 0.0,
+     "score_no_literature_local": 0.0,
+     "datatypeScores": [
+      {
+       "id": "literature",
+       "score": 0.05657133811108141
+      }
+     ],
+     "datasourceScores": [
+      {
+       "id": "europepmc",
+       "score": 0.05657133811108141
+      }
+     ],
+     "error": null
+    }
+   ],
+   "has_target": true,
+   "n_targets": 3,
+   "has_association": true,
+   "max_score": 0.00846194141728923,
+   "max_score_no_literature": 0.0,
+   "max_score_no_literature_local": 0.0,
+   "incomplete": false,
+   "evidence": {
+    "id": "omics:opentargets@26.09:ISOTRETINOIN:inflammatory bowel disease",
+    "what": "약 ISOTRETINOIN(CHEMBL547)의 작용기전 표적은 RARG, RARB, RARA이다. 반응 INFLAMMATORY BOWEL DISEASE의 매핑 용어는 MONDO_0005265(inflammatory bowel disease, 라벨 일치)이다. 표적별 연관 점수는 RARG 0(literature 제외 0); RARB 0.008462(literature 제외 0); RARA 0.006878(literature 제외 0)이고, 최댓값은 0.008462, literature 제외 최댓값은 0이다. 조회일 2026-09-28, 소스 Open Targets Platform 26.09. 라벨 기재 예측용 기전 근거이며, 개별 사례에서 약이 반응을 일으켰다는 인과 근거가 아니다."
+   },
+   "requests": [
+    {
+     "source": "opentargets",
+     "operation": "DrugSearch",
+     "variables": {
+      "q": "ISOTRETINOIN"
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/bd7823efc7b740daf560b9b355a57e4c22ecfb62.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "DrugMechanisms",
+     "variables": {
+      "id": "CHEMBL547"
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/e46eea99750c1c3bc03522bfa514bcd59333dddd.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "DiseaseSearch",
+     "variables": {
+      "q": "INFLAMMATORY BOWEL DISEASE"
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/8b2dd4622c549aa9b5850dfbbf8f7cb2de892271.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "TargetDiseaseAssociation",
+     "variables": {
+      "id": "ENSG00000172819",
+      "bs": [
+       "MONDO_0005265"
+      ],
+      "noLit": [
+       {
+        "id": "europepmc",
+        "weight": 0.0,
+        "propagate": true
+       }
+      ]
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/d583dce377dab638e1f6587e37ad3e0a7551feef.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "TargetDiseaseAssociation",
+     "variables": {
+      "id": "ENSG00000077092",
+      "bs": [
+       "MONDO_0005265"
+      ],
+      "noLit": [
+       {
+        "id": "europepmc",
+        "weight": 0.0,
+        "propagate": true
+       }
+      ]
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/3555b81053749533bd0d783030966410afb91239.json",
+     "from_cache": true,
+     "error": null
+    },
+    {
+     "source": "opentargets",
+     "operation": "TargetDiseaseAssociation",
+     "variables": {
+      "id": "ENSG00000131759",
+      "bs": [
+       "MONDO_0005265"
+      ],
+      "noLit": [
+       {
+        "id": "europepmc",
+        "weight": 0.0,
+        "propagate": true
+       }
+      ]
+     },
+     "cache_path": "/data/hps/assoc/private/rsc/user/ybae/tmp/omics-plausibility/opentargets/f009636d72d845b4ce615236139501d089a73028.json",
+     "from_cache": true,
+     "error": null
+    }
+   ]
+  }
+ ]
+}

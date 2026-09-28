@@ -58,7 +58,7 @@ FDA와 EMA는 2026년 1월 14일에 의약품 전 주기의 AI 활용 원칙 열
 
 | 항목 | 값 | 어디서 |
 |---|---|---|
-| 오프라인 테스트 | 317개 통과 | `pytest -q -m "not network"` |
+| 오프라인 테스트 | 338개 통과 | `pytest -q -m "not network"` |
 | NAT 등록 도구 | 8종 | `configs/author.yml` |
 | 에이전트 도구 호출 | 4종 연속, 주장 4건 전부 근거 있음 | `eval/results/nat_run_author_flydock.json` |
 | 과잉해석 규칙 | 15종 | `src/harness/tools/overclaim_rules.py` |
@@ -276,6 +276,8 @@ v0에서 문제 정의와 검증 설계를 물려받았고, v0이 쓴 외부 플
 | `docs/notes/report-form-mapping.md` | 실제 보고 서식과 우리 산출물의 대응 |
 | `docs/notes/metric-validation-plan-2026-09-27.md` | 불균형 지표 성능 검증과 문헌, 오믹스 근거 확장 계획. FlyVigilante 와의 대응 |
 | `docs/notes/metric-validation-2026-09-28.md` | 불균형 지표의 라벨 기재 판별 성능 실측. Evans 규칙 민감도와 근거 등급 경계 |
+| `docs/notes/omics-plausibility-2026-09-28.md` | 기전 타당성 축 파일럿. Open Targets 표적-질환 연관은 라벨 기재를 귀무보다 조금만 가르고 불균형 지표에 못 미친다 |
+| `docs/notes/pharmacist-review-2026-09-28.md` | 팀원 B(약사) 서면 검토. 등급 코드 버그, 참조 세트 정답지, 라벨 절 근거, 본선 제안 |
 | `docs/COURSE-GUIDE.md` | NVIDIA DLI 강좌 수강 안내 |
 | `docs/TROUBLESHOOTING.md` | 겪고 푼 문제 열 건 |
 | `docs/HANDOFF.md` | 진행 상황과 검증된 수치 |

@@ -25,6 +25,7 @@ check or CI. It touches no network and reads only committed result files.
 from __future__ import annotations
 
 import argparse
+import gzip
 import json
 import re
 import subprocess
@@ -38,7 +39,7 @@ if str(ROOT / "src") not in sys.path:
 # Documents expected to carry these numbers. A value missing from any one of them counts as
 # a mismatch: partial updates are the failure we are guarding against.
 DOCS = ["README.md", "docs/HANDOFF.md", "docs/video/script_flygate.md",
-        "docs/notes/metric-validation-2026-09-28.md"]
+        "docs/notes/metric-validation-2026-09-28.md", "docs/notes/omics-plausibility-2026-09-28.md"]
 
 
 def read(rel: str) -> str:
@@ -118,6 +119,17 @@ def metric_validation() -> dict[str, str]:
     }
 
 
+def omics_plausibility() -> dict[str, str]:
+    """Headline numbers of the Open Targets reference-set run (docs/notes/omics-plausibility-2026-09-28.md)."""
+    d = json.loads(gzip.decompress((ROOT / "eval/results/omics_plausibility_refset_2026-09-28.json.gz").read_bytes()))
+    ev = d["evaluation"]
+    return {
+        "rows": f'{ev["n_rows_evaluated"]:,}쌍',
+        "auc": f'AUC {ev["scores"]["max_score"]["auc"]:.3f}',
+        "pts_mapped": f'{d["counts"]["pts_mapped"]:,}개',
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="문서 수치와 출처 대조")
     ap.add_argument("--quiet", action="store_true", help="어긋난 항목만 출력한다")
@@ -126,6 +138,7 @@ def main(argv: list[str] | None = None) -> int:
     cases, rejects = eval_cases()
     per_tok, median_ms = bench_numbers()
     mv = metric_validation()
+    om = omics_plausibility()
 
     # (label, the exact string the documents must contain, where the value came from)
     checks = [
@@ -143,6 +156,9 @@ def main(argv: list[str] | None = None) -> int:
         ("Evans 민감도", mv["evans"], "metric_validation_2026-09-28.json"),
         ("등급 D 라벨 기재 쌍", mv["grade_d"], "metric_validation_2026-09-28.json"),
         ("지표 AUC 범위", mv["auc_range"], "metric_validation_2026-09-28.json"),
+        ("오믹스 평가 행", om["rows"], "omics_plausibility_refset_2026-09-28.json.gz"),
+        ("오믹스 max_score AUC", om["auc"], "omics_plausibility_refset_2026-09-28.json.gz"),
+        ("오믹스 매핑 PT", om["pts_mapped"], "omics_plausibility_refset_2026-09-28.json.gz"),
     ]
 
     texts = {d: read(d) for d in DOCS}
