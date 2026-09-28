@@ -71,9 +71,9 @@ HIGHLIGHTS = [
 ]
 
 COVER_LINKS = [
-    ("데모", "https://project-flygate.vercel.app"),
+    ("데모", "https://flygate.kr"),
     ("저장소", "https://github.com/Team-FlyGate/Project-FlyGate"),
-    ("쇼릴 (4분 10초)", "https://project-flygate.vercel.app/showreel/FlyGate_showreel_v4.3.0.html"),
+    ("쇼릴 (4분 10초)", "https://flygate.kr/showreel/FlyGate_showreel_v4.3.0.html"),
 ]
 
 
@@ -147,6 +147,17 @@ def emphasise_results(md: str) -> str:
 
 MALECNS_BULLET = ("- MaleCNS 수컷 초파리 중추신경계 커넥텀(뉴런 약 166,700개, Janelia FlyEM · "
                   "Cambridge Drosophila Connectomics Group 공개, https://male-cns.janelia.org/)")
+
+
+def use_team_domain(md: str) -> str:
+    """Point every dashboard address at the team's own domain.
+
+    flygate.kr was connected on 2026-09-28 and every form of it, with or without www and on
+    either scheme, lands on the same site. Printing the vercel.app host beside it would show
+    two addresses for one dashboard, so the source's addresses are rewritten here until the
+    team updates them.
+    """
+    return md.replace("https://project-flygate.vercel.app", "https://flygate.kr")
 
 
 def add_missing_sources(md: str) -> str:
@@ -479,7 +490,7 @@ def cli_page() -> str:
   <p class="archnote">저장소를 받아 <code>./scripts/install_flygate.sh</code> 한 줄이면 설치가
   끝납니다. 명령 아홉 개가 모두 근거 ID를 붙인 JSON을 내고, OpenShell 샌드박스 안의 OpenClaw
   에이전트도 사람과 똑같은 명령을 씁니다. 설치 안내는
-  <a href="https://project-flygate.vercel.app/#/cli">project-flygate.vercel.app/#/cli</a>
+  <a href="https://flygate.kr/#/cli">flygate.kr/#/cli</a>
   에 있습니다.</p>
   <div style="width:100%;height:172mm;background:url('{CLI_IMAGE.as_uri()}') no-repeat center top;
        background-size:contain"></div>
@@ -504,7 +515,7 @@ def call_log(repo_root: Path) -> str:
   기록에 키와 프롬프트, 응답 본문은 넣지 않고 시각과 엔드포인트, 모델, 상태, 지연, 요청 ID,
   토큰 수만 남깁니다. 실패한 호출도 지우지 않고 그대로 둡니다. 표 전체와 이전 실측은
   <a href="https://github.com/Team-FlyGate/Project-FlyGate/blob/main/docs/NVIDIA_CALL_LOG_v1.0.0.md">docs/NVIDIA_CALL_LOG_v1.0.0.md</a>,
-  화면은 <a href="https://project-flygate.vercel.app/#/calls">project-flygate.vercel.app/#/calls</a>
+  화면은 <a href="https://flygate.kr/#/calls">flygate.kr/#/calls</a>
   에 있습니다.</p>
   <div style="width:100%;height:196mm;background:url('{shot.as_uri()}') no-repeat center top;
        background-size:contain"></div>
@@ -530,7 +541,7 @@ def main() -> None:
     readme = repo_root / "README.md"
     check_highlights([md_text, readme.read_text(encoding="utf-8") if readme.exists() else ""])
 
-    body = md_to_html(emphasise_results(add_missing_sources(strip_form_scaffolding(md_text))))
+    body = md_to_html(emphasise_results(use_team_domain(add_missing_sources(strip_form_scaffolding(md_text)))))
     html = (f"<!doctype html><html lang='ko'><head><meta charset='utf-8'>"
             f"<title>{PROJECT_NAME}</title><style>{font_faces()}\n{CSS}</style></head>"
             f"<body>{cover(repo_root)}{architecture(repo_root)}{body}"

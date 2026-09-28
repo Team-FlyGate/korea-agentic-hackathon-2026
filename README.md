@@ -274,6 +274,7 @@ v0에서 문제 정의와 검증 설계를 물려받았고, v0이 쓴 외부 플
 | `scripts/render_submission_md.py` | 팀 저장소의 제출 문서를 표지와 구조도와 증거 쪽을 붙여 제출용 PDF로 만든다 |
 | `scripts/ocr_screen_recording.py` | 화면 녹화를 프레임으로 잘라 OCR 해 읽을 수 있는 기록으로 만든다 |
 | `docs/notes/team-repo-conventions.md` | 팀 저장소의 폴더와 문서와 주석 규약. 기여 전에 확인할 것 |
+| `docs/SESSION-2026-09-28.md` | 제출일 기록. 주최 측 답변, 근거 등급 버그 수정, 본선 준비 항목 |
 | `docs/notes/jev-triage-2026-09-27.md` | Jev 를 1단 게이트로 쓸 수 있는지 네 팔 비교 |
 | `docs/notes/openfold3-2026-09-27.md` | OpenFold3 호출과 pLDDT 가 MSA 에 좌우되는 실측 |
 | `docs/notes/structure-rules-2026-09-27.md` | 구조 예측 규칙 2종과 그 규칙이 보태는 값 |
