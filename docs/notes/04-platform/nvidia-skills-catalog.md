@@ -3,7 +3,7 @@
 2026-09-27 작성. 팀원 A와 팀원 C가 카카오톡으로 주고받은 조사 결과를 **원문을 직접 받아
 확인해 옮겼다.** 말로만 오간 내용은 시간이 지나면 팀 자산이 되지 않으므로, 무엇을 어떻게
 확인했는지와 우리 쪽에 어디가 닿는지를 함께 적는다. 결정은
-`docs/notes/nvidia-skills.md` 에 적었고, 여기서는 그 결정의 근거를 담고 스킬별 참조표를 둔다.
+`docs/notes/04-platform/nvidia-skills.md` 에 적었고, 여기서는 그 결정의 근거를 담고 스킬별 참조표를 둔다.
 
 조사 경위는 이렇다. 팀원 A가 `build.nvidia.com/skills` 를 훑어 후보 넷을 올렸고
 (`bionemo-openfold2-nim`, `aiq-research`, `medtech-model-evidence-export`, 그리고 스킬 공개

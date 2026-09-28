@@ -69,7 +69,7 @@
 쟀는데, **기존 15종만으로도 반려 정답 4건을 모두 잡았다.** 친화도 환산 금지와 RMSD 기준 명시가
 도킹 점수에만 걸리게 적혀 있지 않아 pLDDT 에도 그대로 적용됐다. 두 규칙은
 `overclaim_rules.STRUCTURE_RULES` 로 분리해 두고, 구조 예측을 실제로 붙이는 시점에 `RULES` 로
-옮겨 다시 잰다. 측정은 `docs/notes/structure-rules-2026-09-27.md` 에 있다.
+옮겨 다시 잰다. 측정은 `docs/notes/03-structure/structure-rules-2026-09-27.md` 에 있다.
 
 ## 5. 아직 확인하지 못한 것
 

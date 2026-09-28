@@ -14,7 +14,7 @@ fold", and our measurement agrees (pLDDT 31.9 without an alignment against 90.1 
 
 Running both modes is itself the interesting result. Confidence scores move with the input
 alignment, not with the truth of the molecule, which is what our overclaim rule about
-folding confidence asserts. See docs/notes/openfold3-2026-09-27.md.
+folding confidence asserts. See docs/notes/03-structure/openfold3-2026-09-27.md.
 
 Usage:
   python3 scripts/openfold3_smoke.py --no-msa   # fast check of credentials and payload

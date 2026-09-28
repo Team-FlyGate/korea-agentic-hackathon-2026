@@ -1,6 +1,6 @@
 # 논문 계획: 도킹 출력의 과잉해석을 걸러내는 크리틱
 
-2026-09-25 작성. 해커톤 제출과는 별개 갈래다. 순서와 시간 창은 `docs/notes/post-hackathon.md`에 있다.
+2026-09-25 작성. 해커톤 제출과는 별개 갈래다. 순서와 시간 창은 `docs/notes/06-project/post-hackathon.md`에 있다.
 
 > 선행연구와 발표 자리 조사는 2026-09-27 에 끝냈고 결과를 아래 해당 절에 적었다.
 
@@ -31,7 +31,7 @@ factor Xa 에서 -7.967, COX-2 에서 -6.605 다. 전부 실측이고 근거 ID 
 | NVIDIA DiffDock 문서 | "Do not convert confidence directly into binding affinity." |
 | BindingDB 경고 | "Ki, Kd, IC50 and EC50 are distinct endpoints and are NOT pooled into one affinity score." |
 
-원문은 `docs/notes/fddd-and-jev.md` 와 `docs/notes/bionemo-nim.md` 에 인용해 두었다.
+원문은 `docs/notes/03-structure/fddd-and-jev.md` 와 `docs/notes/03-structure/bionemo-nim.md` 에 인용해 두었다.
 
 ## 우리가 실측으로 보탠 규칙
 
@@ -474,7 +474,7 @@ PLOS Software 는 OSI 라이선스를, Bioinformatics Application Note 는 2년�
 
 ### 새 재료 1. 현장에서 실제로 일어난 과잉해석 사례
 
-> 사례 목록과 확인 결과는 `docs/notes/real-world-cases.md` 로 옮겼다. 초파리 외에
+> 사례 목록과 확인 결과는 `docs/notes/01-domain/real-world-cases.md` 로 옮겼다. 초파리 외에
 > 아두카누맙 사례를 더했다. 약물감시 쪽 독자에게는 그쪽이 더 잘 닿는다.
 
 지금 계획의 부정 케이스는 전부 우리가 만든 것이다. 심사자는 "이 실패가 실제로 일어나는가"를
@@ -558,7 +558,7 @@ PLOS Software 는 OSI 라이선스를, Bioinformatics Application Note 는 2년�
   13/16 에 거짓 양성 1/17 이었다. 규칙 15종을 넣으면 16/16 에 0/17 이다. **LLM 판단만으로도
   열세 건이 걸러진다는 사실을 숨기지 않는다.** 규칙이 더한 셋은 단일 시드 재현성 주장,
   SMILES 를 실행 입력이라 부르는 것, DiffDock 에 시드가 없다는 사실이고 전부 도구 문서를
-  읽어야 아는 것이다. 기록은 `docs/notes/rule-contribution-2026-09-27.md`
+  읽어야 아는 것이다. 기록은 `docs/notes/03-structure/rule-contribution-2026-09-27.md`
 - **규칙별 분포를 구분력으로 읽으면 안 된다.** `eval/cases.jsonl` 이 규칙당 반려 케이스를
   하나씩 심은 구조라 규칙당 1건은 설계상 하한이다. 그리고 `diffdock_confidence_affinity` 는
   자기 케이스에서도 `affinity_conversion` 으로 귀속돼 이름으로 확인된 적이 없다
@@ -570,7 +570,7 @@ PLOS Software 는 OSI 라이선스를, Bioinformatics Application Note 는 2년�
 
 ## 저자와 기여
 
-`docs/notes/credits.md` 의 기여 구분을 따른다. 주제와 도킹 자산과 해석 한계 목록은 팀원 A,
+`docs/notes/06-project/credits.md` 의 기여 구분을 따른다. 주제와 도킹 자산과 해석 한계 목록은 팀원 A,
 하네스와 검증 체계와 약물감시 도구는 팀장이다. 저자 순서는 논문 착수 시점에 팀에서 정한다.
 
 FDDD 는 팀원 A 의 별도 저작물이다. 논문에서도 복제하지 않고 인용하며, 데이터 출처와 SHA256 을

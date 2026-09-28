@@ -18,7 +18,7 @@
 # Verified run: all eight steps passed on the Colima backend on 2026-09-25 (OpenShell 0.0.116,
 # Docker 29.5.2, Ubuntu 24.04, kernel 6.8.0-117). The Multipass backend could not be exercised
 # because qemu-img crashes on this Intel Mac [unverified]. The full log is in
-# docs/notes/openshell-setup.md.
+# docs/notes/04-platform/openshell-setup.md.
 #
 # Reference documents (checked 2026-09-24) and measurements (2026-09-25)
 #   OpenShell install.sh:      https://raw.githubusercontent.com/NVIDIA/OpenShell/main/install.sh

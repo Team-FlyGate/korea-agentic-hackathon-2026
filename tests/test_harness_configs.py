@@ -32,7 +32,7 @@ def test_author_config_loads_with_two_nim_llms_and_five_tools():
     cfg = _load("configs/author.yml")
     assert set(cfg.llms) == {"planner", "worker"}
     assert cfg.llms["planner"].model_name == "nvidia/nemotron-3-super-120b-a12b"
-    # nano(nvidia/nemotron-3-nano-30b-a3b)는 2026-09-01 종료(410)라 lightning 으로 바꿨다. docs/notes/nat-harness.md 참고.
+    # nano(nvidia/nemotron-3-nano-30b-a3b)는 2026-09-01 종료(410)라 lightning 으로 바꿨다. docs/notes/04-platform/nat-harness.md 참고.
     assert cfg.llms["worker"].model_name == "nvidia/nemotron-3.5-lightning-30b-a3b"
     assert cfg.llms["planner"].base_url == "https://integrate.api.nvidia.com/v1"
     assert set(cfg.functions) == set(TOOL_NAMES)

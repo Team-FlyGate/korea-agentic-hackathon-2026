@@ -26,7 +26,7 @@ Vina 점수를 교차 비교할 수 없고, DiffDock 의 신뢰도는 친화도�
 규칙 15종은 지어낸 것이 아니라 도구 문서와 데이터 제공자 경고에서 옮겼습니다. 한 건은 우리가
 직접 재서 넣었습니다. DiffDock 은 시드가 없어 같은 입력에도 신뢰도가 0.725 와 0.515 로 갈립니다.
 
-배경과 결정 근거는 `docs/notes/topic-decision.md` 에 있습니다. 그 문서 하나면 맥락이 잡힙니다.
+배경과 결정 근거는 `docs/notes/06-project/topic-decision.md` 에 있습니다. 그 문서 하나면 맥락이 잡힙니다.
 
 ## 먼저 하실 일 세 가지
 
@@ -95,5 +95,5 @@ cp .env.example .env            # NVIDIA_API_KEY 를 채웁니다. .env 는 커�
 - **저장소 규약은 `docs/CONVENTIONS.md` 에 있습니다.** 커밋 범위와 작업 규율이 들어 있습니다.
 - **커밋에 AI 도구를 공동저자로 넣지 않습니다.** 각자 본인 GitHub 신원으로 커밋합니다.
 - 저장소를 제출 직전 공개로 돌립니다. 팀원 실명과 키를 문서에 남기지 않습니다.
-- 주제와 결정 근거는 `docs/notes/topic-decision.md`, 현재 상태는 `docs/HANDOFF.md`,
+- 주제와 결정 근거는 `docs/notes/06-project/topic-decision.md`, 현재 상태는 `docs/HANDOFF.md`,
   기술 메모는 `docs/notes/` 에 있습니다. `docs/PLAN.md` 는 초기 계획 기록입니다.

@@ -965,7 +965,7 @@ def credits_html(data: dict) -> str:
         m = re.search(r"규칙\s*(\d+)\s*종", " ".join(row))
         if m and int(m.group(1)) != data["rule_count"]:
             stale = (f'층별 기여 표의 과잉해석 규칙 수 {m.group(1)}종은 '
-                     f'<code>docs/notes/credits.md</code> 를 적을 당시의 값이다. '
+                     f'<code>docs/notes/06-project/credits.md</code> 를 적을 당시의 값이다. '
                      f'지금 <code>src/harness/tools/overclaim_rules.py</code> 에 들어 있는 규칙은 '
                      f'{data["rule_count"]}종이다.')
             break
@@ -982,7 +982,7 @@ def credits_html(data: dict) -> str:
         + "</div>"
         + '<p class="muted">초파리 도킹 자산 FDDD 는 팀원의 별도 저작물이다. 복제하지 않고 '
           "도구로 참조하며 데이터 출처와 SHA256 을 그대로 인용한다. 공개 산출물에는 실명을 "
-          "쓰지 않고 역할로만 적는다. 출처 <code>docs/notes/credits.md</code>.</p>"
+          "쓰지 않고 역할로만 적는다. 출처 <code>docs/notes/06-project/credits.md</code>.</p>"
     )
     return section("8", "계보와 기여", body)
 

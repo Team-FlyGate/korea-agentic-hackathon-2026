@@ -19,7 +19,7 @@ FlyDiscovery(신약개발)와 FlyVigilance(약물감시) 둘이고, 웹과 api, 
 
 이 저장소는 그 데모가 쓰는 **규칙 원본과 측정 스크립트**다. NAT 도구 등록, OpenShell 정책,
 과잉해석 규칙 17종, 평가 케이스, 근거 등급 시제품이 여기 있다. 두 저장소를 합치지 않고
-양쪽에서 서로를 가리킨다. 검토 기록은 `docs/notes/flyvigilante-review-2026-09-28.md`에 있다.
+양쪽에서 서로를 가리킨다. 검토 기록은 `docs/notes/06-project/flyvigilante-review-2026-09-28.md`에 있다.
 데모 저장소는 9월 28일에 `FlyVigilante`, `FlyVigilance`를 거쳐 `Project-FlyGate`로 정리됐다.
 
 ## 형식 검사의 한계
@@ -213,13 +213,13 @@ LLM 판단만으로도 열세 건이 걸러진다. 규칙이 더한 것은 세 �
 
 놓친 세 건이 무엇인지가 규칙의 값을 보여 준다. 단일 시드 결과에 재현성을 주장하는 것,
 SMILES를 실행 입력이라고 말하는 것, DiffDock 호스팅 API에 시드가 없다는 사실이다.
-분야 상식으로는 닿지 않고 도구 문서를 읽어야 안다. 측정은 `docs/notes/rule-contribution-2026-09-27.md`.
+분야 상식으로는 닿지 않고 도구 문서를 읽어야 안다. 측정은 `docs/notes/03-structure/rule-contribution-2026-09-27.md`.
 
 규칙을 늘리면 늘 좋아지는지도 재 보았다. 구조 예측 도구를 붙이는 안이 나와 예측 구조와 신뢰도
 지표(pLDDT, pTM, ipTM)를 다루는 규칙 2종을 NVIDIA 스킬 문서에서 옮겨 적고, 케이스 5건에
 두 프롬프트로 물었다. **기존 15종만으로도 반려 정답 4건을 모두 잡아 새 규칙이 추가로 잡은 것은
 없었다.** 그래서 두 규칙은 `overclaim_rules.STRUCTURE_RULES` 로 분리해 두고 발표하는 적발률은
-15종 기준을 그대로 쓴다. 측정은 `docs/notes/structure-rules-2026-09-27.md`.
+15종 기준을 그대로 쓴다. 측정은 `docs/notes/03-structure/structure-rules-2026-09-27.md`.
 
 ### 예상 질문
 
@@ -240,7 +240,7 @@ v0에서 문제 정의와 검증 설계를 물려받았고, v0이 쓴 외부 플
 측정을 먼저 하고 서술한다는 원칙도 그때부터 이어 온다.
 
 주제와 초파리 도킹 경로는 팀원 제안이고, 에이전트 하네스와 검증 체계는 선행 프로젝트에서
-이어 온 자산이다. 두 갈래를 하나의 파이프라인으로 이었다. 갈래별 구분은 `docs/notes/credits.md`.
+이어 온 자산이다. 두 갈래를 하나의 파이프라인으로 이었다. 갈래별 구분은 `docs/notes/06-project/credits.md`.
 
 초파리 도킹 자산 [FDDD](https://drug.flybrain.kr)는 팀원의 별도 저작물이다.
 **복제하지 않고 도구로 참조한다.** 데이터 출처와 SHA256을 그대로 인용한다.
@@ -261,26 +261,35 @@ v0에서 문제 정의와 검증 설계를 물려받았고, v0이 쓴 외부 플
 
 | 문서 | 무엇 |
 |---|---|
-| `docs/notes/topic-decision.md` | 주제 결정 근거, 과잉해석 규칙 15종, 게이트와 일정 |
-| `docs/notes/bionemo-nim.md` | NVIDIA 생물학 NIM 접근 확인과 호출 규격, 구현 함정 |
-| `docs/notes/fddd-and-jev.md` | 초파리 데모와 Jev 실측 확인 |
-| `docs/notes/fddd-teardown.md` | 초파리 데모 기술 분해 |
-| `docs/notes/real-world-cases.md` | 현장에서 실제로 일어난 과잉해석 사례와 확인 결과 |
-| `docs/notes/jev-primer.md` | 판정 전용 모델 Jev 정리. 자체 측정과 독립 검증을 나눠 적음 |
-| `docs/notes/paper-plan.md` | 논문 계획, 선행연구와 정직한 한계 |
-| `docs/notes/case-drug-review-2026-09-27.md` | 사례 약물 열다섯 종 실측. 키트루다로 규칙이 갈리는 것과 퇴출 약물 조회 함정 |
-| `docs/notes/flyvigilante-review-2026-09-28.md` | 팀 데모 저장소 실측 검토. 선행 일수와 Jev 대 Nemotron 주장 재측정, 저장소 분리 결정 |
+| `docs/notes/06-project/topic-decision.md` | 주제 결정 근거, 과잉해석 규칙 15종, 게이트와 일정 |
+| `docs/notes/03-structure/bionemo-nim.md` | NVIDIA 생물학 NIM 접근 확인과 호출 규격, 구현 함정 |
+| `docs/notes/03-structure/fddd-and-jev.md` | 초파리 데모와 Jev 실측 확인 |
+| `docs/notes/03-structure/fddd-teardown.md` | 초파리 데모 기술 분해 |
+| `docs/notes/01-domain/real-world-cases.md` | 현장에서 실제로 일어난 과잉해석 사례와 확인 결과 |
+| `docs/notes/02-judging/jev-primer.md` | 판정 전용 모델 Jev 정리. 자체 측정과 독립 검증을 나눠 적음 |
+| `docs/notes/05-research/paper-plan.md` | 논문 계획, 선행연구와 정직한 한계 |
+| `docs/notes/01-domain/case-drug-review-2026-09-27.md` | 사례 약물 열다섯 종 실측. 키트루다로 규칙이 갈리는 것과 퇴출 약물 조회 함정 |
+| `docs/notes/06-project/flyvigilante-review-2026-09-28.md` | 팀 데모 저장소 실측 검토. 선행 일수와 Jev 대 Nemotron 주장 재측정, 저장소 분리 결정 |
 | `scripts/collect_call_log.py` | 데모 에이전트를 한 바퀴 돌려 NVIDIA 호출 기록을 모으고 요약한다 |
 | `scripts/render_submission_md.py` | 팀 저장소의 제출 문서를 표지와 구조도와 증거 쪽을 붙여 제출용 PDF로 만든다 |
 | `scripts/ocr_screen_recording.py` | 화면 녹화를 프레임으로 잘라 OCR 해 읽을 수 있는 기록으로 만든다 |
-| `docs/notes/team-repo-conventions.md` | 팀 저장소의 폴더와 문서와 주석 규약. 기여 전에 확인할 것 |
+| `docs/notes/06-project/team-repo-conventions.md` | 팀 저장소의 폴더와 문서와 주석 규약. 기여 전에 확인할 것 |
 | `docs/SESSION-2026-09-28.md` | 제출일 기록. 주최 측 답변, 근거 등급 버그 수정, 본선 준비 항목 |
-| `docs/notes/jev-triage-2026-09-27.md` | Jev 를 1단 게이트로 쓸 수 있는지 네 팔 비교 |
-| `docs/notes/openfold3-2026-09-27.md` | OpenFold3 호출과 pLDDT 가 MSA 에 좌우되는 실측 |
-| `docs/notes/structure-rules-2026-09-27.md` | 구조 예측 규칙 2종과 그 규칙이 보태는 값 |
-| `docs/notes/nvidia-skills-catalog.md` | NVIDIA 스킬 380개 가운데 쓸 만한 것 정리 |
-| `docs/notes/causality-assessment.md` | WHO-UMC 와 한국형 알고리즘, 정답 데이터의 소재 |
-| `docs/notes/report-form-mapping.md` | 실제 보고 서식과 우리 산출물의 대응 |
+| `docs/notes/05-research/lessons-2026-09-28.md` | 도메인 이해, 코드화, 측정, 시현, 전달에서 배운 것과 틀렸던 것 |
+| `docs/notes/02-judging/jev-triage-2026-09-27.md` | Jev 를 1단 게이트로 쓸 수 있는지 네 팔 비교 |
+| `docs/notes/03-structure/openfold3-2026-09-27.md` | OpenFold3 호출과 pLDDT 가 MSA 에 좌우되는 실측 |
+| `docs/notes/03-structure/structure-rules-2026-09-27.md` | 구조 예측 규칙 2종과 그 규칙이 보태는 값 |
+| `docs/notes/04-platform/nvidia-skills-catalog.md` | NVIDIA 스킬 380개 가운데 쓸 만한 것 정리 |
+| `docs/notes/01-domain/causality-assessment.md` | WHO-UMC 와 한국형 알고리즘, 정답 데이터의 소재 |
+| `docs/notes/01-domain/report-form-mapping.md` | 실제 보고 서식과 우리 산출물의 대응 |
+| `docs/notes/README.md` | **작업 노트 색인.** 주제별 폴더 여섯 개와 그 안의 파일 목록 |
+| `docs/notes/05-research/paper-plan-pv.md` | **약물감시 본편 논문 계획.** 논지, 실험 6종, 투고처와 비용 |
+| `docs/notes/05-research/lit-survey-2026-09-29.md` | 선행연구 조사. 카파 0.22 정정과 선점 위험 셋 |
+| `docs/papers/README.md` | **논문 세 편의 편성과 겹치지 않게 그은 선** |
+| `docs/papers/pv-main.md` | 본편 골격. 절마다 있는 것과 필요한 것 |
+| `docs/papers/ml-leakage.md` | 별편 골격. 누수 유형 다섯과 가림 사다리 |
+| `docs/papers/docking-critic.md` | 도킹 편 골격. arXiv 와 워크숍으로 형태를 바꿈 |
+| `docs/SESSION-2026-09-29.md` | 마감 다음 날 기록. 노트 정리, 논문 골격, 투고처 확정 |
 | `docs/COURSE-GUIDE.md` | NVIDIA DLI 강좌 수강 안내 |
 | `docs/TROUBLESHOOTING.md` | 겪고 푼 문제 열 건 |
 | `docs/HANDOFF.md` | 진행 상황과 검증된 수치 |

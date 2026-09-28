@@ -57,7 +57,7 @@ first-pass hosted/local usage; load supplemental files only when needed:
 
 | 파일 | 담을 것 | 내용을 가져올 곳 |
 |---|---|---|
-| `SKILL.md` | 머리말과 본문. 언제 쓰는지, 단계 순서, 한계 | `README.md`, `docs/notes/topic-decision.md` |
+| `SKILL.md` | 머리말과 본문. 언제 쓰는지, 단계 순서, 한계 | `README.md`, `docs/notes/06-project/topic-decision.md` |
 | `references/api.md` | openFDA, DailyMed, PubMed, BindingDB 호출 규격 | `src/harness/tools/` 의 각 도구 docstring |
 | `references/evidence.md` | 근거 ID 체계와 각 ID 가 무엇을 가리키는지 | `eval/results/case_niraparib.json` |
 | `references/limits.md` | 과잉해석 규칙 15종과 그 출처 | `src/harness/tools/overclaim_rules.py` |
@@ -116,8 +116,8 @@ ls skills/pharmacovigilance-evidence/references/
 **두세 시간 보시면 됩니다.** 새로 조사할 것이 없습니다. 위 표의 오른쪽 열에 적힌 파일을
 열어 영어로 옮기고 규격에 맞춰 묶는 일입니다.
 
-막히시면 `docs/notes/bionemo-nim.md` 에 NVIDIA 스킬 저장소 구조를 분해해 두었고,
-`docs/notes/topic-decision.md` 에 규칙 15종의 출처가 정리돼 있습니다.
+막히시면 `docs/notes/03-structure/bionemo-nim.md` 에 NVIDIA 스킬 저장소 구조를 분해해 두었고,
+`docs/notes/06-project/topic-decision.md` 에 규칙 15종의 출처가 정리돼 있습니다.
 
 `configs/` 와 `src/harness/register.py` 는 팀장만 고칩니다. 이 작업은 그 둘을 건드리지
 않으므로 겹치지 않습니다.

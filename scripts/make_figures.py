@@ -84,7 +84,7 @@ def register_fonts() -> str:
     found = sorted(FONT_DIR.glob("Pretendard-*.ttf"))
     if not found:
         raise FileNotFoundError(
-            f"Pretendard 폰트가 없습니다: {FONT_DIR}. docs/notes/figures.md 의 설치 절차를 따르세요.")
+            f"Pretendard 폰트가 없습니다: {FONT_DIR}. docs/notes/06-project/figures.md 의 설치 절차를 따르세요.")
     for path in found:
         font_manager.fontManager.addfont(str(path))
     family = font_manager.FontProperties(fname=str(found[0])).get_name()
@@ -484,7 +484,7 @@ PUBLIC_C = BLUE           # 공개 API 와 외부 실측(FDDD, 초파리 커넥�
 PUBLIC_BG = BLUE_BG
 
 # Names and versions come from the repository state, not from memory:
-#   model names and tool layout: the "도구 구성" section of docs/notes/topic-decision.md
+#   model names and tool layout: the "도구 구성" section of docs/notes/06-project/topic-decision.md
 #   NeMo Agent Toolkit version: nvidia-nat 1.9.0 in .venv (pip show)
 #   the seven allowed hosts: the policy entry in the same section
 NAT_VERSION = "1.9.0"
@@ -737,7 +737,7 @@ def make_pipeline_architecture(out_path: Path) -> Path:
             ha="center", va="center", fontsize=5.2, color=INK_SOFT, zorder=8)
 
     ax.text(98.6, 0.7,
-            "출처: docs/notes/topic-decision.md(도구 구성과 규칙 15종), configs/author.yml, configs/critic.yml, nvidia-nat "
+            "출처: docs/notes/06-project/topic-decision.md(도구 구성과 규칙 15종), configs/author.yml, configs/critic.yml, nvidia-nat "
             + NAT_VERSION,
             ha="right", va="center", fontsize=4.6, color=INK_FAINT)
 

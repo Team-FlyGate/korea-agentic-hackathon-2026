@@ -59,7 +59,7 @@ OpenShell은 호스트가 macOS Intel이면 설치 자체가 거부된다(설치
 남겼다. 게이트웨이 기동에서 두 군데가 막혔는데, compute driver 자동 탐지가 실패하므로
 `~/.config/openshell/gateway.env`에 `OPENSHELL_DRIVERS=docker`를 넣어야 하고, 사용자 systemd
 매니저가 docker 그룹 없이 떠 있으면 `sudo systemctl restart user@$(id -u).service`로 다시 띄워야
-한다. 자세한 기록은 `docs/notes/openshell-setup.md`의 "실행 기록(Colima)" 절에 있다.
+한다. 자세한 기록은 `docs/notes/04-platform/openshell-setup.md`의 "실행 기록(Colima)" 절에 있다.
 
 ## 4. DLI 강좌에서 "Failed to fetch"가 뜬다
 

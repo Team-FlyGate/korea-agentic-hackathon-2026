@@ -2,7 +2,7 @@
 
 2026-09-25 조사. 자산과 엔진 코드를 직접 받아 읽었다. 데모의 성격과 규모를 파악하고,
 우리가 무엇을 가져다 쓸 수 있는지 판단하기 위한 것이다.
-데모의 과학적 내용과 도킹 수치는 `docs/notes/fddd-and-jev.md` 에 있다.
+데모의 과학적 내용과 도킹 수치는 `docs/notes/03-structure/fddd-and-jev.md` 에 있다.
 
 ## 한 줄
 
@@ -219,4 +219,4 @@ manifest 에 계보와 개수와 SHA256 과 라이선스를 적고, `dynamics` �
 | FDDD 자체 | 미확인 [unverified] | 팀원 A 에게 확인 |
 | Webina, MolModa | 각 저장소 표기 | 표기 |
 
-`docs/notes/credits.md` 의 외부 자산 표에 반영한다.
+`docs/notes/06-project/credits.md` 의 외부 자산 표에 반영한다.

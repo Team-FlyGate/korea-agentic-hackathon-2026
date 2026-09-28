@@ -5,7 +5,7 @@ NAT 를 import 하지 않는다. DiffDock, Boltz-2, MolMIM, GenMol, MSA-Search, 
 ``pharmasignal_common`` 의 것을 재사용한다.
 
 규격 근거
-- 사양: ``docs/notes/bionemo-nim.md``
+- 사양: ``docs/notes/03-structure/bionemo-nim.md``
 - 실측: ``eval/results/diffdock_smoke.txt`` (2026-09-25, HTTP 200, 4.1초, Nvcf-Status: fulfilled)
 
 설계 요약
@@ -38,7 +38,7 @@ except ImportError:  # 스크립트/테스트에서 sys.path 로 직접 임포�
     from pharmasignal_common import ResponseCache, now_iso
 
 # --------------------------------------------------------------------------------------
-# 상수. 전부 docs/notes/bionemo-nim.md 와 diffdock_smoke.txt 에서 온 값이다.
+# 상수. 전부 docs/notes/03-structure/bionemo-nim.md 와 diffdock_smoke.txt 에서 온 값이다.
 # --------------------------------------------------------------------------------------
 HEALTH_BASE = "https://health.api.nvidia.com"
 STATUS_PATH = "/v1/status"

@@ -12,8 +12,8 @@
 | GitHub organization | `FlyGate` 가 선점되어 **`Team-FlyGate`** 로 만들었고 팀원 A가 다섯 명을 모두 Owner로 초대함. 저장소 이전은 팀장이 함 |
 | UI | 팀원 C가 Vercel로 배포함 (`flygate-six.vercel.app`). 주제 두 방향을 각각 화면으로 만들어 공유함 |
 | 팀원 D | 합류 확정. 계정 확보. 저장소 초대 필요 |
-| NVIDIA 스킬 | 카탈로그 조사 완료. `docs/notes/nvidia-skills.md` 에 정리함 |
-| 인과성 평가 도구 | 원본 확보. 배점 대조까지 끝남. `docs/notes/causality-assessment.md` |
+| NVIDIA 스킬 | 카탈로그 조사 완료. `docs/notes/04-platform/nvidia-skills.md` 에 정리함 |
+| 인과성 평가 도구 | 원본 확보. 배점 대조까지 끝남. `docs/notes/01-domain/causality-assessment.md` |
 | PV 도메인 자료 | 팀원 B가 실무자 인터뷰 요약, 공개 DB 목록, 국내 흐름 설명서, 보고 서식 셋을 공유함 |
 | 대상 약물 | 니라파립 유지 여부 미정. 베타 아밀로이드 표적 약(레켐비, 키순라, 아두헬름)이 후보로 나옴 |
 | DLI 진도 | `activity-api.learn.nvidia.com` 응답이 없어 전원이 막혔음. 캡처를 모아 문의에 붙임 |
@@ -33,7 +33,7 @@
 | 항목 | 상태 |
 |---|---|
 | 적발률 재측정 | 끝. 조건을 셋으로 늘렸음. 1/16, 13/16, 16/16 |
-| 규칙별 반려 분포 | 끝. `docs/notes/measurement-2026-09-27.md` |
+| 규칙별 반려 분포 | 끝. `docs/notes/02-judging/measurement-2026-09-27.md` |
 | 표기 변동 안정성 | 끝. 판정 126건 중 뒤집힘 0건 |
 | README 갱신과 윤문 | 끝 |
 | 선행 문헌 다섯 편 분석 | 끝. 구글 드라이브 `FlyGate_선행연구_문헌분석` |
@@ -86,7 +86,7 @@ Brev 크레딧을 쓰지 않아도 됨.
 | 라벨과 FAERS 판정 | 약사나 약물감시를 아는 사람 | 30분 |
 | 에이전트 구성과 크리틱 설계 | 에이전트를 만들어 본 사람 | 30분 |
 
-읽을 것은 `eval/results/case_niraparib_brief.md` 와 `docs/notes/topic-decision.md` 의 규칙 표임.
+읽을 것은 `eval/results/case_niraparib_brief.md` 와 `docs/notes/06-project/topic-decision.md` 의 규칙 표임.
 
 **문서를 직접 고치지 말고** `docs/notes/review-<이름>.md` 로 새 파일을 만들어 주면 좋겠음.
 충돌이 없고 누가 무엇을 짚었는지 남음.
@@ -135,7 +135,7 @@ Brev 크레딧을 쓰지 않아도 됨.
 | GIW ISCB-Asia 2026 포스터 | 9/30 | 초록만. 서울 11/17~20 개최 |
 
 둘 다 초록만 내면 되므로 제출을 끝내고 써도 됨.
-계획과 선행연구 정리는 `docs/notes/paper-plan.md` 에 있음.
+계획과 선행연구 정리는 `docs/notes/05-research/paper-plan.md` 에 있음.
 
 ## 파일 충돌을 막는 규칙
 
@@ -146,4 +146,4 @@ Brev 크레딧을 쓰지 않아도 됨.
 3. 공유할 내용은 `docs/notes/<주제>.md` 로 **새 파일**을 만듦
 
 저장소에 실명을 쓰지 않음. 공개 산출물에는 역할과 GitHub 핸들로만 적음.
-기여 표기는 `docs/notes/credits.md` 를 따름.
+기여 표기는 `docs/notes/06-project/credits.md` 를 따름.

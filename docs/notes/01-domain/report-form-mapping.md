@@ -94,6 +94,6 @@ PV 실무자가 "내러티브의 완성도가 이후 모든 보고서의 품질�
 
 - 팀원 B가 공유한 서식 세 종과 국내 약물감시 흐름 설명서 (2026-09-27)
 - 약물부작용 인과성평가 기준 및 도구 원본. WHO-UMC 6등급과 한국형 알고리즘 ver 2.0
-- 알고리즘 배점과 등급 구간은 `docs/notes/causality-assessment.md`
+- 알고리즘 배점과 등급 구간은 `docs/notes/01-domain/causality-assessment.md`
 - FAERS 필드 보유율은 같은 문서 3절
 - 원본 파일은 `_local/team-shared/2026-09-27/`

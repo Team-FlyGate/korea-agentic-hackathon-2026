@@ -5,7 +5,7 @@
 
 출처
 - 조회 URL: ``https://drug.flybrain.kr/data/docking/multi-target.json``
-- 원문 정리: ``docs/notes/fddd-and-jev.md`` (도킹 조합 8건과 금지 해석 8항목)
+- 원문 정리: ``docs/notes/03-structure/fddd-and-jev.md`` (도킹 조합 8건과 금지 해석 8항목)
 - HTTP 계층: ``pharmasignal_common`` 의 재시도와 원자적 파일 캐시를 그대로 쓴다.
 
 설계 의도

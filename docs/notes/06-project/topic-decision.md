@@ -2,11 +2,11 @@
 
 2026-09-25 작성. 마감 2026-09-28(월) 23:59, 목표 제출 9/28 22:00. 남은 시간 3일.
 
-`docs/notes/team.md:21`에서 팀장이 별도 세션에서 초파리와 Jev 두 주제의 계획을 먼저 짜기로 했다.
+`docs/notes/06-project/team.md:21`에서 팀장이 별도 세션에서 초파리와 Jev 두 주제의 계획을 먼저 짜기로 했다.
 이 문서가 그 산출물이고, 다섯 명 의견을 모으는 자리에 가져갈 판단 재료다.
 
-실측 근거는 두 문서에 나눠 적었다. NVIDIA 생물학 NIM 쪽은 `docs/notes/bionemo-nim.md`,
-팀원 제안 주제 쪽은 `docs/notes/fddd-and-jev.md`다.
+실측 근거는 두 문서에 나눠 적었다. NVIDIA 생물학 NIM 쪽은 `docs/notes/03-structure/bionemo-nim.md`,
+팀원 제안 주제 쪽은 `docs/notes/03-structure/fddd-and-jev.md`다.
 
 ## 결론 먼저
 
@@ -21,7 +21,7 @@
 
 `docs/PLAN.md:49-59`의 후보 2였다. 밤새 저장소에서 스스로 실험하고 아침에 증거를 붙인 PR 후보를
 올리는 자율 코딩 에이전트다. **개발자 도메인을 겨냥한 후보였고 개발자 커뮤니티 섭외용이었다**
-(`docs/PLAN.md:10`, `docs/notes/recruiting.md:28-31`).
+(`docs/PLAN.md:10`, `docs/notes/06-project/recruiting.md:28-31`).
 
 팀이 확정되면서 전제가 사라졌다. 확정 3명이 전부 바이오와 제약 쪽이다. 혈액 내 암세포 데이터
 분석, 면역학 박사이자 AI 신약개발 저자, 약사이자 AI 프로덕트 개발자다. 팀원 두 분이 밝힌 관심도
@@ -42,7 +42,7 @@
   적용까지 확인했다. 정책 작성 지식이 그대로 남는다
 - 다만 NAT 워크플로가 없다. 계획자와 작업자가 미구현이라 주제로 되살리려면 배선이 새 작업이다
 
-다음 해커톤이나 개발자 대상 자리에 쓴다. 자세한 것은 `docs/notes/nightshift-components.md`에 있다.
+다음 해커톤이나 개발자 대상 자리에 쓴다. 자세한 것은 `docs/notes/04-platform/nightshift-components.md`에 있다.
 
 ## 먼저 알아야 할 사실: 하네스에 도메인 도구가 등록돼 있지 않다
 
@@ -66,7 +66,7 @@ $ grep -rn "register_function" src/harness/tools/ | wc -l
 
 이것이 PharmaSignal의 가장 큰 구멍이고 **어느 주제로 가든 맨 먼저 메운다.** 기존 도구는 코드가
 이미 동작하므로 `@register_function` 래퍼를 얇게 씌우는 일이다. 참조 구현은
-`src/harness/register.py:126-147` 하나뿐이고 절차는 `docs/notes/nat-harness.md:244-253`에 있다.
+`src/harness/register.py:126-147` 하나뿐이고 절차는 `docs/notes/04-platform/nat-harness.md:244-253`에 있다.
 
 ## 두 후보 비교
 
@@ -336,7 +336,7 @@ DLI 강좌 기준선 대조에서 나온 것이고 주제와 무관하게 고칠
 2. `base.yaml`과 `pharmasignal.yaml`에 `process` 블록이 없다. 이미지 `USER`가 바뀌면 조용히
    root로 돈다. `nightshift.yaml`처럼 명시한다
 3. `access: read-write`는 경로를 가리지 않는다. `rules`로 `POST /v1/chat/completions`와
-   `GET /v1/models`만 여는 예시가 `docs/notes/nat-harness.md:528-540`에 있다
+   `GET /v1/models`만 여는 예시가 `docs/notes/04-platform/nat-harness.md:528-540`에 있다
 
 ## 확인해 주실 것
 

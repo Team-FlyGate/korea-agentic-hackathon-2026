@@ -58,7 +58,7 @@ build.nvidia.com 스킬 카탈로그의 NVIDIA BioNeMo 에이전트 스킬 `diff
 ```
 
 초파리 도킹 자산은 팀원의 별도 저작물이라 복제하지 않고 출처와 SHA256 을 밝혀 인용한다.
-커넥톰 원본은 CC BY 4.0 이라 출처 표기가 필요하다. 자세한 기여 구분은 `docs/notes/credits.md`.
+커넥톰 원본은 CC BY 4.0 이라 출처 표기가 필요하다. 자세한 기여 구분은 `docs/notes/06-project/credits.md`.
 
 ## 추가 URL
 

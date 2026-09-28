@@ -28,7 +28,7 @@ ROOT = Path(__file__).parents[1]
 # 규칙 자체
 # --------------------------------------------------------------------------------------
 def test_rule_count_is_table_fourteen_plus_evidence_scope():
-    """docs/notes/topic-decision.md 표 14종 + case_runner 가 쓰고 있던 근거 범위 준수 1종."""
+    """docs/notes/06-project/topic-decision.md 표 14종 + case_runner 가 쓰고 있던 근거 범위 준수 1종."""
     assert len(TABLE_RULE_IDS) == 14
     assert len(RULES) == 15
     assert set(TABLE_RULE_IDS) < set(ocr.rule_ids())
@@ -56,7 +56,7 @@ def test_every_rule_strength_is_graded_or_explicitly_ungraded():
 
 
 def test_paper_plan_graded_rules_match_the_table():
-    """docs/notes/paper-plan.md 의 강도 표 5줄이 그대로 들어왔는지."""
+    """docs/notes/05-research/paper-plan.md 의 강도 표 5줄이 그대로 들어왔는지."""
     expected = {
         "cross_target_ranking": ocr.STRENGTH_STRONG,
         "diffdock_confidence_affinity": ocr.STRENGTH_VERY_STRONG,
@@ -136,7 +136,7 @@ def test_fddd_only_rules_shrank_from_ten_to_three():
     """FDDD 단독 의존이 10종에서 3종으로 줄었다는 단정. 늘어나면 실패한다.
 
     이중 귀속 전에는 `source == SOURCE_FDDD` 인 규칙 10종이 전부 FDDD 단독 의존이었다.
-    `docs/notes/contingency-roster.md` 의 "과잉해석 규칙 10종" 행이 그 상태를 적은 것이다.
+    `docs/notes/06-project/contingency-roster.md` 의 "과잉해석 규칙 10종" 행이 그 상태를 적은 것이다.
     """
     fddd_sourced = [r.id for r in RULES if r.source == SOURCE_FDDD]
     assert len(fddd_sourced) == 10, "FDDD 출처 규칙 수가 달라졌다"

@@ -29,7 +29,7 @@
 ``bindingdb:<UniProt>``, ``dailymed:setid:<id>:section:<번호>``, ``faers:2x2:<drug>-<event>``,
 ``pubmed:<PMID>``.
 
-DiffDock 은 시드가 없어 호출마다 값이 다르다(``docs/notes/bionemo-nim.md``). 그래서 요청과
+DiffDock 은 시드가 없어 호출마다 값이 다르다(``docs/notes/03-structure/bionemo-nim.md``). 그래서 요청과
 응답의 SHA256 을 함께 적고 "이 호출에서 이 값이 나왔다"로만 쓴다.
 """
 
@@ -67,7 +67,7 @@ except ImportError:  # 스크립트/테스트에서 sys.path 로 직접 임포�
     from pharmasignal_pubmed import search_pubmed  # type: ignore[no-redef]
 
 # --------------------------------------------------------------------------------------
-# 상수. 전부 docs/notes/fddd-and-jev.md 와 실제 데이터 파일에서 온 값이다.
+# 상수. 전부 docs/notes/03-structure/fddd-and-jev.md 와 실제 데이터 파일에서 온 값이다.
 # --------------------------------------------------------------------------------------
 FDDD_DOCKING_URL = "https://drug.flybrain.kr/data/docking/multi-target.json"
 FDDD_EVIDENCE_URL = "https://drug.flybrain.kr/data/evidence/summary.json"
@@ -695,7 +695,7 @@ def run_path(spec: PathSpec, docking: dict[str, Any], evidence: dict[str, Any], 
     ``use_vina=False`` 면 FDDD 의 AutoDock Vina 실측 조회를 건너뛴다. 그 자산은 팀원의
     별도 저작물이므로 쓸 수 없게 되는 경우를 대비한 경로다. 결합 근거는 DiffDock NIM 하나로
     줄지만 케이스의 요지(같은 화합물, 두 경로, 한쪽만 실험 근거가 있다)는 그대로 선다.
-    자세한 것은 ``docs/notes/contingency-roster.md``.
+    자세한 것은 ``docs/notes/06-project/contingency-roster.md``.
     """
     structure = step_structure(spec, offline=offline, use_cache=use_cache)
     vina = step_vina(spec, docking) if use_vina else vina_skip_step()

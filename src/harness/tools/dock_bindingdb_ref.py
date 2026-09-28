@@ -7,7 +7,7 @@ REST 를 한 번 호출해 캡처해 둔 요약을 읽는다. 그래서 조회 �
 출처
 - 조회 URL: ``https://drug.flybrain.kr/data/evidence/summary.json`` 의 ``bindingdb`` 블록
 - FDDD 가 캡처한 원본 질의: BindingDB REST ``getLigandsByUniprots``
-- 원문 정리: ``docs/notes/fddd-and-jev.md``
+- 원문 정리: ``docs/notes/03-structure/fddd-and-jev.md``
 - HTTP 계층: ``pharmasignal_common`` 의 재시도와 원자적 파일 캐시를 그대로 쓴다.
 
 설계 의도

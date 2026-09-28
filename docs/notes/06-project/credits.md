@@ -10,7 +10,7 @@
 | 층 | 내용 | 기여자 | 근거 |
 |---|---|---|---|
 | 주제와 훅 | 초파리 커넥톰을 신약개발에 붙이는 발상, 화제성 판단 | 팀원 A | 2026-09-25 팀 논의에서 제안 |
-| 도킹 자산 | FDDD 데모. 타깃 3종, 화합물 6종, AutoDock Vina 1.2.3 실행 8건, 수용체와 포즈와 로그의 SHA256, BindingDB 참조, DailyMed PK | 팀원 A | `drug.flybrain.kr`, `docs/notes/fddd-and-jev.md` |
+| 도킹 자산 | FDDD 데모. 타깃 3종, 화합물 6종, AutoDock Vina 1.2.3 실행 8건, 수용체와 포즈와 로그의 SHA256, BindingDB 참조, DailyMed PK | 팀원 A | `drug.flybrain.kr`, `docs/notes/03-structure/fddd-and-jev.md` |
 | 해석 한계 목록 | 하지 말아야 할 해석 8항목. 우리 크리틱 규칙의 뼈대가 됨 | 팀원 A | FDDD `multi-target.json` 의 `notes` 배열 |
 | Jev 접목 제안 | 판단 전용 모델을 파이프라인에 얹는 구성 | 팀원 A | 공유된 아키텍처 도식을 보고 제안 |
 | 약 도메인 검토 | 라벨 읽기, 약 정보 정합, 약사 관점 | 팀원 B | |
@@ -18,8 +18,8 @@
 | 약물감시 도구 | openFDA FAERS 집계와 불균형 지표, DailyMed 라벨 섹션, PubMed 문헌, ROR 오라클 | 팀장 | `src/harness/tools/pharmasignal_*.py` |
 | 샌드박스 | OpenShell 정책과 차단 로그, provider profile 자격증명 격리 | 팀장 | `policies/`, `eval/results/openshell_smoke*.txt` |
 | 평가 체계 | `nat eval` 적발률, 크리틱 판정 평가기 | 팀장 | `src/harness/evaluators.py` |
-| NIM 통합 | 생물학 NIM 접근 확인과 호출 계층, DiffDock 도구 | 팀장 | `docs/notes/bionemo-nim.md`, `eval/results/diffdock_smoke.txt` |
-| 과잉해석 크리틱 | 규칙 15종과 부정 케이스, 3단 판정 | 팀장 설계, 팀원 A 의 목록을 출처로 | `docs/notes/topic-decision.md` 규칙 표 |
+| NIM 통합 | 생물학 NIM 접근 확인과 호출 계층, DiffDock 도구 | 팀장 | `docs/notes/03-structure/bionemo-nim.md`, `eval/results/diffdock_smoke.txt` |
+| 과잉해석 크리틱 | 규칙 15종과 부정 케이스, 3단 판정 | 팀장 설계, 팀원 A 의 목록을 출처로 | `docs/notes/06-project/topic-decision.md` 규칙 표 |
 | 제작 파이프라인 | 영상 9단계, 이중언어 슬라이드, 그림 생성 | 팀장 | `assets/`, `scripts/make_figures.py` |
 
 ## 선행 프로젝트 계보
@@ -28,7 +28,7 @@
 
 PharmaSignal v0(`github.com/kakyungkim/pharmasignal-v0`, 2026-08 Agent Forge AI Hackathon Seoul
 제출, 미수상)의 후속이다. v0 에서 ROR 오라클과 검증 지표, 영상과 슬라이드 파이프라인을 가져왔다.
-자세한 것은 `docs/notes/reuse-from-v1.md`.
+자세한 것은 `docs/notes/04-platform/reuse-from-v1.md`.
 
 FDDD 는 팀원 A 의 별도 저작물이다. 이 저장소가 그것을 복제하지 않고 **도구로 참조한다.**
 데이터 출처와 SHA256 을 그대로 인용하고 원 저작물을 링크로 밝힌다.

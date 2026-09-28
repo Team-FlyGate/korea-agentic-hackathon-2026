@@ -37,7 +37,7 @@ scripts/openshell_smoke.sh pharmasignal                      # 허용/차단/쓰
 ```
 
 샌드박스 안 로그를 직접 띄우려면 VM에서 `openshell logs pharmasignal --since 15m`을 쓴다.
-VM 기동 절차는 `docs/notes/openshell-setup.md`에 있다.
+VM 기동 절차는 `docs/notes/04-platform/openshell-setup.md`에 있다.
 
 ---
 

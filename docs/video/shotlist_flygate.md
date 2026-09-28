@@ -42,7 +42,7 @@ scripts/openshell_smoke.sh flydock                      # 허용/차단/쓰기/T
 ```
 
 샌드박스 안 로그를 직접 띄우려면 VM에서 `openshell logs flydock --since 15m`을 쓴다.
-VM 기동 절차는 `docs/notes/openshell-setup.md`에 있다.
+VM 기동 절차는 `docs/notes/04-platform/openshell-setup.md`에 있다.
 
 ---
 
@@ -77,7 +77,7 @@ VM 기동 절차는 `docs/notes/openshell-setup.md`에 있다.
 - 클립 길이는 20초에서 30초 사이로 받는다. 지금 자리는 22.2초다.
 - 화면 구성은 말하는 사람 얼굴을 기본으로 두고, `drug.flybrain.kr` 데모 화면을 작게 끼우는
   쪽을 권한다. 데모 캡처를 못 뜨면 슬라이드 4를 배경으로 깐다.
-- 실명 자막을 넣지 않는다. 저장소를 공개로 돌리므로 역할로만 적는다(`docs/notes/credits.md`).
+- 실명 자막을 넣지 않는다. 저장소를 공개로 돌리므로 역할로만 적는다(`docs/notes/06-project/credits.md`).
 
 ### 3. 흐름 (문장 9~19, 약 62초)
 

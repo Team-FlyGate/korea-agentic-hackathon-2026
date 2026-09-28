@@ -125,14 +125,14 @@ def slides_to_add(m: dict) -> list[dict]:
                  "nvidia_skills_2026-09-27.json"],
                 ["인과성 평가 원본",
                  "한국형 알고리즘 ver 2.0 여덟 항목의 배점을 원본과 대조 완료",
-                 "docs/notes/causality-assessment.md"],
+                 "docs/notes/01-domain/causality-assessment.md"],
                 ["오프라인 테스트",
                  f"293개에서 {m['tests']}개로. 커밋 {m['commits']}건",
                  'pytest -q -m "not network"'],
             ],
             "note": "수치는 전부 방금 실행한 결과 파일에서 가져왔다. 이 슬라이드를 만드는 스크립트도 "
                     "같은 파일을 읽는다(scripts/extend_briefing_deck.py).",
-            "source": "팀장 추가(9/28) · 출처: eval/results/ 의 결과 JSON, docs/notes/openfold3-2026-09-27.md",
+            "source": "팀장 추가(9/28) · 출처: eval/results/ 의 결과 JSON, docs/notes/03-structure/openfold3-2026-09-27.md",
         },
         {
             "title": "이 브리핑에서 고칠 곳",
@@ -165,7 +165,7 @@ def slides_to_add(m: dict) -> list[dict]:
             "note": f"카탈로그 {m['skill_count']}개에서 {m['skill_relevant']}개를 후보로 걸러 "
                     f"{m['skill_detailed']}개는 SKILL.md 원문까지 읽었다. 공고의 \"Skill API\" 는 "
                     "스킬을 만들어 올리라는 뜻이 아니라 카탈로그를 활용하라는 뜻으로 읽는다.",
-            "source": "팀장 추가(9/28) · 출처: docs/notes/nvidia-skills-catalog.md, scripts/fetch_nvidia_skills.py",
+            "source": "팀장 추가(9/28) · 출처: docs/notes/04-platform/nvidia-skills-catalog.md, scripts/fetch_nvidia_skills.py",
         },
         {
             "title": "팀 자산으로 남긴 것",
@@ -202,7 +202,7 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "3번 팔이 이 측정의 핵심이다. 기억으로 판단하는 게이트는 우리가 반려해야 할 "
                     "종류의 추론이므로, 라벨 기재 여부를 근거로 넣어 주는 4번이 옳은 구성이다.",
-            "source": "팀장 추가(9/28) · 출처: docs/notes/jev-triage-2026-09-27.md, eval/results/triage_scale_jev-*.json",
+            "source": "팀장 추가(9/28) · 출처: docs/notes/02-judging/jev-triage-2026-09-27.md, eval/results/triage_scale_jev-*.json",
         },
         {
             "title": "사례 약물의 실측과 권고",
@@ -220,7 +220,7 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "니라파립이 적을 것이라는 회의 중 추정은 틀렸고, 도킹은 니라파립을 유지하며 "
                     "약물감시 사례로 클로자핀과 이소트레티노인을 더하는 쪽을 권한다.",
-            "source": "팀장 추가(9/28) · 출처: docs/notes/case-drug-review-2026-09-27.md, scripts/faers_drug_scan.py",
+            "source": "팀장 추가(9/28) · 출처: docs/notes/01-domain/case-drug-review-2026-09-27.md, scripts/faers_drug_scan.py",
         },
         {
             "title": "0 이라는 숫자의 함정",
@@ -236,7 +236,7 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "팀장이 \"퇴출 약물은 공개 데이터에 없다\" 고 먼저 보고했다가 되잡은 건이다. "
                     "우리 크리틱이 잡아야 할 종류의 착각이라 지우지 않고 문서에 남겼다.",
-            "source": "팀장 추가(9/28) · 출처: docs/notes/case-drug-review-2026-09-27.md 2절",
+            "source": "팀장 추가(9/28) · 출처: docs/notes/01-domain/case-drug-review-2026-09-27.md 2절",
         },
         {
             "title": "인과성 여덟 항목의 실측",
@@ -254,7 +254,7 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "점수가 전부 라벨 기재 한 항목에서 나왔다. 발현일이 공개본에 없어 선후관계를 가릴 수 "
                     "없다. 빈 칸을 채우면 +3이 +11이 되어 등급이 올라가는데 근거는 그대로다.",
-            "source": "팀장 추가(9/28) · 출처: docs/notes/causality-assessment.md 3-1절, "
+            "source": "팀장 추가(9/28) · 출처: docs/notes/01-domain/causality-assessment.md 3-1절, "
                       "eval/results/jev_causality_13497451.json",
         },
         {
@@ -271,7 +271,7 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "팀원 A의 제안대로 키트루다가 니라파립보다 다섯 배 많았다. 다만 건수가 많은 것과 "
                     "사례로 좋은 것은 다르다.",
-            "source": "팀장 추가(9/28) · 출처: docs/notes/case-drug-review-2026-09-27.md 4-1절, "
+            "source": "팀장 추가(9/28) · 출처: docs/notes/01-domain/case-drug-review-2026-09-27.md 4-1절, "
                       "eval/results/rule_split_scan_2026-09-27.json",
         },
         {
@@ -288,7 +288,7 @@ def slides_to_add(m: dict) -> list[dict]:
             ],
             "note": "마감은 23:59 이고 목표는 22:00 이다. 두 시간 여유를 둔다. "
                     "팀장이 근무 시간에는 손을 대기 어려우므로 낮에 할 것은 문의와 수강으로 좁혔다.",
-            "source": "팀장 추가(9/28) · 출처: docs/SESSION-2026-09-27.md, docs/notes/work-assignment.md",
+            "source": "팀장 추가(9/28) · 출처: docs/SESSION-2026-09-27.md, docs/notes/06-project/work-assignment.md",
         },
         {
             "title": "아직 비어 있는 것",

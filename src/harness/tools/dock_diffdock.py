@@ -4,7 +4,7 @@
 근거 ID 를 붙이는 일만 한다. 등록 이름은 ``diffdock_nim`` 이다.
 
 규격 근거
-- 사양: ``docs/notes/bionemo-nim.md``
+- 사양: ``docs/notes/03-structure/bionemo-nim.md``
 - 실측: ``eval/results/diffdock_smoke.txt`` (2026-09-25). 4R6E chain A 의 ATOM 2,752줄(222KB)과
   niraparib SMILES 로 HTTP 200, 4.1초, ``Nvcf-Status: fulfilled``,
   ``position_confidence`` [0.798, 0.751, 0.725], 포즈 3개(SDF).

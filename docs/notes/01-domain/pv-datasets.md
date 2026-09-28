@@ -146,7 +146,7 @@ Clinical Pharmacology and Therapeutics, 2026-07-29, DOI 10.1002/cpt.70409, PMID 
 있다. PRAC 문서에는 PRR 같은 불균형 지표 수치가 나오지 않는다.
 
 니라파립과 혈소판감소증 조합의 필드 보유율, FAERS 필드와 한국형 알고리즘 항목의 대응은
-`docs/notes/causality-assessment.md` 에 정리했다. 원본 세 건은 `_local/team-shared/2026-09-27/`
+`docs/notes/01-domain/causality-assessment.md` 에 정리했다. 원본 세 건은 `_local/team-shared/2026-09-27/`
 에 있다.
 
 **PV 실무자 인터뷰에서 얻은 것.** 한 사람의 경험이므로 업계 전체로 일반화하지 않는다. 우리

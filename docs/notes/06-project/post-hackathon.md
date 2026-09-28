@@ -1,7 +1,7 @@
 # 제출 후 계획: 세 갈래와 순서
 
 2026-09-25 작성. 9/28 제출을 마친 뒤에 할 일을 정리한다.
-논문 상세는 `docs/notes/paper-plan.md`, 주제 결정 근거는 `docs/notes/topic-decision.md`에 있다.
+논문 상세는 `docs/notes/05-research/paper-plan.md`, 주제 결정 근거는 `docs/notes/06-project/topic-decision.md`에 있다.
 
 ## 먼저 인정할 것: 세 갈래는 서로 다른 것을 보상한다
 
@@ -48,7 +48,7 @@
 쓸 만한 클라이언트가 지금 없다. 우리가 정리한 함정이 정확히 사람들이 걸리는 자리다.
 DiffDock 의 `steps` 와 `num_steps`, Boltz-2 MSA 의 `alignment` 와 `data`, MolMIM 의 `smi`,
 GenMol 의 문자열 `temperature`, 항상 null 인 `pae`, 429 백오프, 202 방어 분기다.
-근거는 `docs/notes/bionemo-nim.md` 와 `eval/results/diffdock_*.txt` 에 있다.
+근거는 `docs/notes/03-structure/bionemo-nim.md` 와 `eval/results/diffdock_*.txt` 에 있다.
 
 - 어차피 `src/harness/tools/bionemo_client.py` 로 만들고 있어 떼어 내는 비용이 작다
 - 마찰이 낮다. `pip install` 과 API 키 하나다
@@ -59,7 +59,7 @@ GenMol 의 문자열 `temperature`, 항상 null 인 `pae`, 429 백오프, 202 �
 **2. 초파리 도킹 시각화 (팀원 A 의 결정 사항)**
 
 가장 큰 훅이다. 이미 Doom 과 마인크래프트와 코인봇으로 크게 퍼진 계보 안에 있다
-(`docs/notes/fddd-and-jev.md` 참고). README 맨 위에 움직이는 그림을 걸고 한 줄로 돌아가게
+(`docs/notes/03-structure/fddd-and-jev.md` 참고). README 맨 위에 움직이는 그림을 걸고 한 줄로 돌아가게
 만들면 터질 자리다.
 
 **다만 FDDD 는 팀원 A 의 저작물이므로 그분이 정한다.** 우리가 대신 공개하지 않는다.
@@ -74,7 +74,7 @@ GenMol 의 문자열 `temperature`, 항상 null 인 `pae`, 429 백오프, 202 �
 - **제출용 저장소를 건드리지 않는다.** 별도 저장소로 복사하고 계보를 밝힌다
 - 키와 팀원 실명이 이력에 남지 않는지 확인한다
 - 저작자는 `kakyungkim <kakyung.kim@gmail.com>` 하나다
-- 외부 자산 라이선스를 표기한다. 목록은 `docs/notes/credits.md`
+- 외부 자산 라이선스를 표기한다. 목록은 `docs/notes/06-project/credits.md`
 
 ### 하지 말 것
 
@@ -83,7 +83,7 @@ GenMol 의 문자열 `temperature`, 항상 null 인 `pae`, 429 백오프, 202 �
 
 ## 갈래 2: 논문
 
-상세는 `docs/notes/paper-plan.md`. 요지만 적는다.
+상세는 `docs/notes/05-research/paper-plan.md`. 요지만 적는다.
 
 **논문이 되는 것은 초파리가 아니라 과잉해석 크리틱이다.** 초파리 도킹은 지금 형태로는
 표준 재도킹 벤치마크에서 Vina 나 DiffDock 과 겨룬 수치가 없고, 원 논평자도 한계를 못 박았다.
@@ -98,7 +98,7 @@ GenMol 의 문자열 `temperature`, 항상 null 인 `pae`, 429 백오프, 202 �
 2. 제출 직후 사흘(9/29~10/1)에 **NIM 클라이언트를 별도 저장소로 뗀다.** 하루면 된다
 3. 본선 여부가 정해지면 본선에 집중하거나 논문으로 넘어간다
 4. 10/8 이후 한 달에 **논문 확장.** 케이스 수백 쌍, 모델 여럿, 전문가 일치도, 베이스라인
-5. arXiv 선공개 후 워크숍 투고. 자리 후보는 `docs/notes/paper-plan.md`
+5. arXiv 선공개 후 워크숍 투고. 자리 후보는 `docs/notes/05-research/paper-plan.md`
 
 ## 남은 공백
 

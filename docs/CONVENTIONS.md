@@ -1,7 +1,7 @@
 # 저장소 규약
 
 팀원이 함께 지키는 규칙이다. 환경 준비는 `docs/ONBOARDING.md`, 진행 상황은 `docs/HANDOFF.md`,
-주제 결정 근거는 `docs/notes/topic-decision.md` 를 본다.
+주제 결정 근거는 `docs/notes/06-project/topic-decision.md` 를 본다.
 
 ## 환경
 
@@ -42,11 +42,11 @@ docs/                   계획, 설정 안내, 그림, 제출물
 
 커밋 이력은 본인 이름으로 남는 작업 기록이고 대외 공개 저장소에서도 읽힌다.
 
-사람 기여 표기는 `docs/notes/credits.md` 를 따른다.
+사람 기여 표기는 `docs/notes/06-project/credits.md` 를 따른다.
 
 ## 작업 규율
 
-- 각자 담당 경로만 고친다. 담당은 `docs/notes/work-assignment.md` 에 있다.
+- 각자 담당 경로만 고친다. 담당은 `docs/notes/06-project/work-assignment.md` 에 있다.
   **`configs/` 와 `src/harness/register.py` 는 팀장만 고친다**
 - 파일을 고치는 스크립트는 읽고 나서 쓰고, 다건 수정은 드라이런 후 적용한다
 - **모든 수치는 방금 실행한 출력에서만 가져온다.** 추정은 추정이라 적고 확인 못 한 것은

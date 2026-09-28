@@ -131,7 +131,7 @@
 | 허용 도메인 | 4곳 모두 200 | `eval/results/openshell_smoke.txt` | 허용 도메인 절 |
 | github.com 차단 | 403, curl rc=56 | 같은 파일 | 차단 로그 원문 |
 | 스모크 결과 | pass=9 fail=0 | 같은 파일 | 마지막 줄 |
-| 데이터 기준일 | 2026-07-30 | openFDA `meta.last_updated`(`docs/notes/figures.md`에 기록) | |
+| 데이터 기준일 | 2026-07-30 | openFDA `meta.last_updated`(`docs/notes/06-project/figures.md`에 기록) | |
 
 영상에 쓰지 않은 수치도 화면 자막으로는 띄울 수 있다. 오프라인 테스트 128개와 `nat validate` 4종은
 `README.md`의 "현재 확인된 것"에 있고, 필요하면 슬라이드 12의 보조 숫자로 넣는다.
@@ -145,7 +145,7 @@
   같은 구성이 있다고 먼저 밝힌다.
 - 소요 시간 절감("몇 시간이 몇 분으로")은 출처가 없어 넣지 않았다.
 - 라벨 선택이 검색 첫 결과라는 한계와 약물명 토큰 일치로 복합제가 섞이는 한계는 영상 분량상 넣지
-  않았다. 심사 질의가 오면 `docs/notes/pharmasignal-tools.md`의 "남은 일과 한계"로 답한다.
+  않았다. 심사 질의가 오면 `docs/notes/04-platform/pharmasignal-tools.md`의 "남은 일과 한계"로 답한다.
 
 ## `09_caption.py` NUM 치환표 제안
 

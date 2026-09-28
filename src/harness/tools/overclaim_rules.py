@@ -9,7 +9,7 @@
 
 ## 규칙 수
 
-- `TABLE_RULE_IDS` 14종은 `docs/notes/topic-decision.md` 의 규칙 표를 그대로 옮긴 것이다.
+- `TABLE_RULE_IDS` 14종은 `docs/notes/06-project/topic-decision.md` 의 규칙 표를 그대로 옮긴 것이다.
 - 여기에 `evidence_scope` 1종을 더해 `RULES` 는 15종이다. 이 규칙은 표에 적히기 전부터
   `case_runner` 3단 프롬프트가 쓰고 있었고, 출처도 FDDD 원문과 약물감시 규율에 있다.
 - `STRUCTURE_RULES` 2종은 구조 예측 도구(OpenFold2 계열)를 붙일 때만 켜는 규칙이라 `RULES` 와
@@ -22,14 +22,14 @@
 | 출처 | 원본 |
 |---|---|
 | FDDD notes 원문 | `drug.flybrain.kr/data/docking/multi-target.json` 의 `notes` 8항목. 사본은 `eval/results/case_niraparib.json` 의 `fddd_notes` |
-| NVIDIA DiffDock 문서 | `nim-skills/diffdock-nim/references/validation.md:31` 의 "Do not convert confidence directly into binding affinity." 인용 경위는 `docs/notes/bionemo-nim.md:205-215` |
+| NVIDIA DiffDock 문서 | `nim-skills/diffdock-nim/references/validation.md:31` 의 "Do not convert confidence directly into binding affinity." 인용 경위는 `docs/notes/03-structure/bionemo-nim.md:205-215` |
 | 기존 약물감시 규율 | 불균형 지표를 인과로 말하지 않는다. PharmaSignal 케이스 3건이 따르던 규율 |
 
 ## 문헌 이중 귀속
 
 FDDD 는 팀원의 별도 저작물이라 팀에서 빠질 수 있다. 그런데 notes 8항목은 도킹 분야에서 널리 알려진
 한계를 다시 적은 것이고 같은 내용이 동료심사 문헌에 있다. 그래서 `literature_source` 와
-`literature_quote` 로 출처를 둘로 달았다. 문헌은 `docs/notes/paper-plan.md` 의 선행연구 표에 있는
+`literature_quote` 로 출처를 둘로 달았다. 문헌은 `docs/notes/05-research/paper-plan.md` 의 선행연구 표에 있는
 것만 쓰고 `LITERATURE_SOURCES` 로 값을 제한한다. 뒷받침이 없으면 `None` 으로 두고 사유를
 `strength_note` 에 적는다. 억지로 붙이지 않는다.
 
@@ -42,7 +42,7 @@ FDDD 는 팀원의 별도 저작물이라 팀에서 빠질 수 있다. 그런데
 
 ## 강도
 
-`strength` 는 `docs/notes/paper-plan.md` 의 "규칙별 문헌 뒷받침 강도" 표를 따른다. 그 표를 15종
+`strength` 는 `docs/notes/05-research/paper-plan.md` 의 "규칙별 문헌 뒷받침 강도" 표를 따른다. 그 표를 15종
 전부로 늘리면서 문헌 뒷받침이 없는 4종은 **없음**으로 적었다. 등급을 임의로 올리지 않는다.
 """
 
@@ -66,7 +66,7 @@ SOURCES: tuple[str, ...] = (SOURCE_FDDD, SOURCE_NVIDIA, SOURCE_PV, SOURCE_NVIDIA
 # --------------------------------------------------------------------------------------
 # 문헌 귀속의 허용 값
 #
-# `docs/notes/paper-plan.md` 의 선행연구 표와 그 절이 인용한 도구 공식 문서에서만 가져온다.
+# `docs/notes/05-research/paper-plan.md` 의 선행연구 표와 그 절이 인용한 도구 공식 문서에서만 가져온다.
 # 여기 없는 문헌을 `literature_source` 에 넣으면 테스트가 막는다.
 # --------------------------------------------------------------------------------------
 LIT_WARREN = "Warren 등 2006, J Med Chem 49(20):5912, 10.1021/jm050362n"
@@ -105,7 +105,7 @@ class Rule:
     """과잉해석 규칙 하나.
 
     - ``id``: 짧은 식별자. 3단 판정의 check 이름과 케이스 id 접두사로 쓴다
-    - ``name``: 한국어 규칙 이름. `docs/notes/topic-decision.md` 표의 이름을 따른다
+    - ``name``: 한국어 규칙 이름. `docs/notes/06-project/topic-decision.md` 표의 이름을 따른다
     - ``reject_when``: LLM 이 읽고 판단할 반려 조건. "주의하라" 가 아니라 무엇을 하면
       반려인지 구체적으로 적는다
     - ``source``: `SOURCES` 중 하나
@@ -113,7 +113,7 @@ class Rule:
     - ``literature_source``: 문헌 귀속. `LITERATURE_SOURCES` 의 값이고 둘 이상이면
       `LITERATURE_JOIN` 으로 잇는다. 뒷받침하는 문헌이 없으면 `None`
     - ``literature_quote``: 그 문헌의 원문 인용 한 문장 또는 확인한 내용. 문헌이 없으면 `None`
-    - ``strength``: `STRENGTHS` 중 하나. `docs/notes/paper-plan.md` 표를 따른다
+    - ``strength``: `STRENGTHS` 중 하나. `docs/notes/05-research/paper-plan.md` 표를 따른다
     - ``strength_note``: 등급의 근거나 유보 사항
     """
 
@@ -295,7 +295,7 @@ RULES: tuple[Rule, ...] = (
         literature_source=LIT_OPIG,
         literature_quote=("\"have we finally solved drug discovery with a fly? Obviously not\". 같은 글이 학습되지 "
                           "않은 죽은 초파리의 뇌이고 하행 뉴런의 감각 의존 활동이 전체의 약 0.1퍼센트에 그친다고 "
-                          "적었다(docs/notes/fddd-and-jev.md 의 도킹 논평 절)."),
+                          "적었다(docs/notes/03-structure/fddd-and-jev.md 의 도킹 논평 절)."),
     ),
     Rule(
         id="diffdock_confidence_affinity",
@@ -323,7 +323,7 @@ RULES: tuple[Rule, ...] = (
             "다른 쪽을 수치로 확증한다고 말하면 반려한다."),
         source=SOURCE_NVIDIA,
         source_quote=("NVIDIA DiffDock 문서가 confidence 를 친화도로 바꾸지 말라고 적었고, 응답에 점수 필드는 "
-                      "position_confidence 하나뿐이다(docs/notes/bionemo-nim.md:205)."),
+                      "position_confidence 하나뿐이다(docs/notes/03-structure/bionemo-nim.md:205)."),
         strength=STRENGTH_MEDIUM,
         strength_note=("원 논문 [4] 이 confidence 의 학습 목표를 정의하므로 단위와 축이 다르다는 결론이 문헌으로 선다. "
                        "두 도구의 점수를 직접 견준 문헌은 확인하지 못해 중간으로 둔다."),
@@ -339,14 +339,14 @@ RULES: tuple[Rule, ...] = (
             "반려한다. 같은 입력 두 번에 3순위 포즈가 0.725 와 0.515 로 갈린 것을 실측했다. "
             "\"이 호출에서 이 값이 나왔다\" 로 적으면 반려하지 않는다."),
         source=SOURCE_NVIDIA,
-        source_quote=("호스팅 API 요청 스키마에 시드 필드가 없다(docs/notes/bionemo-nim.md:172-190). "
-                      "호출 간 변동은 2026-09-25 실측(docs/notes/bionemo-nim.md:145-150)."),
+        source_quote=("호스팅 API 요청 스키마에 시드 필드가 없다(docs/notes/03-structure/bionemo-nim.md:172-190). "
+                      "호출 간 변동은 2026-09-25 실측(docs/notes/03-structure/bionemo-nim.md:145-150)."),
         strength=STRENGTH_MEDIUM,
         strength_note=("paper-plan.md 표 \"시드 없는 단일 호출에 재현성 주장\" 행. 우리 측정이 핵심 근거이고 문헌은 "
                        "생성모델이라는 성격만 받친다."),
         literature_source=LIT_CORSO,
         literature_quote=("DiffDock 은 포즈 분포에서 표본을 뽑는 확산 생성모델이라 호출마다 표본이 달라진다"
-                          "(원 논문 요지, docs/notes/bionemo-nim.md:205-215). **원문 문장을 직접 대조하지 못했다 "
+                          "(원 논문 요지, docs/notes/03-structure/bionemo-nim.md:205-215). **원문 문장을 직접 대조하지 못했다 "
                           "[unverified].** 시드 필드 부재와 0.725 대 0.515 변동은 우리 실측이다."),
     ),
     Rule(
@@ -357,7 +357,7 @@ RULES: tuple[Rule, ...] = (
             "오프타깃 배제의 근거로 읽으면 반려한다. 포즈가 기하학적으로 맞을 자신이 낮다는 뜻이고 결합 여부를 "
             "판정하지 않는다."),
         source=SOURCE_NVIDIA,
-        source_quote=("음수 값은 2026-09-25 케이스 시연 실측(docs/notes/bionemo-nim.md:115-135). "
+        source_quote=("음수 값은 2026-09-25 케이스 시연 실측(docs/notes/03-structure/bionemo-nim.md:115-135). "
                       "로짓 해석은 학습 절차에서 추론한 것이고 NVIDIA 문서가 명시하지 않았다 [unverified]."),
         strength=STRENGTH_MEDIUM,
         strength_note=("값의 관측은 우리 실측이고 \"결합하지 않음의 증거가 아니다\" 라는 결론은 원 논문 [4] 의 학습 "
@@ -428,7 +428,7 @@ STRUCTURE_RULES: tuple[Rule, ...] = (
                       'for a production-quality fold." 라고 적었다.'),
         strength=STRENGTH_NONE,
         strength_note=("문헌 귀속을 달지 않았다. 근거가 도구 제작자의 사용 범위 문서이고 "
-                       "`docs/notes/paper-plan.md` 의 강도 표에는 아직 이 행이 없다. "
+                       "`docs/notes/05-research/paper-plan.md` 의 강도 표에는 아직 이 행이 없다. "
                        "diffdock_confidence_affinity 와 같은 성격의 출처다."),
         literature_source=None,
         literature_quote=None,
@@ -458,7 +458,7 @@ STRUCTURE_RULE_IDS: tuple[str, ...] = tuple(r.id for r in STRUCTURE_RULES)
 # 규칙 전체. id 로 찾을 때만 쓰고, 프롬프트 기본값에는 구조 예측 규칙이 들어가지 않는다.
 ALL_RULES: tuple[Rule, ...] = RULES + STRUCTURE_RULES
 
-# `docs/notes/topic-decision.md` 규칙 표 14종. evidence_scope 는 표에 없다.
+# `docs/notes/06-project/topic-decision.md` 규칙 표 14종. evidence_scope 는 표에 없다.
 TABLE_RULE_IDS: tuple[str, ...] = (
     "cross_target_ranking", "affinity_conversion", "cross_docking_binding", "species_mismatch",
     "convergence_claim", "rmsd_reference", "endpoint_merge", "executed_input", "fly_response",

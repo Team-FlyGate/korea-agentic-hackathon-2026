@@ -24,7 +24,7 @@
 
 심사 첫 항목이 "NVIDIA Agent 기술 활용 심도"이므로 **이것이 지금 가장 큰 구멍이다.**
 주제와 무관하게 먼저 메운다. 기존 코드에 `@register_function` 래퍼를 씌우는 일이고 참조 구현은
-`src/harness/register.py:126-147`, 절차는 `docs/notes/nat-harness.md:244-253`에 있다.
+`src/harness/register.py:126-147`, 절차는 `docs/notes/04-platform/nat-harness.md:244-253`에 있다.
 
 **2. `README.md`가 OpenShell 실행을 아직 못 한 일로 적고 있다.** 실제로는 완료했다(아래 "샌드박스
 증거"). README가 낡았으니 제출물 작성 전에 고친다.
@@ -80,9 +80,9 @@ Applying Landlock filesystem sandbox [abi:V2 compat:BestEffort ro:12 rw:3]
 ## 미시행 사항
 
 1. **팀 확정.** 폼의 "팀 구성 인원"이 2명부터라 최소 1명 합류가 사실상 필수다. 9/27(일)까지 합류해야
-   각자 폼을 낼 수 있다. 연락 현황은 `docs/notes/recruiting.md`.
+   각자 폼을 낼 수 있다. 연락 현황은 `docs/notes/06-project/recruiting.md`.
 2. **데모 영상.** 2~3분. 도구는 준비돼 있고 원고 작성부터 하면 된다.
-3. **신청서 제출.** 현행 문안은 `docs/submission-flygate.md` 다. 옛 후보 초안은 `docs/notes/submission-draft-v0.md` 로 옮겼다.
+3. **신청서 제출.** 현행 문안은 `docs/submission-flygate.md` 다. 옛 후보 초안은 `docs/notes/06-project/submission-draft-v0.md` 로 옮겼다.
    `[측정필요]` 표에 제출 전 갱신할 자리가 모여 있다.
 4. ~~OpenShell 실행~~ **완료했다.** 아래 "샌드박스 증거" 참고.
 5. **DLI 강좌.** 레슨 1a와 1b를 들었다. 모듈 3과 4는 Brev 인스턴스를 띄워야 진도가 오른다.
@@ -92,23 +92,23 @@ Applying Landlock filesystem sandbox [abi:V2 compat:BestEffort ro:12 rw:3]
 
 - `README.md` 현재 상태와 실행 방법
 - `docs/TROUBLESHOOTING.md` 겪은 문제 11건. 같은 자리에서 시간을 쓰지 않게 한다
-- `docs/notes/submission-draft-v0.md` 의 `[측정필요]` 표
-- `docs/notes/recruiting.md` 연락 현황
-- `docs/notes/topic-decision.md` **주제 후보 비교와 권고, 게이트와 일정. 주제 논의 전에 먼저**
-- `docs/notes/fddd-and-jev.md` 팀원 제안 주제 두 개의 실측 내용
-- `docs/notes/bionemo-nim.md` NVIDIA 생물학 NIM 접근 확인과 호출 규격
-- `docs/notes/post-hackathon.md` 제출 후 세 갈래(심사, 스타, 논문)와 순서
-- `docs/notes/paper-plan.md` 논문 계획과 확장 요건
-- `docs/notes/credits.md` 기여 표기. README 와 신청서가 이것을 따른다
-- `docs/notes/work-assignment.md` **팀원별 담당과 파일 충돌 방지 규칙**
-- `docs/notes/contingency-roster.md` 팀원 이탈과 초파리 자산 제거 대비
+- `docs/notes/06-project/submission-draft-v0.md` 의 `[측정필요]` 표
+- `docs/notes/06-project/recruiting.md` 연락 현황
+- `docs/notes/06-project/topic-decision.md` **주제 후보 비교와 권고, 게이트와 일정. 주제 논의 전에 먼저**
+- `docs/notes/03-structure/fddd-and-jev.md` 팀원 제안 주제 두 개의 실측 내용
+- `docs/notes/03-structure/bionemo-nim.md` NVIDIA 생물학 NIM 접근 확인과 호출 규격
+- `docs/notes/06-project/post-hackathon.md` 제출 후 세 갈래(심사, 스타, 논문)와 순서
+- `docs/notes/05-research/paper-plan.md` 논문 계획과 확장 요건
+- `docs/notes/06-project/credits.md` 기여 표기. README 와 신청서가 이것을 따른다
+- `docs/notes/06-project/work-assignment.md` **팀원별 담당과 파일 충돌 방지 규칙**
+- `docs/notes/06-project/contingency-roster.md` 팀원 이탈과 초파리 자산 제거 대비
 - 새로 합류한 분에게는 `docs/ONBOARDING.md` 링크만 주면 된다
 
 ## 결정된 사항
 
 - 이름은 **PharmaSignal**. 선행 프로젝트는 `kakyungkim/pharmasignal-v0`으로 바꿨고 로컬 폴더는
   `hackthon/AgentForgeAI` 그대로다. 새 저장소 생성과 폴더 이름 변경은 팀 확정 후로 미뤘다
-  (`docs/notes/repo-naming-plan.md`).
+  (`docs/notes/06-project/repo-naming-plan.md`).
 - 계보는 숨기지 않고 밝힌다. README에 문단이 들어가 있다.
 - 되지 않는 것을 되는 것처럼 쓰지 않는다. NemoGuard 판정 모델은 호스팅 쪽 오류로 시연하지 못했고
   문안에도 그렇게 적었다.
@@ -126,8 +126,8 @@ Applying Landlock filesystem sandbox [abi:V2 compat:BestEffort ro:12 rw:3]
   **우리가 실측으로 보인 규칙이라 발표에서 값이 크다**
 - 응답 캐시가 필수다. 캐시 적중은 0.01초이고 네트워크를 타지 않는다
 
-**규약은 `docs/CONVENTIONS.md` 에 있다.** 담당 배분은 `docs/notes/work-assignment.md`,
-기여 표기는 `docs/notes/credits.md` 를 따른다.
+**규약은 `docs/CONVENTIONS.md` 에 있다.** 담당 배분은 `docs/notes/06-project/work-assignment.md`,
+기여 표기는 `docs/notes/06-project/credits.md` 를 따른다.
 
 ## 주제 현황 (2026-09-25)
 
@@ -141,7 +141,7 @@ Jev는 독립 주제가 아니라 어느 쪽에든 얹는 부품이다.
 
 **권고는 두 주제를 하나의 파이프라인으로 이어 붙이는 것이다.** 도킹을 앞단에 약물감시 도구를
 뒷단에 두고, 도킹 점수에서 나올 수 없는 주장을 크리틱이 반려한다. 근거와 게이트와 일정은
-`docs/notes/topic-decision.md`에 있다.
+`docs/notes/06-project/topic-decision.md`에 있다.
 
 전제가 하나 있다. `health.api.nvidia.com`의 DiffDock 호출이 이 계정에서 인가되는지 먼저 확인해야
 한다. 막히면 PharmaSignal 단독으로 되돌린다.

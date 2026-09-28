@@ -41,10 +41,10 @@ Night Shift 쪽만 "Nano"를 실측으로 살아 있는 "3.5 Lightning"으로 �
 |---|---|---|---|
 | 1 | LLM 경로 **실측 완료** | 키를 발급받아 모델을 직접 호출했다. `nat eval`이 크리틱 워크플로를 끝까지 돌렸고 결과가 `eval/results/critic_verdict_output.json`에 남았다(2026-09-24 실행) | 두 후보 솔루션 문안의 Nemotron 관련 서술 |
 | 2 | 크리틱 적발률 **실측 완료** | `eval/results/critic_verdict_output.json` 평균 1.0. 정상 2건 pass, 심어 둔 부정 1건 reject로 3건 모두 기대와 일치한다 | 솔루션 문안에 "평가 3건에서 적발률은 1.0"으로 반영했다 |
-| 3 | Nemotron 3 모델 ID **실측 완료** | `nvidia/nemotron-3-super-120b-a12b`(계획과 크리틱)와 `nvidia/nemotron-3.5-lightning-30b-a3b`(작업자)는 호출된다. 계획서의 `nvidia/nemotron-3-nano-30b-a3b`는 2026-09-01 종료로 410을 돌려준다(`docs/notes/nat-harness.md`) | 기술 스택의 모델명을 실측 ID로 바꿨다 |
+| 3 | Nemotron 3 모델 ID **실측 완료** | `nvidia/nemotron-3-super-120b-a12b`(계획과 크리틱)와 `nvidia/nemotron-3.5-lightning-30b-a3b`(작업자)는 호출된다. 계획서의 `nvidia/nemotron-3-nano-30b-a3b`는 2026-09-01 종료로 410을 돌려준다(`docs/notes/04-platform/nat-harness.md`) | 기술 스택의 모델명을 실측 ID로 바꿨다 |
 | 4 | `[측정필요]` OpenShell 실제 실행 | 정책 YAML 3종과 설치 스크립트를 쓰고 `bash -n` 문법 검사까지만 했다. Multipass VM을 아직 만들지 않았다 | 솔루션 문안의 샌드박스 서술, 기술 스택의 OpenShell 항목 |
 | 5 | `[측정필요]` 정책 차단 로그 건수 | Night Shift 아침 보고서의 정책 감사 요약은 0으로 채운 자리표시다 | 솔루션 문안에 차단 건수를 넣을지 여부 |
-| 6 | NemoGuard **실측 완료(부정 결과)** | `nvidia/llama-3.1-nemoguard-8b-topic-control`은 3회 모두 HTTP 500(서버 쪽 TensorRT-LLM CUDA 오류), `nvidia/llama-3.1-nemoguard-8b-content-safety`는 25초와 90초 모두 타임아웃이다. 응답하는 것은 `nvidia/nemotron-3.5-content-safety` 하나뿐인데 출력이 NemoGuard JSON이 아니라 `User Safety: unsafe` 한 줄이라 레일 파서와 맞는지는 미확인이다(`docs/notes/nat-harness.md`). 차단 시연을 하지 못했다 | 두 기술 스택 문단을 "배선까지 했고 차단 시연은 남았다"로 고쳤다. 그림의 `NemoGuard 토픽 제어` 라벨도 `NeMo Guardrails 정책`으로 바꿨다 |
+| 6 | NemoGuard **실측 완료(부정 결과)** | `nvidia/llama-3.1-nemoguard-8b-topic-control`은 3회 모두 HTTP 500(서버 쪽 TensorRT-LLM CUDA 오류), `nvidia/llama-3.1-nemoguard-8b-content-safety`는 25초와 90초 모두 타임아웃이다. 응답하는 것은 `nvidia/nemotron-3.5-content-safety` 하나뿐인데 출력이 NemoGuard JSON이 아니라 `User Safety: unsafe` 한 줄이라 레일 파서와 맞는지는 미확인이다(`docs/notes/04-platform/nat-harness.md`). 차단 시연을 하지 못했다 | 두 기술 스택 문단을 "배선까지 했고 차단 시연은 남았다"로 고쳤다. 그림의 `NemoGuard 토픽 제어` 라벨도 `NeMo Guardrails 정책`으로 바꿨다 |
 | 7 | `[측정필요]` NeMo Retriever 라벨 RAG | PharmaSignal의 `label_rag`는 계획만 있고 구현하지 않았다. 리랭커는 이 계정의 모델 목록에 하나도 없어 문안에서 뺐고, 임베딩 `nvidia/nemotron-3-embed-1b`(차원 2048)는 동작을 확인했다 | PharmaSignal 기술 스택. 못 만들면 목록에서 뺀다 |
 | 8 | `[측정필요]` 크레딧 소모 | 실험 1건당 모델 호출 3~5회는 설계상 추정이고 실측이 아니다 | 문안에는 넣지 않는다. 심사 질의 대비용 |
 | 9 | `[측정필요]` DLI S-FX-43 수료 | 등록과 수강을 아직 하지 않았다. 증빙 방식도 미확인 | 제출 PDF 첨부 |
@@ -97,7 +97,7 @@ PharmaSignal은 약물명과 이상사례를 받아 근거가 붙은 트리아�
 ```
 
 `[측정필요] 4, 7`이 걸린 문단이다. 모델 ID는 실측값으로 맞췄고, 6번 NemoGuard는 실측 결과대로 "배선까지 했고 차단 시연은 남았다"로 적었다.
-**리랭커는 적지 않는다.** 이 계정의 모델 목록 82개에 rerank 계열이 하나도 없다(`docs/notes/nat-harness.md`).
+**리랭커는 적지 않는다.** 이 계정의 모델 목록 82개에 rerank 계열이 하나도 없다(`docs/notes/04-platform/nat-harness.md`).
 NeMo Retriever 라벨 RAG를 9/27까지 만들면 임베딩 `nvidia/nemotron-3-embed-1b`(차원 2048, 호출 확인)만
 NVIDIA 문단 끝에 더하고, 만들지 못하면 지금처럼 빼 둔다.
 
@@ -128,7 +128,7 @@ Night Shift
 
 (현재 288자, 공백 미포함 218자)
 
-뒤쪽 두 문장의 근거는 `eval/results/nightshift_demo.json`과 `docs/notes/nightshift-components.md`의
+뒤쪽 두 문장의 근거는 `eval/results/nightshift_demo.json`과 `docs/notes/04-platform/nightshift-components.md`의
 데모 실행 결과다. 부정 패치 `fraud_delete_test`와 `fraud_skip_marker` 모두 테스트 실행이 rc=0으로 끝났다.
 
 ### 서비스 소개 및 주요 기능 (Solution)

@@ -341,7 +341,7 @@ OpenFold3의 `inputs`나 `molecules` 필드를 쓰면 안 된다. 응답 스키�
 
 NAT 1.9.0에서는 `nat.plugin_api`에서 import한다. `register_function`, `FunctionBaseConfig`,
 `FunctionInfo`, `Builder`가 모두 stable public으로 분류돼 있다. entry point 그룹은
-`nat.components`다. 등록 절차는 `docs/notes/nat-harness.md:244-253`에 있다.
+`nat.components`다. 등록 절차는 `docs/notes/04-platform/nat-harness.md:244-253`에 있다.
 
 ```python
 from nat.plugin_api import register_function, FunctionBaseConfig, FunctionInfo, Builder

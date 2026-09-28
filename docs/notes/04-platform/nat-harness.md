@@ -256,7 +256,7 @@ CRITIC_DETERMINISTIC_ONLY=true .venv/bin/nat eval --config_file configs/eval.yml
 183건이 통과한다.
 
 nightshift_* 모듈은 `@register_function` 이 없어 import 하지 않는다. Night Shift 는 2026-09-25에
-후보에서 뺐다(`docs/notes/topic-decision.md`). 예시로 적혀 있던 `nightshift_repo` 모듈은 존재하지 않는다.
+후보에서 뺐다(`docs/notes/06-project/topic-decision.md`). 예시로 적혀 있던 `nightshift_repo` 모듈은 존재하지 않는다.
 
 **도구를 늘릴 때 짧은 이름이 겹치면 `nat validate` 가 엉뚱한 메시지로 실패한다.**
 같은 파일을 서로 다른 모듈 경로로 두 번 import 하면 그렇게 된다. 자세한 것은
