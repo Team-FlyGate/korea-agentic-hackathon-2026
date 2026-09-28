@@ -50,22 +50,38 @@ from harness.tools import pharmasignal_pubmed as pubmed  # noqa: E402
 
 OUT_DIR = ROOT / "eval" / "results"
 
-# Three pairs chosen to land in different grades. If they ever come out the same, the rules
-# have stopped discriminating and need to be looked at.
+# Reference pairs chosen to land in different grades. If they ever come out the same, the
+# rules have stopped discriminating and need to be looked at.
+#
+# The last two are the same drug on purpose. Isotretinoin's label carries a causality caveat
+# under 5.8 Hearing Impairment and none under 5.10 Inflammatory Bowel Disease, so the pair
+# that reads the caveat should be capped at C while the other is free to reach B. Run them
+# together and a regression in subsection resolution shows up as both landing on C.
 DEFAULT_PAIRS = [
-    ("NIRAPARIB", "THROMBOCYTOPENIA"),
     ("CLOZAPINE", "NEUTROPENIA"),
+    ("NIRAPARIB", "THROMBOCYTOPENIA"),
     ("ISOTRETINOIN", "INFLAMMATORY BOWEL DISEASE"),
+    ("ISOTRETINOIN", "HEARING IMPAIRMENT"),
 ]
 
 # Label sections in descending order of regulatory weight.
 SECTION_WEIGHT = {"boxed_warning": 3, "warnings_and_precautions": 2, "adverse_reactions": 1}
 
-# A disclaimer counts only when it is about this reaction. Nearly every US label opens its
-# adverse-reactions section with boilerplate saying voluntary reports cannot establish
-# causality, and treating that as reaction-specific graded every pair the same, which is how
-# the bug showed itself. So the boilerplate is excluded by name and the remaining patterns are
-# searched only in the warning sections, where a caveat attaches to a named reaction.
+# A disclaimer counts only when it is about this reaction, and getting that wrong has bitten
+# this script twice.
+#
+# First bite: nearly every US label opens its adverse-reactions section with boilerplate
+# saying voluntary reports cannot establish causality. Reading that as reaction-specific
+# graded every pair the same, so the boilerplate is excluded by name and the patterns are
+# searched only in the warning sections.
+#
+# Second bite, found by the pharmacist on the team: the warning sections themselves are a
+# list of numbered subsections, one reaction each. Searching the whole section meant the
+# caveat under isotretinoin's 5.8 Hearing Impairment ("Mechanism(s) and causality for this
+# reaction have not been established") was applied to inflammatory bowel disease in 5.10,
+# to depression in 5.3, and to every other reaction of that drug. The grade then said more
+# about which drug it was than about the pair. So the search now runs inside the subsection
+# that actually names the reaction, and nowhere else.
 DISCLAIMERS = (
     r"[Mm]echanism\(?s?\)?[^.]{0,40}causality[^.]{0,60}not been established",
     r"causal (?:relationship|association)[^.]{0,60}(?:has |have )?not been established",
@@ -84,6 +100,49 @@ GRADES = {
 }
 
 
+# PLR labels number their subsections ("5.10 Inflammatory Bowel Disease"), and each one
+# covers a single reaction. Splitting on that numbering is what keeps one reaction's caveat
+# from leaking onto its neighbours.
+SUBSECTION_HEAD = re.compile(r"(?:(?<=\s)|^)(\d{1,2}\.\d{1,2})\s+(?=[A-Z])")
+
+
+def split_subsections(text: str) -> list[tuple[str, str]]:
+    """Split a label section into (number, body) pairs, in document order.
+
+    Older non-PLR labels have no numbering. They come back as a single unnumbered block so
+    that the caller still behaves sensibly, just without subsection resolution.
+    """
+    marks = list(SUBSECTION_HEAD.finditer(text))
+    if not marks:
+        return [("", text)]
+    parts = []
+    for i, mark in enumerate(marks):
+        end = marks[i + 1].start() if i + 1 < len(marks) else len(text)
+        parts.append((mark.group(1), text[mark.end():end]))
+    return parts
+
+
+def find_disclaimer(text: str, reaction: str) -> tuple[str, str] | None:
+    """Find a causality caveat that belongs to this reaction. Returns (subsection, quote).
+
+    The reaction has to be named in the same subsection as the caveat. Matching is the plain
+    case-insensitive substring used elsewhere for label mentions, so the two agree on what
+    counts as the reaction appearing in a label.
+    """
+    for number, body in split_subsections(text):
+        if reaction.lower() not in body.lower():
+            continue
+        for pattern in DISCLAIMERS:
+            found = re.search(pattern, body)
+            if not found:
+                continue
+            window = body[max(0, found.start() - 200):found.end() + 40]
+            if BOILERPLATE.search(window):
+                continue      # the generic section preamble, not about this reaction
+            return number, " ".join(window[-260:].split())
+    return None
+
+
 def label_evidence(drug: str, reaction: str) -> dict:
     """Read the label for this reaction: which sections mention it, and any causality caveat."""
     mentions = dmed.find_label_mentions(drug, reaction)
@@ -91,6 +150,7 @@ def label_evidence(drug: str, reaction: str) -> dict:
     weight = max((SECTION_WEIGHT.get(s, 0) for s in sections), default=0)
 
     disclaimer = None
+    disclaimer_where = None
     setids = [c.get("setid") for c in mentions.get("labels_checked") or [] if c.get("setid")]
     if setids:
         full = dmed.fetch_label_sections(setids[0])
@@ -98,20 +158,15 @@ def label_evidence(drug: str, reaction: str) -> dict:
             text = (full.get("sections") or {}).get(name, "")
             if not text:
                 continue
-            for pattern in DISCLAIMERS:
-                found = re.search(pattern, text)
-                if not found:
-                    continue
-                window = text[max(0, found.start() - 200):found.end() + 40]
-                if BOILERPLATE.search(window):
-                    continue          # the generic section preamble, not about this reaction
-                disclaimer = " ".join(window[-260:].split())
-                break
-            if disclaimer:
+            hit = find_disclaimer(text, reaction)
+            if hit:
+                number, disclaimer = hit
+                disclaimer_where = f"{name} {number}".strip()
                 break
 
     return {"labeled": mentions.get("labeled"), "sections": sections,
             "section_weight": weight, "causality_disclaimer": disclaimer,
+            "disclaimer_section": disclaimer_where,
             "errors": mentions.get("errors", [])}
 
 
@@ -138,7 +193,8 @@ def grade(signal: dict, label: dict, literature: dict) -> dict:
         gaps.append("라벨에 기재되지 않음")
 
     if label.get("causality_disclaimer"):
-        reasons.append("라벨이 인과 미확립을 명시")
+        where = label.get("disclaimer_section") or "라벨"
+        reasons.append(f"라벨이 인과 미확립을 명시 ({where})")
 
     papers = literature.get("total_count")
     if isinstance(papers, int) and papers > 0:

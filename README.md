@@ -12,13 +12,15 @@ NVIDIA x 패스트캠퍼스 Korea Agentic AI Hackathon 2026 온라인 사전 챌
 
 ## 팀 데모와 저장소 두 곳
 
-팀이 만든 데모는 **<https://flyvigilante.vercel.app>** 이고 저장소는
-**<https://github.com/Team-FlyGate/FlyVigilante>** 이다. 데모에는 웹과 api, FAERS 창고
-파이프라인, 벤치마크, 에이전트 스킬 7종이 있다.
+팀이 만든 데모는 **<https://project-flygate.vercel.app>** 이고 저장소는
+**<https://github.com/Team-FlyGate/Project-FlyGate>** 이다. 구성은 FlyGate 아래
+FlyDiscovery(신약개발)와 FlyVigilance(약물감시) 둘이고, 웹과 api, FAERS 창고 파이프라인,
+벤치마크, 에이전트 스킬이 들어 있다.
 
 이 저장소는 그 데모가 쓰는 **규칙 원본과 측정 스크립트**다. NAT 도구 등록, OpenShell 정책,
 과잉해석 규칙 17종, 평가 케이스, 근거 등급 시제품이 여기 있다. 두 저장소를 합치지 않고
 양쪽에서 서로를 가리킨다. 검토 기록은 `docs/notes/flyvigilante-review-2026-09-28.md`에 있다.
+데모 저장소는 9월 28일에 `FlyVigilante`, `FlyVigilance`를 거쳐 `Project-FlyGate`로 정리됐다.
 
 ## 형식 검사의 한계
 
