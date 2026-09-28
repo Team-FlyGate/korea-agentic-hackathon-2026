@@ -127,6 +127,9 @@ Evans 신호가 선 쌍이 모두 ROR 신호도 섰다. 위 표에서 근거 등
 
 ## 5. 돌리는 법
 
+참조 세트 64,796쌍의 지표만 담은 `eval/refsets/pilot_sider_2026-09-28_pairs.tsv.gz`(7.3MB)를 저장소에 둔다.
+지표 성능과 Jev 팔은 이 파일만으로 돌아가고, 웨어하우스 재구축은 참조 세트를 새로 만들 때만 필요하다.
+
 날짜는 한국 표준시로 맞춘다. 파일 이름의 날짜를 `date.today()`로 정하므로 `TZ=Asia/Seoul`을 걸고
 돌린다. 계산은 컴퓨트 노드에서 한다.
 
@@ -192,21 +195,22 @@ novel 질문의 참은 "라벨에 없는 새 신호일 수 있다"이다. 모델
 cd <저장소>
 export TYPESAFE_API_KEY=...            # 셸에서만. 파일에 적지 않는다.
 C=eval/results/metric_validation_jev_cache.json
+P=eval/refsets/pilot_sider_2026-09-28_pairs.tsv.gz   # 참조 세트 64,796쌍의 지표 표. 저장소에 있어 웨어하우스 없이 돌아간다
 
 # 1) 비용만 본다. 네트워크로 나가지 않는다.
-TZ=Asia/Seoul .venv/bin/python scripts/metric_validation_jev.py --arm novel --limit 200 --dry-run
+TZ=Asia/Seoul .venv/bin/python scripts/metric_validation_jev.py --arm novel --limit 200 --pairs-tsv $P --dry-run
 
 # 2) 200쌍 시험. 두 팔을 따로 돌린다. --yes 가 없으면 비용만 찍고 멈춘다.
 srun -A rsc -p cpu-core -c 1 --mem=7500M -t 00:30:00 env TZ=Asia/Seoul \
-    .venv/bin/python scripts/metric_validation_jev.py --arm novel --limit 200 --jev-cache $C --yes
+    .venv/bin/python scripts/metric_validation_jev.py --arm novel --limit 200 --pairs-tsv $P --jev-cache $C --yes
 srun -A rsc -p cpu-core -c 1 --mem=7500M -t 00:30:00 env TZ=Asia/Seoul \
-    .venv/bin/python scripts/metric_validation_jev.py --arm blind --limit 200 --jev-cache $C --yes
+    .venv/bin/python scripts/metric_validation_jev.py --arm blind --limit 200 --pairs-tsv $P --jev-cache $C --yes
 
 # 3) 전체 64,796쌍. 순차로 팔당 5시간 남짓이다(2026-09-27 실측 평균 지연 299ms 기준).
 sbatch -A rsc -p cpu-core -c 1 --mem=7500M -t 12:00:00 --wrap="cd $PWD && TZ=Asia/Seoul \
-    .venv/bin/python scripts/metric_validation_jev.py --arm novel --jev-cache $C --sleep 0.05 --yes"
+    .venv/bin/python scripts/metric_validation_jev.py --arm novel --pairs-tsv $P --jev-cache $C --sleep 0.05 --yes"
 sbatch -A rsc -p cpu-core -c 1 --mem=7500M -t 12:00:00 --wrap="cd $PWD && TZ=Asia/Seoul \
-    .venv/bin/python scripts/metric_validation_jev.py --arm blind --jev-cache $C --sleep 0.05 --yes"
+    .venv/bin/python scripts/metric_validation_jev.py --arm blind --pairs-tsv $P --jev-cache $C --sleep 0.05 --yes"
 ```
 
 두 팔을 동시에 돌리면 같은 캐시 파일을 두 프로세스가 덮어쓴다. 동시에 돌릴 때는 팔마다 캐시 파일을
