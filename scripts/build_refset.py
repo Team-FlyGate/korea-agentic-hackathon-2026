@@ -29,10 +29,10 @@
 
 사용법:
   .venv/bin/python scripts/build_refset.py \\
-      --sider-dir /data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation/sider \\
-      --pairs-tsv /data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation/warehouse_pairs_2026q2.tsv.gz \\
-      --drug-n-tsv /data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation/warehouse_drug_n_2026q2.tsv.gz \\
-      --export-meta /data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation/warehouse_export_2026q2.meta.json
+      --sider-dir $METRIC_VALIDATION_DIR/sider \\
+      --pairs-tsv $METRIC_VALIDATION_DIR/warehouse_pairs_2026q2.tsv.gz \\
+      --drug-n-tsv $METRIC_VALIDATION_DIR/warehouse_drug_n_2026q2.tsv.gz \\
+      --export-meta $METRIC_VALIDATION_DIR/warehouse_export_2026q2.meta.json
 """
 from __future__ import annotations
 

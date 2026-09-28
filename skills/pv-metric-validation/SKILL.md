@@ -3,7 +3,7 @@ name: pv-metric-validation
 description: Use when a memo or grade cites a disproportionality threshold (Evans, ROR lower bound, IC025) and needs to say how well that threshold separates label-listed from label-absent drug-reaction pairs, or when the reference set and ROC behind those numbers must be rebuilt.
 license: Apache-2.0
 metadata:
-  author: korea-agentic-hackathon-2026 (FlyGate)
+  author: korea-agentic-hackathon-2026
   layer: memory (mushroom body)
   model: none (fixed computation; Jev only as an optional comparison arm)
   tags: [pharmacovigilance, signal-detection, disproportionality, reference-set, roc, sider]
@@ -43,7 +43,8 @@ SELECT drug, n_drug FROM sig_drug_n;
 plus a small meta JSON with `asof` and the SQL. Keep `--top-n 30`, the `--extra-drugs` list and `--seed 20260928` fixed across quarters so runs stay comparable; change them only as a deliberate new reference set, and say so in the note. `<YYYY-MM-DD>` is the run date in Korea Standard Time. Paths below are this repo's scratch defaults; set your own.
 ```bash
 export TZ=Asia/Seoul
-M=/data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation
+M=<자기 스크래치 경로>/metric-validation   # 예: 소속 스토리지 아래 tmp
+export METRIC_VALIDATION_DIR=$M
 .venv/bin/python scripts/build_refset.py --sider-dir $M/sider \
     --pairs-tsv $M/warehouse_pairs_2026q2.tsv.gz --drug-n-tsv $M/warehouse_drug_n_2026q2.tsv.gz \
     --export-meta $M/warehouse_export_2026q2.meta.json --top-n 30 \

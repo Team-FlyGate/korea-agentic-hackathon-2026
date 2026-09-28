@@ -58,7 +58,7 @@ FDA와 EMA는 2026년 1월 14일에 의약품 전 주기의 AI 활용 원칙 열
 
 | 항목 | 값 | 어디서 |
 |---|---|---|
-| 오프라인 테스트 | 312개 통과 | `pytest -q -m "not network"` |
+| 오프라인 테스트 | 317개 통과 | `pytest -q -m "not network"` |
 | NAT 등록 도구 | 8종 | `configs/author.yml` |
 | 에이전트 도구 호출 | 4종 연속, 주장 4건 전부 근거 있음 | `eval/results/nat_run_author_flydock.json` |
 | 과잉해석 규칙 | 15종 | `src/harness/tools/overclaim_rules.py` |

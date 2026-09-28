@@ -13,7 +13,7 @@
 - PMID 와 총 편수는 `harness.tools.pharmasignal_pubmed.search_pubmed` 에서 받는다. 등급 스크립트가
   쓰는 검색과 같은 검색이다.
 - 초록 전문은 E-utilities efetch XML 로 받아 PMID 하나당 파일 하나로 캐시한다. 캐시는 저장소 밖
-  `/data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation/pubmed_cache/` 이고
+  `$METRIC_VALIDATION_DIR/pubmed_cache/` 이고(없으면 `eval/results/pubmed_cache/`, gitignore 대상),
   `LITERATURE_PUBMED_CACHE_DIR` 로 바꾼다. 호출 간격은 검색 도구의 초당 3회 제한을 같이 쓴다.
 - Jev 는 초록 하나에 한 호출, 질문 다섯 개. `relevant` 가 0.5 미만이면 나머지 답은 저장만 하고
   집계에서 뺀다. 실패한 호출은 None 으로 남기고 0 으로 채우지 않는다.
@@ -52,7 +52,9 @@ import evidence_grade  # noqa: E402
 
 OUT_DIR = ROOT / "eval" / "results"
 CACHE_ENV = "LITERATURE_PUBMED_CACHE_DIR"
-DEFAULT_CACHE_DIR = Path("/data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation/pubmed_cache")
+SCRATCH_ENV = "METRIC_VALIDATION_DIR"   # 소속 스토리지 아래 스크래치. 계정 경로를 코드에 박지 않는다
+DEFAULT_CACHE_DIR = (Path(os.environ[SCRATCH_ENV]) / "pubmed_cache" if os.environ.get(SCRATCH_ENV)
+                     else ROOT / "eval" / "results" / "pubmed_cache")
 RETMAX = 20
 RELEVANT_THRESHOLD = 0.5
 EFETCH_BATCH = 50

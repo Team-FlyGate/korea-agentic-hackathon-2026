@@ -132,7 +132,8 @@ Evans 신호가 선 쌍이 모두 ROR 신호도 섰다. 위 표에서 근거 등
 
 ```bash
 export TZ=Asia/Seoul
-M=/data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation
+M=<자기 스크래치 경로>/metric-validation   # 예: 소속 스토리지 아래 tmp
+export METRIC_VALIDATION_DIR=$M
 
 # 1) 웨어하우스 DuckDB에서 TSV를 뽑는다. duckdb가 있는 venv-fv 파이썬을 쓴다.
 srun -A rsc -p cpu-core -c 2 --mem=15000M -t 00:30:00 \
@@ -234,7 +235,8 @@ USD 1.48 안팎, 200쌍은 USD 0.005 안팎이다. 잔액은 스크립트가 조
 그림에 Jev 곡선을 더하려면 `--jev`를 팔마다 한 번씩 준다. `--jev`가 없으면 그림은 지금과 같다.
 
 ```bash
-M=/data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation
+M=<자기 스크래치 경로>/metric-validation   # 예: 소속 스토리지 아래 tmp
+export METRIC_VALIDATION_DIR=$M
 MPLCONFIGDIR=$M/xdg-cache/mpl $M/venv-fv/bin/python scripts/plot_metric_roc.py \
     --results eval/results/metric_validation_2026-09-28.json \
     --jev eval/results/metric_validation_jev_novel_<날짜>.json \

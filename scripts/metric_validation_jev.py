@@ -62,8 +62,9 @@ from harness.tools import jev_client as jev  # noqa: E402
 
 OUT_DIR = ROOT / "eval" / "results"
 DEFAULT_REFSET = ROOT / "eval" / "refsets" / "pilot_sider_2026-09-28.json.gz"
-DEFAULT_PAIRS = Path("/data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation/"
-                    "warehouse_pairs_2026q2.tsv.gz")
+SCRATCH_ENV = "METRIC_VALIDATION_DIR"   # 소속 스토리지 아래 스크래치. 계정 경로를 코드에 박지 않는다
+DEFAULT_PAIRS = (Path(os.environ[SCRATCH_ENV]) / "warehouse_pairs_2026q2.tsv.gz"
+                 if os.environ.get(SCRATCH_ENV) else None)
 QUESTION = "novel"
 CHARS_PER_TOKEN = 4
 CACHE_FLUSH_EVERY = 200
@@ -265,7 +266,8 @@ def sample_rows(frame: pd.DataFrame, limit: int | None, seed: int) -> pd.DataFra
 def main(argv: list[str] | None = None, *, call: Callable[..., dict] = jev.systemone) -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--refset", type=Path, default=DEFAULT_REFSET)
-    ap.add_argument("--pairs-tsv", type=Path, default=DEFAULT_PAIRS)
+    ap.add_argument("--pairs-tsv", type=Path, default=DEFAULT_PAIRS, required=DEFAULT_PAIRS is None,
+                    help="웨어하우스 sig_signal 추출 TSV. METRIC_VALIDATION_DIR 이 있으면 그 아래 기본값")
     ap.add_argument("--arm", choices=["novel", "blind"], default="novel",
                     help="novel 은 이름을 보이고 blind 는 DRUG_A, REACTION_1 로 가린다")
     ap.add_argument("--limit", type=int, default=None, help="시드로 뽑은 N 쌍만 부른다")

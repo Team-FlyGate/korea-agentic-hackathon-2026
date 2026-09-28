@@ -55,3 +55,4 @@ _local/
 # wayfinder 지도와 티켓 (로컬 전용, A14)
 .scratch/
 !/CONTEXT.md
+eval/results/pubmed_cache/

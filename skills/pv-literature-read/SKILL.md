@@ -3,7 +3,7 @@ name: pv-literature-read
 description: Use when a drug-reaction pair's PubMed hits must be read rather than only counted. Jev (System-1) grades each abstract for relevance, study design, dechallenge, rechallenge and the authors' causal conclusion, and the counts feed the evidence grade and the memo's evidence catalog.
 license: Apache-2.0
 metadata:
-  author: korea-agentic-hackathon-2026 (FlyGate)
+  author: korea-agentic-hackathon-2026
   layer: memory (mushroom body) -> deliberate input
   model: typesafe jev-latest
   tags: [pharmacovigilance, literature, pubmed, jev, evidence-grade]
@@ -16,10 +16,10 @@ Turns `pubmed:<pmid>` from a list of IDs into read evidence. One Jev call per ab
 ## Contract
 - Input: drug and reaction (MedDRA PT), or the default pairs in `scripts/evidence_grade.py`.
 - PMIDs: `harness.tools.pharmasignal_pubmed.search_pubmed(drug, reaction, retmax=20)` (top 20 by relevance; total count kept).
-- Abstracts: E-utilities efetch XML, cached one file per PMID. Cache directory is `LITERATURE_PUBMED_CACHE_DIR`, default `/data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation/pubmed_cache/` (set it to your own scratch path on another machine; never `/tmp`). The script throttles itself to 3 requests per second, shared with the search tool, so run one instance at a time.
+- Abstracts: E-utilities efetch XML, cached one file per PMID. Cache directory is `LITERATURE_PUBMED_CACHE_DIR`; without it, `$METRIC_VALIDATION_DIR/pubmed_cache/` when that scratch variable is set, else `eval/results/pubmed_cache/` (gitignored). Never `/tmp`. The script throttles itself to 3 requests per second, shared with the search tool, so run one instance at a time.
 - Jev questions, one call per abstract (`scripts/literature_read.py::QUESTIONS`):
   - `relevant` (noul): does the abstract address this drug and this reaction? Below 0.5 the other answers are stored in the row but excluded from every aggregate (`by_design`, `dechallenge_n`, `rechallenge_n`, `conclusion_hist`).
-  - `design` (choice): case_report, case_series, observational, rct, meta_analysis_or_review, mechanistic_or_preclinical, other.
+  - `design` (choice): case_report, case_series, observational, randomized_trial, meta_analysis_or_review, mechanistic_or_preclinical, other.
   - `dechallenge`, `rechallenge` (noul).
   - `causal_conclusion` (score, 5 levels): not_stated, speculative, possible, probable, established.
 - Output: `eval/results/literature_read_<YYYY-MM-DD>.json` (run date) with per pair `total_count`, `fetched_n`, `read_n`, `relevant_n`, `by_design`, `dechallenge_n`, `rechallenge_n`, `conclusion_hist`, and per abstract rows (pmid, title, answers, confidences, request_id, model, seconds). A failed call stores `None`, never 0.

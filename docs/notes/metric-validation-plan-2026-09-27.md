@@ -4,7 +4,7 @@
 그리고 인과성 평가 항목을 채우는 쪽.
 
 2026-09-27 작성. 두 저장소를 읽고 정리한 설계 제안이다. 우리 저장소
-(`kakyungkim/korea-agentic-hackathon-2026`)와 후속 데모 `Team-FlyGate/FlyVigilante` 의 코드와
+(`kakyungkim/korea-agentic-hackathon-2026`)와 팀 데모 저장소 `Team-FlyGate/FlyVigilante` 의 코드와
 문서를 근거로 삼았다. 아직 실행한 것은 없다. 어디까지가 확인한 사실이고 어디부터가 제안인지
 구분해 적는다.
 

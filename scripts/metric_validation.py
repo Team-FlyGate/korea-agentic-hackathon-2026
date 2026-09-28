@@ -27,7 +27,7 @@ FlyVigilante 와 우리 근거 등급은 PRR, ROR, 카이제곱, IC 와 그 하�
 사용법:
   .venv/bin/python scripts/metric_validation.py \\
       --refset eval/refsets/pilot_sider_2026-09-28.json.gz \\
-      --pairs-tsv /data/hps/assoc/private/rsc/user/ybae/tmp/metric-validation/warehouse_pairs_2026q2.tsv.gz
+      --pairs-tsv $METRIC_VALIDATION_DIR/warehouse_pairs_2026q2.tsv.gz
 """
 from __future__ import annotations
 
