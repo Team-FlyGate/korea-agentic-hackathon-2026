@@ -8,6 +8,64 @@ Applications 또는 Brief Communication 형식을 확인한다 [미확인].
 
 ---
 
+## 기승전결
+
+**기.** 공개 참조 세트로 LLM 성능을 재면 그 세트를 다룬 논문도 공개돼 있다. 모델이 정답표를
+이미 본 상태에서 재는 셈인데, 재는 쪽은 그것을 알 방법이 없다.
+
+**승.** 이름을 가리고 다시 재면 알 수 있다. AUC 가 0.960 에서 0.790 으로 내려갔다.
+**그 0.170 이 통계가 아니라 이름에서 온 몫이다.**
+
+**전.** 그런데 한 번 가리는 것으로는 부족하다. 화학 쪽 연구는 속성명만 가려서는 보호되지
+않고 목표값 변환까지 해야 우연 수준으로 내려간다고 보고했다. 이름을 지워도 임상 서술의
+문맥만으로 약물 계열이 복원되면 누수가 남는다.
+
+**결.** 가림을 사다리로 나누면 각 층이 얼마씩 기여했는지 분리된다. 전체 이름, 약물명만
+가림, 계열 단서까지 가림, 완전 익명화 네 단계다. **이 절차와 누수 다섯 유형이 이 논문이
+내놓는 것이다.**
+
+**방법.** SIDER 64,796쌍에 A 와 D 를 전수로, B 와 C 를 2,000쌍 부분표본으로 돌린다.
+귀무 AUC 는 라벨 뒤섞기로 구한다. Harpaz 시간 색인 분할을 겹쳐 시점 누수와 이름 누수가
+독립인지 확인한다.
+
+## Abstract 초안
+
+> **Objective.** Public reference sets used to benchmark large language models in drug
+> safety are themselves public, so a model may reproduce a label it has memorised rather
+> than infer it. We ask how much of the measured discrimination is attributable to
+> entity-name priors, and propose a procedure that separates the contributions.
+>
+> **Methods.** We define five leakage types for drug–adverse-event pair prediction and a
+> four-rung blinding ladder (full names; drug name masked; drug name and class cues masked;
+> full anonymisation). Null AUC is obtained by label permutation on the same data. The
+> ladder is crossed with a time-indexed split to test whether name leakage and temporal
+> leakage are independent.
+>
+> **Results.** [실험 1, 3 으로 채운다.] Pilot: AUC 0.960 → 0.790 between the outer rungs,
+> against a permutation null of 0.532 and a best-statistical-measure value of 0.815.
+>
+> **Conclusion.** Reporting a single blinded number is not enough; the rung at which
+> performance falls identifies which prior the model was using.
+
+## 핵심 그림 한 장
+
+```
+AUC
+0.96 ┤ ●  A 전체 이름
+     │  ＼
+     │    ＼ ●  B 약물명만 가림
+     │       ＼
+     │         ＼ ●  C 계열 단서까지
+0.79 ┤            ● D 개체 정보 없음
+0.53 ┤ ─ ─ ─ ─ ─ ─ ─  귀무 (라벨 뒤섞기)
+     └──────────────
+```
+
+**어느 구간이 가파른지가 결과다.** A에서 B가 가파르면 이름 자체를, B에서 C가 가파르면
+계열 지식을 쓰고 있었다는 뜻이다. 지금은 양 끝 두 점만 있다.
+
+---
+
 ## 제목 후안
 
 1. Label provenance leakage in pharmacovigilance signal prediction:

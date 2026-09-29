@@ -12,6 +12,59 @@ USD 2,390 이 필수이고, "기존 소프트웨어 대비 상당한 진전을 �
 
 ---
 
+## 기승전결
+
+**기.** 모델이 낸 요약에서 숫자도 맞고 출처도 실재하는데 결론만 근거를 넘는 경우가 있다.
+형식 검사로는 이것을 못 거른다. 스키마도 통과하고 인용도 붙어 있기 때문이다.
+
+**승.** 넘었는지 아닌지를 누가 정하는가가 문제다. 직접 기준을 지으면 취향 다툼이 된다.
+**도구와 데이터 제공자가 문서에 적어 둔 금지 문장을 그대로 규칙으로 옮기면 그 다툼이
+사라진다.** 반박하려면 만든 쪽의 문서를 반박해야 한다.
+
+**전.** 그렇게 모은 규칙 17종으로 재 보니, 규칙 없는 일반 판정도 16건 중 13건을 잡는다.
+**규칙이 추가로 잡은 것은 3건뿐이다.** 다만 그 셋은 도구를 실제로 써 본 사람만 아는
+것이었다. 시드 없는 API 를 두 번 불러야 알 수 있는 재현성 문제 같은 것이다.
+
+**결.** 규칙의 값어치는 적발 건수가 아니라 **적발한 것의 종류**에 있다. 그리고 규칙마다
+뒷받침 강도를 매겨 보니 넷은 뒷받침이 없었고, 없다고 적었다. 억지로 문헌을 달지 않는 것이
+규칙 목록의 신뢰를 지킨다.
+
+**방법.** 평가 문장 50건(틀린 주장 31, 정상 6, 구조 규칙 13)에 3단 검사를 건다. 1단은 근거
+ID 실재, 2단은 숫자 일치(±1.1%), 3단만 모델이 본다. 규칙 유무로 절제한다.
+
+## Abstract 초안 (워크숍 단편)
+
+> Claims generated from computational tools can be wrong while every citation resolves and
+> every number matches its source. We describe a critic that separates this failure from
+> fabrication: two deterministic stages check evidence-identifier existence and numeric
+> agreement, and only the residual question — whether the conclusion exceeds what the
+> evidence licenses — is put to a model. The rule set is not authored but transcribed from
+> limitations that tool and data providers state in their own documentation, which makes
+> each rule checkable against a citable source rather than a matter of taste. On 50
+> evaluation statements the rules raise detection from 13/16 to 16/16 with no false
+> positives; we report that the three additional detections all concern tool behaviour that
+> is invisible without running the tool, and that 4 of 17 rules have no literature support,
+> which we state rather than supply.
+
+## 핵심 그림 한 장
+
+```
+규칙 없음                    규칙 17종
+  적발 13/16                   적발 16/16
+  거짓 양성 1/17               거짓 양성 0/17
+        │
+        └── 추가로 잡은 3건 ──┬── 단일 시드 재현성 주장
+                              ├── SMILES 를 실행 입력이라 부름
+                              └── DiffDock 에 시드가 없다는 사실
+
+  ※ 셋 다 도구를 두 번 불러 봐야 아는 것
+```
+
+**막대 높이보다 화살표 끝의 세 줄이 주장이다.** 3건이 적다는 사실을 먼저 적고,
+그 셋의 성격으로 규칙의 존재 이유를 말한다.
+
+---
+
 ## 논지 한 문장
 
 > 도구 제공자가 문서에 적어 둔 금지 문장을 규칙의 원본으로 삼으면, 근거와 수치가 모두 맞는데

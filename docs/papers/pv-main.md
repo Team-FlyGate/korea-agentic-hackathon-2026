@@ -8,6 +8,237 @@
 
 ---
 
+## 기승전결
+
+한 문단으로 줄이면 이런 이야기다.
+
+**기.** 약물감시 판정을 자동화하려면 정답이 필요한데, 이 도메인은 사람끼리도 판정이 맞지
+않는다. 척도 없이 판정한 전문가 6명의 카파가 0.21~0.40 이고, 도구를 WHO-UMC 에서 Naranjo 로
+바꾸면 같은 399건의 결론이 53.3퍼센트 확실함에서 96.74퍼센트 가능성 높음으로 옮겨간다.
+**정답을 만들 수 없는 곳에서 모델을 어떻게 평가하는가** 가 이 논문의 물음이다.
+
+**승.** 저자가 정답을 만드는 대신, 연구 이전에 제3자가 확정하고 기계로 대조 가능한 라벨
+네 계열을 쓴다. 규제 문서 원문, 규제 조치 이력, 규제 목록과 규칙, 운영 종점이다.
+**각 계열은 그 자체로 불완전하므로 계열마다 노이즈 상한을 함께 잰다.** 라벨에 기재된 쌍의
+52.6퍼센트에 불균형 신호가 서지 않고, 규제 조치는 9건뿐이라 오경보의 분모가 없다.
+정확도를 100퍼센트가 아니라 이 상한에 대고 읽는다.
+
+**전.** 그렇게 재 보니 두 가지가 뒤집힌다. 첫째, OMOP 참조 세트에서 AUC 0.960 이 나오는데
+약물명과 반응명을 가리면 0.790 으로 내려간다. **판별력의 상당 부분이 통계가 아니라 개체명
+사전지식에서 왔다.** 0.790 은 같은 세트 최고 통계 지표 0.815 에도 진다. 둘째, 모델 단독의
+중대성 AUROC 가 0.898 로 이미 높은데 사람이 먼저 볼 건수는 302건이다. 순위가 좋아도
+업무량이 줄지 않는다.
+
+**결.** 업무량을 줄인 것은 모델이 아니라 경로였다. 확률을 기한과 사유가 붙은 세 경로로
+바꾸자 302건이 138건이 되고 검토에 닿은 중대 사례는 234건에서 247건으로 늘었다.
+경로는 규제가 정의한다(미국 15일, 한국 15일, EMA DME, GVP Module IX 의 3개월과 6개월).
+**판정기 성능을 올리는 것만이 길이 아니다.**
+
+**방법.** FAERS 55개 분기 1,760만 건 위에 SIDER 64,796쌍과 OMOP, EU-ADR 참조 세트를 얹고,
+비자기회귀 결정 모델과 대형 언어 모델을 경로에 따라 나눠 부른다. 귀무 AUC 는 라벨 뒤섞기로
+데이터에서 직접 구하고(겹침 42퍼센트에서 0.532), 짝지은 440건에 McNemar 를 쓴다.
+이름 가림은 전체 이름, 계열 단서만, 완전 익명화 세 단계로 나눈다.
+
+---
+
+## 그림과 표: 논문이 어떻게 보일 것인가
+
+심사자가 기억하는 것은 문장이 아니라 그림이다. 다섯 장과 표 셋으로 이야기가 끝나야 한다.
+
+### 그림 1. 가림 사다리 (논문의 얼굴)
+
+```
+AUC
+1.00 ┤
+     │   ●  0.960   이름 보임
+0.95 ┤   │
+     │   │                        ← 이 간격 0.170 이 논문의 주장
+0.90 ┤   │          ○  0.90   MALADE (선행연구)
+     │   │
+0.85 ┤   │
+     │   ▼          △  0.815  같은 세트 최고 통계 지표
+0.80 ┤   ●  0.790   이름 가림
+     │
+0.75 ┤
+     └───────────────────────────────────────
+          우리          비교 대상
+```
+
+독자가 보는 것은 하나다. **화살표가 아래를 향한다.** 이름을 가리자 우리 값이 선행연구
+아래로, 그리고 단순 통계 지표 아래로 내려간다. 논문이 자기 수치를 스스로 깎는 그림이라
+심사자의 첫 방어선을 먼저 무너뜨린다.
+
+**지금 있는 것.** 네 점 모두. **필요한 것.** 실험 1 전수로 신뢰구간을 붙이는 일.
+
+### 그림 2. 부분 가림 곡선
+
+```
+AUC
+0.96 ┤ ●
+     │  ＼
+0.90 ┤    ＼ ●            A  전체 이름
+     │       ＼           B  약물명만 가림
+0.85 ┤         ＼ ●       C  약물명과 계열 단서까지
+     │            ＼      D  개체 정보 없음
+0.79 ┤              ●
+     └──A───B───C───D──
+```
+
+그림 1이 "이름이 기여한다" 를 보이면, 그림 2는 **그 기여가 어디서 끊기는지**를 보인다.
+B 에서 많이 떨어지면 이름 자체가, C 에서 떨어지면 계열 지식이 답을 만들고 있었다는 뜻이다.
+"가림이 정당한 약리 정보까지 없앤다" 는 반박을 이 곡선 하나가 막는다.
+
+**필요한 것.** 실험 3. 2,000쌍이면 되고 비용은 실험 1의 20분의 1이다.
+
+### 그림 3. 경로 설계 (두 번째 기여)
+
+왼쪽과 오른쪽을 나란히 놓는다.
+
+```
+  모델 단독                        워크플로
+  ─────────                       ─────────
+  확률 ──┬── >0.5 ─→ 사람 302건    확률 ──┬── 높음 ──→ 사람      138건
+         └── ≤0.5 ─→ 자동                ├── 애매 ──→ System 2  검토
+                                         └── 낮음 ──→ 자동
+  중대 234/250                     중대 247/250
+  특이도 0.642                     특이도 0.984
+  AUROC 0.898                      같은 모델
+```
+
+**같은 모델인데 오른쪽이 사람 일을 절반 아래로 줄이고 중대 사례는 더 찾는다.**
+Li 2026 이 임계값 하나에 경로 둘을 두는 것과 갈라지는 지점이 이 그림이다.
+
+**지금 있는 것.** 전부. 이 그림은 오늘 그릴 수 있다.
+
+### 그림 4. 라벨 네 계열과 각자의 천장
+
+```
+계열                  이 계열로 잴 수 있는 상한
+─────────────────────────────────────────────
+규제 문서 원문        ████████░░  기재 쌍의 52.6%에 신호가 안 선다
+규제 조치 이력        ██░░░░░░░░  조치 9건. 오경보 분모 없음
+규제 목록과 규칙      ██████████  정의로 주어진다
+운영 종점            █████░░░░░  행정 분류이지 임상 중대성이 아니다
+```
+
+**정확도를 100퍼센트가 아니라 이 막대에 대고 읽는다** 는 논문의 설계를 한 장으로 보인다.
+막대가 다 차지 않은 것이 결함이 아니라 측정 결과라는 점이 이 그림의 뜻이다.
+
+### 그림 5. 커넥톰 대조 (음성 결과)
+
+```
+AUC
+      │        ┌─┐
+      │     ┌──┤ ├──┐   ← 차수 보존 재배선 100회 분포
+      │     │  └─┘  │
+      │  ●  ←── 실측 커넥톰이 이 분포 안에 있으면 기여 없음
+      │
+      │  ●  ←── 투영 없음 (특징을 바로 판독)
+      └──────────────────
+```
+
+**실측 점이 분포 안에 있으면 그것이 결과다.** 주장이 근거를 넘지 않게 하는 논문이 자기
+비유를 스스로 검증해 기여가 아님을 보이면, 나머지 주장의 신뢰가 오른다.
+
+**필요한 것.** 실험 6. CPU 만 쓰고 비용 0원.
+
+### 표 1. 절제
+
+그림 3의 근거다. 네 줄이면 된다.
+
+| 조건 | 검토에 닿은 중대 | 사람 우선 | 특이도 |
+|---|---|---|---|
+| 워크플로 전체 | 247 / 250 | 138 | 0.984 |
+| 라벨 근거 주입 없음 | 248 / 250 | 144 | 0.984 |
+| DME 안전망 없음 | 247 / 250 | 137 | 0.984 |
+| 모델 단독, 질문 하나 | 234 / 250 | 302 | 0.642 |
+
+**가운데 두 줄이 거의 손해가 없다는 것을 감추지 않는다.** 이득의 출처가 경로 수와 결정
+정책이라는 주장이 이 표에서 나온다.
+
+### 표 2. 지표 일곱 종과 귀무 AUC
+
+SIDER 64,796쌍. 귀무가 0.5 가 아니라 0.532 라는 것을 한 열로 보인다.
+
+### 표 3. 평가자 일치도 비교
+
+| 출처 | 무엇 사이의 일치인가 | 카파 |
+|---|---|---|
+| Naranjo 1981 | 척도 없는 전문가 6명 | 0.21 ~ 0.40 |
+| Naranjo 1981 | 같은 전문가, 척도 사용 | 0.69 ~ 0.86 |
+| More 2024 | **도구 둘 사이** (WHO-UMC 대 Naranjo) | 0.22 |
+| 우리 (실험 2) | 약사 2인, 같은 100건 | [미측정] |
+
+**세 번째 줄이 도구 간 일치도라는 것을 이 표가 못 박는다.** 우리 노트가 한때 이 숫자를
+전문가 간 일치도로 잘못 인용했고, 표로 만들어 두면 다음 사람이 같은 실수를 하지 않는다.
+
+---
+
+## 이야기의 흐름
+
+그림 순서가 곧 논문 순서다.
+
+```
+1절 서론        정답이 없다          (표 3)
+   ↓
+3절 라벨        그래서 이렇게 잰다    (그림 4)
+   ↓
+4절 누수        재 보니 이렇다 ①     (그림 1, 2)   ← 우리 수치를 깎는다
+   ↓
+5절 경로        재 보니 이렇다 ②     (그림 3, 표 1) ← 대신 여기서 이득이 온다
+   ↓
+6·7·8절 대조    다른 축은 안 된다     (표 2, 그림 5) ← 음성도 적는다
+   ↓
+10절 한계       아직 못 잰 것 여덟
+```
+
+**4절에서 우리 수치를 깎고 5절에서 다른 이득을 내놓는 배치가 이 논문의 구조다.**
+0.960 을 앞세우는 논문은 심사자가 누수를 의심하는 순간 끝나지만, 누수를 우리가 먼저 재서
+내놓으면 그다음 주장이 살아남는다.
+
+---
+
+## Abstract 초안 (구조화, Drug Safety 형식)
+
+투고 시 영문이므로 영문으로 적는다. 단어 수 상한은 투고 규정 확인 후 맞춘다 [미확인].
+
+> **Background.** Automating pharmacovigilance triage requires a ground truth, yet human
+> causality assessment in this domain is unstable: six experts judging 63 adverse drug
+> reactions without a scale agreed on 38–63% of cases (kappa 0.21–0.40), and applying two
+> standard instruments to the same 399 reports classified 53.3% as certain under WHO-UMC
+> but 96.74% as probable under Naranjo. Evaluations that treat author-generated labels as
+> truth therefore report a number about the labelling, not the system.
+>
+> **Objective.** To define an evaluation design for decision models in domains where expert
+> agreement is low, and to quantify how much of a model's apparent discrimination comes
+> from statistical evidence rather than entity-name priors.
+>
+> **Methods.** We used four families of labels fixed by third parties before this study and
+> checkable by machine: regulatory label text at subsection granularity, regulatory action
+> history indexed by date, regulatory lists and rules (EMA DME, ICH E2D, Evans criteria),
+> and operational endpoints. For each family we measured its own noise ceiling. Performance
+> was read against that ceiling rather than against 100%. Null AUC was obtained by label
+> permutation on the same data rather than assumed to be 0.5. Discrimination was decomposed
+> with a blinding ladder (full names, class cues only, full anonymisation) on SIDER
+> (64,796 pairs) and OMOP, with a time-indexed split. Routing was evaluated by ablation on
+> 440 FAERS reports with outcome codes masked, using McNemar's test for paired comparison.
+>
+> **Results.** [실험 1, 2, 3, 6 결과로 채운다.] Pilot values: AUC fell from 0.960 with drug
+> and reaction names visible to 0.790 when blinded, below the best statistical measure on
+> the same set (0.815). Label permutation gave a null AUC of 0.532, not 0.5, because 42% of
+> positive and negative pairs overlap. The model alone reached a seriousness AUROC of 0.898
+> yet sent 302 of 440 reports to human-first review; adding intermediate routes reduced this
+> to 138 while raising serious cases reaching review from 234/250 to 247/250 (p = 0.0044
+> for cases left in the automated queue; p = 3.6 × 10⁻⁴⁸ for total human-first volume).
+> Ablating label-evidence injection and the DME safety net changed detection by at most one
+> case, locating the gain in route count and decision policy rather than in either component.
+>
+> **Conclusion.** [기여 셋을 한 문장씩.]
+
+**채우기 전에는 초록을 확정하지 않는다.** Results 의 대괄호가 실험 1, 2, 3, 6 에 묶여 있다.
+
+---
+
 ## 제목 후안
 
 1. Evaluating decision models where expert agreement is low: third-party labels,
